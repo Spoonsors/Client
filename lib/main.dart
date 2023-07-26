@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/teenager/TeenagerViewHomePage.dart';
+import 'package:save_children_v01/pages/auth/AllLoginPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,12 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Home',
+        title: "Login",
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        initialRoute: '/home',
-        routes: {'/home': (context) => TeenagerViewHomePage()});
+        initialRoute: "/login",
+        routes: {"/login": (context) => AllLoginPageWidget()});
   }
 }
