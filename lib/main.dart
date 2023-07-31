@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:save_children_v01/pages/admin/AdminViewAllProductPage.dart';
+import 'package:save_children_v01/pages/nutritionist/NutritionistNutriHomePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // initialRoute: "/login",
-      home: AdminViewAllProductPageWidget(), //TODO : 지워야할것
+      home: NutritionistNutriHomePageWidget(), //TODO : 지워야할것
     );
     //routes: {"/login": (context) => AdminViewAllProductPageWidget()});
     //routes: {"/login": (context) => AllLoginPageWidget()});

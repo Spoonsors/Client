@@ -287,7 +287,7 @@ class _AdminProductRegisterPageWidgetState
                   fixedSize: Size(double.infinity, 55.0),
                   backgroundColor: primary,
                   elevation: 2.0,
-                ),
+                  shadowColor: Colors.black),
               ),
             ),
           ),

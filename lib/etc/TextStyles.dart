@@ -22,3 +22,10 @@ const TextStyle titleMedium = TextStyle(
   fontWeight: FontWeight.normal,
   color: Colors.white,
 );
+
+const TextStyle labelMedium = TextStyle(
+  color: secondaryText,
+  fontWeight: FontWeight.w400,
+  fontFamily: 'SUITE',
+  fontSize: 10.0,
+);

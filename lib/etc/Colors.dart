@@ -7,3 +7,5 @@ const Color secondaryBackground = Color(0xffF5F5F5);
 const Color info = Color(0xff2196F3);
 const Color primary = Color(0xffFFB74D);
 const Color alternate = Color(0xffE0E0E0);
+const Color error = Color(0xffF44336);
+const Color success = Color(0xff4CAF50);
