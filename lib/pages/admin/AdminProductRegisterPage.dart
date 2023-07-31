@@ -16,19 +16,9 @@ class _AdminProductRegisterPageWidgetState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primaryBackground,
-        iconTheme: IconThemeData(color: primaryText),
-        automaticallyImplyLeading: true,
         title: Text(
           '상품 등록',
-          style: TextStyle(
-            fontFamily: 'SUITE',
-            color: primaryText,
-          ),
         ),
-        actions: [],
-        centerTitle: false,
-        elevation: 2.0,
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,

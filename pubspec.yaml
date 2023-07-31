@@ -65,6 +65,7 @@ flutter:
     - family: SUITE
       fonts:
         - asset: assets/fonts/SUITE-Variable.ttf
+        - asset: assets/fonts/SUITE-Medium.ttf # 폰트가 이상한것 같아서 추가했습니다. 혹시 문제 없으시면 지우셔도 됩니다.
     - family: Outfit
       fonts:
         - asset: assets/fonts/Outfit-VariableFont_wght.ttf
