@@ -34,15 +34,8 @@ class _AdminViewAllProductPageWidgetState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primaryBackground,
-        automaticallyImplyLeading: false,
         title: Text(
           '현재 등록된 상품들',
-          style: TextStyle(
-            fontFamily: 'SUITE',
-            color: primaryText,
-            fontSize: 22.0,
-          ),
         ),
         actions: [
           // Logout button
@@ -58,9 +51,6 @@ class _AdminViewAllProductPageWidgetState
             ),
           ),
         ],
-        centerTitle: false,
-        elevation: 2.0,
-        shadowColor: Colors.black,
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,

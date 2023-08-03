@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../components/NutritionistDietAddFoodBottomSheet.dart';
+import '../../components/nutritionistDietAddFoodBottomSheet.dart';
 import '../../etc/Colors.dart';
 
 class NutritionistDietRegisterPageWidget extends StatefulWidget {
@@ -18,14 +18,9 @@ class _NutritionistDietRegisterPageWidgetState
     return Scaffold(
       backgroundColor: primaryBackground,
       appBar: AppBar(
-        backgroundColor: primaryBackground,
         iconTheme: IconThemeData(color: primaryText),
         title: Text(
           '식단 등록하기',
-          style: TextStyle(
-            fontFamily: 'SUITE',
-            color: primaryText,
-          ),
         ),
         actions: [
           Align(
@@ -44,9 +39,6 @@ class _NutritionistDietRegisterPageWidgetState
             ),
           ),
         ],
-        centerTitle: false,
-        elevation: 2.0,
-        shadowColor: Colors.black,
       ),
       body: SingleChildScrollView(
         child: Column(

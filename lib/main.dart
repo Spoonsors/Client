@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:save_children_v01/pages/nutritionist/NutritionistNutriHomePage.dart';
+import 'package:save_children_v01/etc/Routes.dart';
+import 'package:save_children_v01/etc/ThemeData.dart';
+import 'package:save_children_v01/pages/supporter/SupporterMainPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,12 +16,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Login",
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: themeData,
+      routes: namedRoutes,
       // initialRoute: "/login",
-      home: NutritionistNutriHomePageWidget(), //TODO : 지워야할것
+      home: SupporterMainPageWidget(),
     );
     //routes: {"/login": (context) => AdminViewAllProductPageWidget()});
     //routes: {"/login": (context) => AllLoginPageWidget()});

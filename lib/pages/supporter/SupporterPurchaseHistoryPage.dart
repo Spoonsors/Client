@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:save_children_v01/etc/Colors.dart';
 
-import 'NutritionistDietRegisterPage.dart';
+import '../../etc/Colors.dart';
 
-class NutritionistNutriHomePageWidget extends StatefulWidget {
-  const NutritionistNutriHomePageWidget({Key? key}) : super(key: key);
+class SupporterPurchaseHistoryPageWidget extends StatefulWidget {
+  const SupporterPurchaseHistoryPageWidget({super.key});
 
   @override
-  _NutritionistNutriHomePageWidgetState createState() =>
-      _NutritionistNutriHomePageWidgetState();
+  State<SupporterPurchaseHistoryPageWidget> createState() =>
+      _SupporterPurchaseHistoryPageWidgetState();
 }
 
-class _NutritionistNutriHomePageWidgetState
-    extends State<NutritionistNutriHomePageWidget> {
-  List<String> items = [
-    "최신 순",
-    "가격 순",
-  ];
-  String selectedItem = "최신 순";
+class _SupporterPurchaseHistoryPageWidgetState
+    extends State<SupporterPurchaseHistoryPageWidget> {
   final List<String> images = [
     "https://img-cf.kurly.com/shop/data/goodsview/20191213/gv10000072801_1.jpg",
     "https://i.namu.wiki/i/hpNKO-WVGSNMmidWZP8FEr4pR8xOBS_itU4Y0qRjMSXjkizMhhqe2UkLobGIjevtQozkCmNuivfQrqlQgx2Jog.webp",
@@ -35,110 +29,25 @@ class _NutritionistNutriHomePageWidgetState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '추천 식단 목록',
-        ),
-        actions: [
-          // Logout button
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 0.0),
-            child: IconButton(
-              icon: Icon(
-                Icons.login_rounded,
-                size: 24.0,
-              ),
-              onPressed: () {}, // TODO : [Nutri] Logout 버튼 구현
-            ),
-          ),
-        ],
+        title: Text('후원 내역'),
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 5.0, 0.0),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-                  child: DropdownButton(
-                    underline: SizedBox.shrink(),
-                    style: TextStyle(
-                      fontFamily: 'SUITE',
-                      color: primaryText,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    value: selectedItem,
-                    items: items.map(
-                      (value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Text(value),
-                        );
-                      },
-                    ).toList(),
-                    onChanged: (value) => {
-                      setState(() {
-                        selectedItem = value!;
-                      })
-                    },
-                    icon: Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: primaryText,
-                      size: 24.0,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: images.length,
-              itemBuilder: (context, index) {
-                final imageUrl = images[index];
-                return ProductDetailsWidget(imageUrl: imageUrl);
-              },
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      const NutritionistDietRegisterPageWidget()));
+      body: ListView.builder(
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: images.length,
+        itemBuilder: (context, index) {
+          final imageUrl = images[index];
+          return SupporterProductPurchaseDetailsListItem(imageUrl: imageUrl);
         },
-        backgroundColor: primary,
-        icon: Icon(
-          Icons.receipt,
-          color: primaryBackground,
-        ),
-        elevation: 8.0,
-        label: Text(
-          '추천 식단 짜기',
-          style: TextStyle(
-            fontFamily: 'SUITE',
-            color: primaryBackground,
-            fontSize: 20.0,
-          ),
-        ),
       ),
     );
   }
 }
 
-class ProductDetailsWidget extends StatelessWidget {
-  const ProductDetailsWidget({super.key, required this.imageUrl});
+class SupporterProductPurchaseDetailsListItem extends StatelessWidget {
+  const SupporterProductPurchaseDetailsListItem(
+      {super.key, required this.imageUrl});
 
   final String imageUrl;
 
@@ -188,7 +97,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 0.0, 0.0),
                                 child: Text(
-                                  '고등어구이 감자밥정식',
+                                  '스팸',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       color: info,
@@ -200,7 +109,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '450kcal',
+                                  'CJ 제일제당 스팸 200g',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       fontSize: 13.0,
@@ -211,7 +120,19 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '탄수화물 30g, 단백질 13g, 지방 3g',
+                                  '4500원',
+                                  style: TextStyle(
+                                    fontFamily: 'SUITE',
+                                    fontSize: 12.0,
+                                    color: secondaryText,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 2.0, 0.0, 0.0),
+                                child: Text(
+                                  '수혜자 : 닉네임 1',
                                   style: TextStyle(
                                     fontFamily: 'SUITE',
                                     fontSize: 12.0,
@@ -226,19 +147,11 @@ class ProductDetailsWidget extends StatelessWidget {
                             children: [
                               IconButton(
                                 icon: Icon(
-                                  Icons.delete_sharp,
+                                  Icons.more,
                                   color: secondaryText,
-                                  size: 17.0,
+                                  size: 24.0,
                                 ),
-                                onPressed: () {}, // TODO : [Nutri] 등록된 상품 제거 구현
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.mode_edit_sharp,
-                                  color: secondaryText,
-                                  size: 17.0,
-                                ),
-                                onPressed: () {}, // TODO : [Nutri] 등록된 상품 등록 구현
+                                onPressed: () {}, // TODO : [Suppt] 등록된 상품 제거 구현
                               ),
                             ],
                           ),
