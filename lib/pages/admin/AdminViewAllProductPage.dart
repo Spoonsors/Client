@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Colors.dart';
-import 'package:save_children_v01/pages/admin/AdminProductRegisterPage.dart';
+import 'package:save_children_v01/model/IngredientsModel.dart';
+import 'package:save_children_v01/service/IngredientsService.dart';
 
 class AdminViewAllProductPageWidget extends StatefulWidget {
   const AdminViewAllProductPageWidget({Key? key}) : super(key: key);
@@ -16,132 +18,129 @@ class _AdminViewAllProductPageWidgetState
     "최신 순",
     "가격 순",
   ];
-  final List<String> images = [
-    "https://cdn2.thecatapi.com/images/bi.jpg",
-    "https://cdn2.thecatapi.com/images/63g.jpg",
-    "https://cdn2.thecatapi.com/images/a3h.jpg",
-    "https://cdn2.thecatapi.com/images/a9m.jpg",
-    "https://cdn2.thecatapi.com/images/aph.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-  ];
+
   String selectedItem = "최신 순";
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '현재 등록된 상품들',
-        ),
-        actions: [
-          // Logout button
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 0.0),
-            child: IconButton(
-              icon: Icon(
-                Icons.login_rounded,
-                color: secondaryText,
-                size: 24.0,
-              ),
-              onPressed: () {}, // TODO : [admin] Logout 버튼 구현
-            ),
+    return Consumer<IngredientsService>(
+        builder: (context, ingredientsService, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            '현재 등록된 상품들',
           ),
-        ],
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 5.0, 0.0),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-                  child: DropdownButton(
-                    underline: SizedBox.shrink(),
-                    style: TextStyle(
-                      fontFamily: 'SUITE',
-                      color: primaryText,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    value: selectedItem,
-                    items: items.map(
-                      (value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Text(value),
-                        );
+          actions: [
+            // Logout button
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 0.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.login_rounded,
+                  color: secondaryText,
+                  size: 24.0,
+                ),
+                onPressed: () {}, // TODO : [admin] Logout 버튼 구현
+              ),
+            ),
+          ],
+        ),
+        body: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 5.0, 0.0),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
+                    child: DropdownButton(
+                      underline: SizedBox.shrink(),
+                      style: TextStyle(
+                        fontFamily: 'SUITE',
+                        color: primaryText,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      value: selectedItem,
+                      items: items.map(
+                        (value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (value) => {
+                        setState(() {
+                          selectedItem = value!;
+                        })
                       },
-                    ).toList(),
-                    onChanged: (value) => {
-                      setState(() {
-                        selectedItem = value!;
-                      })
-                    },
-                    icon: Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: primaryText,
-                      size: 24.0,
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: primaryText,
+                        size: 24.0,
+                      ),
                     ),
                   ),
                 ),
+              ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: ingredientsService.productList.length,
+                itemBuilder: (context, index) {
+                  final ingredient = ingredientsService.productList[index];
+                  return ProductDetailsWidget(
+                      ingredients: ingredient,
+                      ingredientsService: ingredientsService);
+                },
               ),
-            ],
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushNamed(context, '/AdminProductRegisterPage');
+          },
+          backgroundColor: primary,
+          icon: Icon(
+            Icons.add,
+            color: primaryBackground,
           ),
-          Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: images.length,
-              itemBuilder: (context, index) {
-                final imageUrl = images[index];
-                return ProductDetailsWidget(imageUrl: imageUrl);
-              },
+          elevation: 8.0,
+          label: Text(
+            '상품 등록',
+            style: TextStyle(
+              fontFamily: 'SUITE',
+              color: primaryBackground,
+              fontSize: 20.0,
             ),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      const AdminProductRegisterPageWidget()));
-        },
-        backgroundColor: primary,
-        icon: Icon(
-          Icons.add,
-          color: primaryBackground,
         ),
-        elevation: 8.0,
-        label: Text(
-          '상품 등록',
-          style: TextStyle(
-            fontFamily: 'SUITE',
-            color: primaryBackground,
-            fontSize: 20.0,
-          ),
-        ),
-      ),
-    );
+      );
+    });
   }
 }
 
-class ProductDetailsWidget extends StatelessWidget {
-  const ProductDetailsWidget({super.key, required this.imageUrl});
+class ProductDetailsWidget extends StatefulWidget {
+  const ProductDetailsWidget(
+      {super.key, required this.ingredients, required this.ingredientsService});
 
-  final String imageUrl;
+  final Ingredients ingredients;
+  final IngredientsService ingredientsService;
 
+  @override
+  State<ProductDetailsWidget> createState() => _ProductDetailsWidgetState();
+}
+
+class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
   @override
   Widget build(BuildContext context) {
     return // Generated code for this UserList9 Widget...
@@ -168,12 +167,12 @@ class ProductDetailsWidget extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        imageUrl,
+                      child: Image.asset(
+                        'assets/images/돼지고기.jpeg',
                         width: 70.0,
                         height: 70.0,
                         fit: BoxFit.cover,
-                      ),
+                      ), // TODO : [admin] 이미지 확인
                     ),
                     Expanded(
                       child: Row(
@@ -188,7 +187,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 0.0, 0.0),
                                 child: Text(
-                                  '스팸',
+                                  '${widget.ingredients.ingredients_name}',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       color: info,
@@ -200,7 +199,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  'CJ 제일제당 스팸 200g',
+                                  '${widget.ingredients.product_name}',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       fontSize: 13.0,
@@ -211,7 +210,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '4500원',
+                                  '${widget.ingredients.price}원',
                                   style: TextStyle(
                                     fontFamily: 'SUITE',
                                     fontSize: 12.0,
@@ -230,7 +229,10 @@ class ProductDetailsWidget extends StatelessWidget {
                                   color: secondaryText,
                                   size: 17.0,
                                 ),
-                                onPressed: () {}, // TODO : [admin] 등록된 상품 제거 구현
+                                onPressed: () {
+                                  widget.ingredientsService.deleteProduct(
+                                      widget.ingredients.ingredients_id);
+                                }, // TODO : [admin] 등록된 상품 제거 구현
                               ),
                               IconButton(
                                 icon: Icon(
@@ -238,7 +240,11 @@ class ProductDetailsWidget extends StatelessWidget {
                                   color: secondaryText,
                                   size: 17.0,
                                 ),
-                                onPressed: () {}, // TODO : [admin] 등록된 상품 등록 구현
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, '/AdminProductRegisterPage',
+                                      arguments: widget.ingredients);
+                                }, // TODO : [admin] 등록된 상품 수정 구현
                               ),
                             ],
                           ),

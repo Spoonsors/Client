@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Routes.dart';
 import 'package:save_children_v01/etc/ThemeData.dart';
-import 'package:save_children_v01/pages/auth/AllLoginPage.dart';
-import 'package:save_children_v01/pages/supporter/SupporterMainPage.dart';
+import 'package:save_children_v01/pages/admin/AdminViewAllProductPage.dart';
+import 'package:save_children_v01/service/IngredientsService.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => IngredientsService()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: themeData,
       routes: namedRoutes,
       // initialRoute: "/login",
-      home: AllLoginPageWidget(),
+      home: AdminViewAllProductPageWidget(),
     );
     //routes: {"/login": (context) => AdminViewAllProductPageWidget()});
     //routes: {"/login": (context) => AllLoginPageWidget()});
