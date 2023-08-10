@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Colors.dart';
+import 'package:save_children_v01/model/MealPlannerModel.dart';
+import 'package:save_children_v01/service/MealPlannerService.dart';
+import 'package:save_children_v01/service/RecipeService.dart';
 
 import 'NutritionistDietRegisterPage.dart';
 
@@ -18,129 +22,128 @@ class _NutritionistNutriHomePageWidgetState
     "가격 순",
   ];
   String selectedItem = "최신 순";
-  final List<String> images = [
-    "https://img-cf.kurly.com/shop/data/goodsview/20191213/gv10000072801_1.jpg",
-    "https://i.namu.wiki/i/hpNKO-WVGSNMmidWZP8FEr4pR8xOBS_itU4Y0qRjMSXjkizMhhqe2UkLobGIjevtQozkCmNuivfQrqlQgx2Jog.webp",
-    "https://img.choroc.com/newshop/goods/009179/009179_1.jpg",
-    "https://res.heraldm.com/phpwas/restmb_idxmake.php?idx=507&simg=/content/image/2019/10/14/20191014000235_0.jpg",
-    "https://cdn2.thecatapi.com/images/aph.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '추천 식단 목록',
-        ),
-        actions: [
-          // Logout button
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 0.0),
-            child: IconButton(
-              icon: Icon(
-                Icons.login_rounded,
-                size: 24.0,
-              ),
-              onPressed: () {}, // TODO : [Nutri] Logout 버튼 구현
-            ),
+    return Consumer2<MealPlannerService, RecipeService>(
+        builder: (context, mealPlannerService, recipeService, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            '추천 식단 목록',
           ),
-        ],
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 5.0, 0.0),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-                  child: DropdownButton(
-                    underline: SizedBox.shrink(),
-                    style: TextStyle(
-                      fontFamily: 'SUITE',
-                      color: primaryText,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    value: selectedItem,
-                    items: items.map(
-                      (value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Text(value),
-                        );
+          actions: [
+            // Logout button
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 0.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.login_rounded,
+                  size: 24.0,
+                ),
+                onPressed: () {}, // TODO : [Nutri] Logout 버튼 구현
+              ),
+            ),
+          ],
+        ),
+        body: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 5.0, 0.0),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
+                    child: DropdownButton(
+                      underline: SizedBox.shrink(),
+                      style: TextStyle(
+                        fontFamily: 'SUITE',
+                        color: primaryText,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      value: selectedItem,
+                      items: items.map(
+                        (value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (value) => {
+                        setState(() {
+                          selectedItem = value!;
+                        })
                       },
-                    ).toList(),
-                    onChanged: (value) => {
-                      setState(() {
-                        selectedItem = value!;
-                      })
-                    },
-                    icon: Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: primaryText,
-                      size: 24.0,
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: primaryText,
+                        size: 24.0,
+                      ),
                     ),
                   ),
                 ),
+              ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: mealPlannerService.mealPlannerList.length,
+                itemBuilder: (context, index) {
+                  final mealPlanner = mealPlannerService.mealPlannerList[index];
+                  return ProductDetailsWidget(
+                      mealPlanner: mealPlanner, idx: index);
+                },
               ),
-            ],
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            for (int i = 0; i < recipeService.recipeList.length; i++) {
+              recipeService.recipeList[i].selected = false;
+            }
+            recipeService.selectedRecipeList.clear();
+            recipeService.calNutriInfo();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const NutritionistDietRegisterPageWidget()));
+          },
+          backgroundColor: primary,
+          icon: Icon(
+            Icons.receipt,
+            color: primaryBackground,
           ),
-          Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: images.length,
-              itemBuilder: (context, index) {
-                final imageUrl = images[index];
-                return ProductDetailsWidget(imageUrl: imageUrl);
-              },
+          elevation: 8.0,
+          label: Text(
+            '추천 식단 짜기',
+            style: TextStyle(
+              fontFamily: 'SUITE',
+              color: primaryBackground,
+              fontSize: 20.0,
             ),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      const NutritionistDietRegisterPageWidget()));
-        },
-        backgroundColor: primary,
-        icon: Icon(
-          Icons.receipt,
-          color: primaryBackground,
         ),
-        elevation: 8.0,
-        label: Text(
-          '추천 식단 짜기',
-          style: TextStyle(
-            fontFamily: 'SUITE',
-            color: primaryBackground,
-            fontSize: 20.0,
-          ),
-        ),
-      ),
-    );
+      );
+    });
   }
 }
 
 class ProductDetailsWidget extends StatelessWidget {
-  const ProductDetailsWidget({super.key, required this.imageUrl});
+  const ProductDetailsWidget(
+      {super.key, required this.mealPlanner, required this.idx});
 
-  final String imageUrl;
+  final MealPlanner mealPlanner;
+  final int idx;
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +164,7 @@ class ProductDetailsWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(0.0),
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 12.0, 8.0),
+                padding: EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 12.0, 5.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -169,9 +172,9 @@ class ProductDetailsWidget extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.network(
-                        imageUrl,
-                        width: 70.0,
-                        height: 70.0,
+                        "${mealPlanner.menu_img1}",
+                        width: 60.0,
+                        height: 60.0,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -188,7 +191,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 0.0, 0.0),
                                 child: Text(
-                                  '고등어구이 감자밥정식',
+                                  '${mealPlanner.mealPlanner_name}',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       color: info,
@@ -200,7 +203,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '450kcal',
+                                  '${mealPlanner.kcal}kcal',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       fontSize: 13.0,
@@ -211,7 +214,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '탄수화물 30g, 단백질 13g, 지방 3g',
+                                  '탄수화물 ${mealPlanner.carbohydrate}g, 단백질 ${mealPlanner.protein}g, 지방 ${mealPlanner.fat}g',
                                   style: TextStyle(
                                     fontFamily: 'SUITE',
                                     fontSize: 12.0,
@@ -230,7 +233,12 @@ class ProductDetailsWidget extends StatelessWidget {
                                   color: secondaryText,
                                   size: 17.0,
                                 ),
-                                onPressed: () {}, // TODO : [Nutri] 등록된 상품 제거 구현
+                                onPressed: () {
+                                  context
+                                      .read<MealPlannerService>()
+                                      .deleteMealPlanner(
+                                          mealPlanner.mealPlanner_id);
+                                },
                               ),
                               IconButton(
                                 icon: Icon(
@@ -238,7 +246,25 @@ class ProductDetailsWidget extends StatelessWidget {
                                   color: secondaryText,
                                   size: 17.0,
                                 ),
-                                onPressed: () {}, // TODO : [Nutri] 등록된 상품 등록 구현
+                                onPressed: () {
+                                  // 식단 list의 idx.
+                                  // selectedList에 넣기.
+                                  final menus = [
+                                    mealPlanner.menu_name1,
+                                    mealPlanner.menu_name2,
+                                    mealPlanner.menu_name3,
+                                    mealPlanner.menu_name4,
+                                  ];
+
+                                  context
+                                      .read<RecipeService>()
+                                      .selectMenus(menus);
+                                  context.read<RecipeService>().calNutriInfo();
+
+                                  Navigator.pushNamed(
+                                      context, "/NutritionistDietEditPage",
+                                      arguments: idx); // TODO : 수정 구현
+                                },
                               ),
                             ],
                           ),
