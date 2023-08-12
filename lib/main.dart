@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_children_v01/etc/Routes.dart';
 import 'package:save_children_v01/etc/ThemeData.dart';
+import 'package:save_children_v01/pages/auth/AllLoginPage.dart';
 import 'package:save_children_v01/pages/supporter/SupporterMainPage.dart';
 
 void main() {
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: themeData,
       routes: namedRoutes,
       // initialRoute: "/login",
-      home: SupporterMainPageWidget(),
+      home: AllLoginPageWidget(),
     );
     //routes: {"/login": (context) => AdminViewAllProductPageWidget()});
     //routes: {"/login": (context) => AllLoginPageWidget()});
