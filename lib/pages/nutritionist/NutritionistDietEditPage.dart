@@ -6,20 +6,23 @@ import 'package:save_children_v01/service/RecipeService.dart';
 
 import '../../components/nutritionistDietAddFoodBottomSheet.dart';
 import '../../etc/Colors.dart';
+import '../../model/MealPlannerModel.dart';
 
-class NutritionistDietRegisterPageWidget extends StatefulWidget {
-  const NutritionistDietRegisterPageWidget({super.key});
+class NutritionistDietEditPageWidget extends StatefulWidget {
+  const NutritionistDietEditPageWidget({super.key});
 
   @override
-  State<NutritionistDietRegisterPageWidget> createState() =>
-      _NutritionistDietRegisterPageWidgetState();
+  State<NutritionistDietEditPageWidget> createState() =>
+      _NutritionistDietEditPageWidgetState();
 }
 
-class _NutritionistDietRegisterPageWidgetState
-    extends State<NutritionistDietRegisterPageWidget> {
+class _NutritionistDietEditPageWidgetState
+    extends State<NutritionistDietEditPageWidget> {
   @override
   Widget build(BuildContext context) {
     final _mealPlannerTitleTextController = TextEditingController();
+
+    final idx = ModalRoute.of(context)?.settings.arguments as int;
 
     return Consumer2<RecipeService, MealPlannerService>(
         builder: (context, recipeService, mealPlannerService, child) {
@@ -37,7 +40,9 @@ class _NutritionistDietRegisterPageWidgetState
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 0.0),
                 child: GestureDetector(
                   onTap: () {
-                    PostMealPlanner postMealPlanner = PostMealPlanner(
+                    MealPlanner putMealPlanner = MealPlanner(
+                        mealPlanner_id: mealPlannerService
+                            .mealPlannerList[idx].mealPlanner_id,
                         menu_name1:
                             recipeService.selectedRecipeList[0].recipe.rcp_NM,
                         menu_img1: recipeService
@@ -61,8 +66,8 @@ class _NutritionistDietRegisterPageWidgetState
                         fat: recipeService.fat.toInt(),
                         level: "중",
                         timeRequired: "50");
-                    print(postMealPlanner.toString());
-                    mealPlannerService.postMealPlanner(postMealPlanner);
+
+                    mealPlannerService.updateMealPlanner(putMealPlanner, idx);
 
                     Navigator.pop(context);
                   },

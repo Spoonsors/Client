@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:save_children_v01/pages/auth/AllWelcomeSignInPage.dart';
 
 import '../../models/SupporterCreateProfilePageModel.dart';
 

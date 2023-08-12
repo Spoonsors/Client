@@ -1,3 +1,6 @@
+import '../pages/admin/AdminProductRegisterPage.dart';
+import '../pages/nutritionist/NutritionistDietEditPage.dart';
+import '../pages/nutritionist/NutritionistNutriHomePage.dart';
 import '../pages/supporter/SupporterMainPage.dart';
 import '../pages/supporter/SupporterNotificationPage.dart';
 import '../pages/supporter/SupporterPurchaseHistoryPage.dart';
@@ -18,4 +21,7 @@ var namedRoutes = {
   '/SupporterPurchasePage': (context) => SupporterPurchasePageWidget(),
   '/SupporterViewCompletePostDetailPage': (context) =>
       SupporterViewCompletePostDetailPageWidget(),
+  '/AdminProductRegisterPage': (context) => AdminProductRegisterPageWidget(),
+  '/NutritionistNutriHomePage': (context) => NutritionistNutriHomePageWidget(),
+  '/NutritionistDietEditPage': (context) => NutritionistDietEditPageWidget(),
 };
