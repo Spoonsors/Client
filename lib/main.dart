@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Routes.dart';
 import 'package:save_children_v01/etc/ThemeData.dart';
-import 'package:save_children_v01/pages/auth/AllLoginPage.dart';
-import 'package:save_children_v01/pages/supporter/SupporterMainPage.dart';
+import 'package:save_children_v01/pages/nutritionist/NutritionistNutriHomePage.dart';
+import 'package:save_children_v01/service/IngredientsService.dart';
+import 'package:save_children_v01/service/MealPlannerService.dart';
+import 'package:save_children_v01/service/RecipeService.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => RecipeService()),
+      ChangeNotifierProvider(create: (context) => IngredientsService()),
+      ChangeNotifierProvider(create: (context) => MealPlannerService()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +30,7 @@ class MyApp extends StatelessWidget {
       theme: themeData,
       routes: namedRoutes,
       // initialRoute: "/login",
-      home: AllLoginPageWidget(),
+      home: NutritionistNutriHomePageWidget(),
     );
     //routes: {"/login": (context) => AdminViewAllProductPageWidget()});
     //routes: {"/login": (context) => AllLoginPageWidget()});

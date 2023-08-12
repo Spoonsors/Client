@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 Ingredients IngredientsJson(String str) =>
     Ingredients.fromJson(json.decode(str));
@@ -7,7 +6,7 @@ Ingredients IngredientsJson(String str) =>
 String IngredientsToJson(Ingredients data) => json.encode(data.toJson());
 
 class Ingredients {
-  Long ingredients_id;
+  int ingredients_id;
   String ingredients_name;
   String product_name;
   String ingredients_image;
