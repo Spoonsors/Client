@@ -11,7 +11,7 @@ Spon SponJson(String str) => Spon.fromJson(json.decode(str));
 String SponToJson(Spon data) => json.encode(data.toJson());
 
 class Spon {
-  Long spon_id;
+  int spon_id;
   SMember sMember;
   Post post;
   Ingredients ingredients;

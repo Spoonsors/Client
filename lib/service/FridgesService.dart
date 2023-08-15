@@ -75,11 +75,12 @@ class FridgesService extends ChangeNotifier {
           postFridges.item_img!.path,
           filename: "${postFridges.item_name}.jpg",
         ),
-        "FridgesDto": MultipartFile.fromString(
+        "fridgesDto": MultipartFile.fromString(
           jsonEncode({
+            "fridge_id": postFridges.fridge_id,
             "name": postFridges.item_name,
             "isFrized": postFridges.is_frized,
-            "expirationDate": postFridges.expiration_date,
+            "expirationDate": postFridges.expiration_date.toString(),
           }),
           contentType: MediaType.parse('application/json'),
         ),

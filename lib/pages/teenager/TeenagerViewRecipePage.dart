@@ -49,7 +49,7 @@ class _TeenagerViewRecipePageWidgetState
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => TeenagerWriteRequestPageWidget()));
+                    builder: (context) => TeenagerWriteRequestPageWidget(recipe : _recipe)));
           },
           backgroundColor: const Color(0xffffb74d),
           icon: FaIcon(

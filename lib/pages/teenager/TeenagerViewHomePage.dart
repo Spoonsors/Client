@@ -549,7 +549,7 @@ class RecommendedMenuCard extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      TeenagerWriteRequestPageWidget()));
+                                      TeenagerWriteRequestPageWidget(recipe: menu)));
                         },
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),

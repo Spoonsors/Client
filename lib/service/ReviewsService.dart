@@ -47,16 +47,20 @@ class ReviewsService extends ChangeNotifier {
   }
 
   void writeReview(BMember bMember, PostReview postReview) async {
-    Map<String, dynamic> data = {
-      "review_id": postReview.review_id,
-      "post": postReview.review_img?.path,
+    final data = FormData.fromMap({
       "review_img": await MultipartFile.fromFile(
         postReview.review_img!.path,
         filename: "${postReview.review_id}.jpg",
       ),
-      "review_txt": postReview.review_txt,
-      "review_date": postReview.review_date,
-    };
+      "reviewDto": MultipartFile.fromString(
+          jsonEncode({
+            "review_id": postReview.review_id,
+            // "post": postReview.review_img?.path,x
+            "review_txt": postReview.review_txt,
+            "review_date": postReview.review_date.toString(),
+          }),
+          contentType: MediaType.parse('application/json'))
+    });
     try {
       Response response = await Dio().post(
         "http://3.86.110.15:8080//review/create/${postReview.post.post_id}",

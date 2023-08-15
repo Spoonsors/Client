@@ -12,7 +12,7 @@ import '../model/RecipeModel.dart';
 
 class PostPosts {
   int post_id;
-  BMember bMember;
+  String bMember_nickname;
   String post_title;
   String post_txt;
   int post_state;
@@ -25,7 +25,7 @@ class PostPosts {
 
   PostPosts(
       {required this.post_id,
-      required this.bMember,
+      required this.bMember_nickname,
       required this.post_title,
       required this.post_txt,
       required this.post_state,
@@ -80,7 +80,7 @@ class PostsService extends ChangeNotifier {
   void writePost(PostPosts post, BMember bMember) async {
     Map<String, dynamic> data = {
       "post_id": post.post_id,
-      "bMember": post.bMember,
+      "bMember": post.bMember_nickname,
       "post_title": post.post_title,
       "post_txt": post.post_txt,
       "post_state": post.post_state,

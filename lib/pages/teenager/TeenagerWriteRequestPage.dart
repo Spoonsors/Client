@@ -260,7 +260,7 @@ class _TeenagerWriteRequestPageWidgetState
                             onPressed: () async {
                               PostPosts _post = PostPosts(
                                 post_id: 1,
-                                bMember: bMember,
+                                bMember_nickname: bMember.bMember_Nickname,
                                 post_title: _titleTextController.text,
                                 post_txt: _contentTextController.text,
                                 post_state: 0,
