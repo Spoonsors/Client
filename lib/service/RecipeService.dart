@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:save_children_v01/model/MealPlannerModel.dart';
 import 'package:save_children_v01/model/RecipeModel.dart';
 
 // 레시피에 대한 서비스 객체
@@ -21,6 +22,18 @@ class RecipeService extends ChangeNotifier {
   // 검색된 식재료 목록
   List<SelectedRecipe> searchedRecipeList = [];
 
+  // 이름으로 검색된 식단
+  late MealPlanner requestedDiet;
+
+  // 이름으로 검색된 메뉴
+  late Recipe requestedMenu;
+
+  // 이름으로 검색된 식단에 포함된 메뉴들 이름
+  List<String> requested4MenuInDiet = [];
+
+  // 이름으로 검색된 식단에 포함된 메뉴들의 레시피
+  List<Recipe> requested4RecipeInDiet = [];
+
   double kcal = 0;
   double carbo = 0;
   double fat = 0;
@@ -29,6 +42,7 @@ class RecipeService extends ChangeNotifier {
 
   RecipeService() {
     getAllRecipeInfo();
+    // getRecipeInfo(requestedMenuName);
   }
 
   // 모든 레시피 정보 가져오기
@@ -55,6 +69,32 @@ class RecipeService extends ChangeNotifier {
 
     // 화면 갱신
     notifyListeners();
+  }
+
+  // 특정 식단에 포함된 메뉴들(4개)의 레시피 정보 가져오기
+  void get4RecipeInfo(String diet_name) async {
+    Response res = await Dio().get(
+        "http://3.86.110.15:8080/mealplanner/findByName?mealPlanner_name=" +
+            diet_name);
+    requestedDiet = MealPlanner.fromJson(res.data);
+    requested4MenuInDiet.add(requestedDiet.menu_name1);
+    requested4MenuInDiet.add(requestedDiet.menu_name2);
+    requested4MenuInDiet.add(requestedDiet.menu_name3);
+    requested4MenuInDiet.add(requestedDiet.menu_name4);
+    for (int i = 0; i < 4; i++) {
+      Response res = await Dio().get(
+          "http://3.86.110.15:8080/recipe/findByName?RCP_NM=" +
+              requested4MenuInDiet[i]);
+      Recipe _menu = Recipe.fromJson(res.data);
+      requested4RecipeInDiet.add(_menu);
+    }
+  }
+
+  // 특정 메뉴(1개) 레시피 정보 가져오기
+  void getRecipeInfo(String menu_name) async {
+    Response res = await Dio()
+        .get("http://3.86.110.15:8080/recipe/findByName?RCP_NM=" + menu_name);
+    requestedMenu = Recipe.fromJson(res.data);
   }
 
   // 레시피 선택

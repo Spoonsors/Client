@@ -1,41 +1,45 @@
 import 'dart:convert';
 import 'dart:ffi';
 
+import 'package:image_picker/image_picker.dart';
+
+import 'BMemberModel.dart';
+
 Fridge FridgeJson(String str) => Fridge.fromJson(json.decode(str));
 
 String FridgeToJson(Fridge data) => json.encode(data.toJson());
 
 class Fridge {
-  Long fridge_id;
-  String fridge_pwd;
-  String fridge_nickname;
-  String fridge_phoneNumber;
-  String fridge_address;
-  String fridge_certificate;
+  int fridge_id;
+  BMember bMember;
+  String fridge_item_name;
+  XFile? fridge_item_img;
+  int is_frized;
+  DateTime expiration_date;
 
   Fridge(
       {required this.fridge_id,
-      required this.fridge_pwd,
-      required this.fridge_nickname,
-      required this.fridge_phoneNumber,
-      required this.fridge_address,
-      required this.fridge_certificate});
+      required this.bMember,
+      required this.fridge_item_name,
+      required this.fridge_item_img,
+      required this.is_frized,
+      required this.expiration_date});
 
   factory Fridge.fromJson(Map<String, dynamic> json) => Fridge(
+        bMember: json["fridge_id"],
+        expiration_date: json["expiration_date"],
         fridge_id: json["fridge_id"],
-        fridge_pwd: json["fridge_pwd"],
-        fridge_nickname: json["fridge_nickname"],
-        fridge_phoneNumber: json["fridge_phoneNumber"],
-        fridge_address: json["fridge_address"],
-        fridge_certificate: json["fridge_certificate"],
+        fridge_item_img: json["fridge_item_img"],
+        fridge_item_name: json["fridge_item_name"],
+        is_frized: json["is_frized"],
       );
 
   Map<String, dynamic> toJson() => {
         "fridge_id": fridge_id,
-        "fridge_pwd": fridge_pwd,
-        "fridge_nickname": fridge_nickname,
-        "fridge_phoneNumber": fridge_phoneNumber,
-        "fridge_address": fridge_address,
-        "fridge_certificate": fridge_certificate,
+        "bMember": bMember,
+        "fridge_item_name": fridge_item_name,
+        "fridge_item_img": fridge_item_img,
+        "is_frized": is_frized,
+        "expiration_date": expiration_date,
       };
 }

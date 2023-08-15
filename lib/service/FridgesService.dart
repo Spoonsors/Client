@@ -8,12 +8,12 @@ import '../model/BMemberModel.dart';
 import '../model/FridgeModel.dart';
 
 class PostFridges {
-  Long fridge_id;
+  int fridge_id;
   BMember bMember;
   String item_name;
   XFile? item_img;
-  String is_frized;
-  DateTime expiration_data;
+  int is_frized;
+  DateTime expiration_date;
 
   PostFridges(
       {required this.fridge_id,
@@ -21,14 +21,15 @@ class PostFridges {
       required this.item_name,
       required this.item_img,
       required this.is_frized,
-      required this.expiration_data});
+      required this.expiration_date});
 }
 
 class FridgesService extends ChangeNotifier {
-  List<Fridge> fridgeList = [];
-  String myId = "";
+  List<Fridge> fridgeList = []; //냉장
+  List<Fridge> freezerList = []; //냉동,실온
+  late BMember bMember;
   FridgesService() {
-    getMyFridge(myId);
+    getMyFridge(bMember.bMember_Id);
   }
 
   void getMyFridge(String bMember_id) async {
@@ -37,7 +38,11 @@ class FridgesService extends ChangeNotifier {
         await dio.get("http://3.86.110.15:8080/bMember/fridge/" + bMember_id);
     for (Map<String, dynamic> item in response.data) {
       Fridge fridge = Fridge.fromJson(item);
-      fridgeList.add(fridge);
+      if (fridge.is_frized == 0) {
+        fridgeList.add(fridge);
+      } else {
+        freezerList.add(fridge);
+      }
     }
 
     notifyListeners();
@@ -74,7 +79,7 @@ class FridgesService extends ChangeNotifier {
           jsonEncode({
             "name": postFridges.item_name,
             "isFrized": postFridges.is_frized,
-            "expirationDate": postFridges.expiration_data,
+            "expirationDate": postFridges.expiration_date,
           }),
           contentType: MediaType.parse('application/json'),
         ),
