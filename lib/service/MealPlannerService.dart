@@ -47,12 +47,11 @@ class PostMealPlanner {
 class MealPlannerService extends ChangeNotifier {
   // 식재료 목록
   List<MealPlanner> mealPlannerList = [];
-
   MealPlannerService() {
     getAllMealPlannerInfo();
   }
 
-  // 상품 정보 가져오기
+  // 모든 상품 정보 가져오기
   void getAllMealPlannerInfo() async {
     // API 호출
     Response res = await Dio().get(
@@ -182,4 +181,6 @@ class MealPlannerService extends ChangeNotifier {
 
     getAllMealPlannerInfo();
   }
+
+  
 }

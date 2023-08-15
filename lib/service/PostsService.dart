@@ -8,9 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:save_children_v01/model/SponModel.dart';
 import '../model/BMemberModel.dart';
 import '../model/PostModel.dart';
+import '../model/RecipeModel.dart';
 
 class PostPosts {
-  Long post_id;
+  int post_id;
   BMember bMember;
   String post_title;
   String post_txt;
@@ -40,9 +41,14 @@ class PostsService extends ChangeNotifier {
   List<Post> allPostList = [];
   List<Post> myPostList = [];
   late Post _post;
-  late BMember bMember;
-  PostsService() {
+  final BMember bMember;
+
+  // 후원에 올리는 메뉴의 레시피
+  late Recipe post_Recipe;
+
+  PostsService({required this.bMember}) {
     getAllPosts();
+    getAllMyPosts(bMember.bMember_Id);
   }
 
   void getAllMyPosts(String id) async {
@@ -113,5 +119,11 @@ class PostsService extends ChangeNotifier {
     _post = Post.fromJson(res.data);
 
     notifyListeners();
+  }
+
+  void getIngredientsOfPost(Post post) async {
+    Response res = await Dio().get(
+        "http://3.86.110.15:8080/recipe/findByName?RCP_NM=" + post.menu_name);
+    post_Recipe = Recipe.fromJson(res.data);
   }
 }

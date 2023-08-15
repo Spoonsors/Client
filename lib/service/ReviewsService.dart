@@ -11,9 +11,9 @@ import '../model/PostModel.dart';
 import '../model/ReviewModel.dart';
 
 class PostReview {
-  Long review_id;
+  int review_id;
   Post post;
-  String review_img;
+  XFile? review_img;
   String review_txt;
   DateTime review_date;
 
@@ -46,17 +46,20 @@ class ReviewsService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void writeReview(BMember bMember, post, Review review) async {
+  void writeReview(BMember bMember, PostReview postReview) async {
     Map<String, dynamic> data = {
-      "review_id": review.review_id,
-      "post": review.post,
-      "review_img": review.review_img,
-      "review_txt": review.review_txt,
-      "review_date": review.review_date,
+      "review_id": postReview.review_id,
+      "post": postReview.review_img?.path,
+      "review_img": await MultipartFile.fromFile(
+        postReview.review_img!.path,
+        filename: "${postReview.review_id}.jpg",
+      ),
+      "review_txt": postReview.review_txt,
+      "review_date": postReview.review_date,
     };
     try {
       Response response = await Dio().post(
-        "http://3.86.110.15:8080//review/create/${review.post.post_id}",
+        "http://3.86.110.15:8080//review/create/${postReview.post.post_id}",
         data: data,
       );
       if (response.statusCode == 200) {
