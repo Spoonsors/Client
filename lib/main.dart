@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Routes.dart';
 import 'package:save_children_v01/etc/ThemeData.dart';
-import 'package:save_children_v01/pages/nutritionist/NutritionistNutriHomePage.dart';
+import 'package:save_children_v01/pages/supporter/SupporterMainPage.dart';
 import 'package:save_children_v01/service/IngredientsService.dart';
 import 'package:save_children_v01/service/MealPlannerService.dart';
 import 'package:save_children_v01/service/RecipeService.dart';
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       theme: themeData,
       routes: namedRoutes,
       // initialRoute: "/login",
-      home: NutritionistNutriHomePageWidget(),
+      home: SupporterMainPageWidget(),
     );
     //routes: {"/login": (context) => AdminViewAllProductPageWidget()});
     //routes: {"/login": (context) => AllLoginPageWidget()});

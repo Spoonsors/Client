@@ -14,10 +14,10 @@ class MealPlanner {
 
   String mealPlanner_name;
 
-  int kcal;
-  int carbohydrate;
-  int protein;
-  int fat;
+  double kcal;
+  double carbohydrate;
+  double protein;
+  double fat;
 
   String level;
   String timeRequired;
