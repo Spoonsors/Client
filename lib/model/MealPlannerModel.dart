@@ -1,26 +1,27 @@
 class MealPlanner {
-  int mealPlanner_id;
-  String menu_name1;
-  String menu_img1;
+  int? mealPlanner_id;
+  String? menu_name1;
+  String? menu_img1;
 
-  String menu_name2;
-  String menu_img2;
+  String? menu_name2;
+  String? menu_img2;
 
-  String menu_name3;
-  String menu_img3;
+  String? menu_name3;
+  String? menu_img3;
 
-  String menu_name4;
-  String menu_img4;
+  String? menu_name4;
+  String? menu_img4;
 
-  String mealPlanner_name;
+  String? mealPlanner_name;
 
-  double kcal;
-  double carbohydrate;
-  double protein;
-  double fat;
+  double? kcal;
+  double? carbohydrate;
+  double? protein;
+  double? fat;
+  double? na;
 
-  String level;
-  String timeRequired;
+  String? level;
+  String? timeRequired;
 
   MealPlanner(
       {required this.mealPlanner_id,
@@ -38,6 +39,7 @@ class MealPlanner {
       required this.protein,
       required this.fat,
       required this.level,
+      required this.na,
       required this.timeRequired});
 
   factory MealPlanner.fromJson(Map<String, dynamic> json) => MealPlanner(
@@ -55,6 +57,7 @@ class MealPlanner {
         carbohydrate: json["carbohydrate"],
         protein: json["protein"],
         fat: json["fat"],
+        na: json["na"],
         level: json["level"],
         timeRequired: json["timeRequired"],
       );
@@ -74,6 +77,7 @@ class MealPlanner {
         "carbohydrate": carbohydrate,
         "protein": protein,
         "fat": fat,
+        "na": na,
         "level": level,
         "timeRequired": timeRequired,
       };

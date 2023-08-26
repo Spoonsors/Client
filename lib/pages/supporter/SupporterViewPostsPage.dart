@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:save_children_v01/service/SupporterPostService.dart';
 
 import '../../etc/Colors.dart';
 import '../../etc/TextStyles.dart';
+import '../../model/GetPostDTOModel.dart';
 
 class SupporterViewPostsPageWidget extends StatefulWidget {
   const SupporterViewPostsPageWidget({super.key});
@@ -21,155 +25,169 @@ class _SupporterViewPostsPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('후원 게시판'),
-      ),
-      body: DefaultTabController(
-        length: 2,
-        initialIndex: 0,
-        child: Column(
-          children: [
-            TabBar(
-              labelColor: primaryText,
-              unselectedLabelColor: secondaryText,
-              labelStyle: titleMedium,
-              indicatorColor: primary,
-              tabs: [
-                Tab(
-                  text: '후원 요청 게시글',
-                ),
-                Tab(
-                  text: '후원 완료된 게시글',
-                ),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 5.0, 5.0, 5.0),
-                            child: DropdownButton(
-                              underline: SizedBox.shrink(),
-                              style: TextStyle(
-                                fontFamily: 'SUITE',
-                                color: primaryText,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              value: selectedItem,
-                              items: items.map(
-                                (value) {
-                                  return DropdownMenuItem(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                },
-                              ).toList(),
-                              onChanged: (value) => {
-                                setState(() {
-                                  selectedItem = value!;
-                                })
-                              },
-                              icon: Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: primaryText,
-                                size: 24.0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            PostListItem(
-                              check: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+    return Consumer<SupporterPostService>(
+        builder: (context, supporterPostService, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('후원 게시판'),
+        ),
+        body: DefaultTabController(
+          length: 2,
+          initialIndex: 0,
+          child: Column(
+            children: [
+              TabBar(
+                labelColor: primaryText,
+                unselectedLabelColor: secondaryText,
+                labelStyle: titleMedium,
+                indicatorColor: primary,
+                tabs: [
+                  Tab(
+                    text: '후원 요청 게시글',
                   ),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 5.0, 5.0, 5.0),
-                            child: DropdownButton(
-                              underline: SizedBox.shrink(),
-                              style: TextStyle(
-                                fontFamily: 'SUITE',
-                                color: primaryText,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              value: selectedItem,
-                              items: items.map(
-                                (value) {
-                                  return DropdownMenuItem(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                },
-                              ).toList(),
-                              onChanged: (value) => {
-                                setState(() {
-                                  selectedItem = value!;
-                                })
-                              },
-                              icon: Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: primaryText,
-                                size: 24.0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            PostListItem(
-                              check: 2,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  Tab(
+                    text: '후원 완료된 게시글',
                   ),
                 ],
               ),
-            ),
-          ],
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 5.0, 5.0, 5.0),
+                              child: DropdownButton(
+                                underline: SizedBox.shrink(),
+                                style: TextStyle(
+                                  fontFamily: 'SUITE',
+                                  color: primaryText,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                value: selectedItem,
+                                items: items.map(
+                                  (value) {
+                                    return DropdownMenuItem(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  },
+                                ).toList(),
+                                onChanged: (value) => {
+                                  setState(() {
+                                    selectedItem = value!;
+                                  })
+                                },
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: primaryText,
+                                  size: 24.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: supporterPostService
+                                .allPostInCompleteList.length,
+                            itemBuilder: (context, index) {
+                              final suppPost = supporterPostService
+                                  .allPostInCompleteList[index];
+                              return PostListItem(
+                                suppPost: suppPost,
+                                check: 1,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 5.0, 5.0, 5.0),
+                              child: DropdownButton(
+                                underline: SizedBox.shrink(),
+                                style: TextStyle(
+                                  fontFamily: 'SUITE',
+                                  color: primaryText,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                value: selectedItem,
+                                items: items.map(
+                                  (value) {
+                                    return DropdownMenuItem(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  },
+                                ).toList(),
+                                onChanged: (value) => {
+                                  setState(() {
+                                    selectedItem = value!;
+                                  })
+                                },
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: primaryText,
+                                  size: 24.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount:
+                                supporterPostService.allPostCompleteList.length,
+                            itemBuilder: (context, index) {
+                              final suppPost = supporterPostService
+                                  .allPostCompleteList[index];
+                              return PostListItem(
+                                suppPost: suppPost,
+                                check: 2,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
 class PostListItem extends StatefulWidget {
-  const PostListItem({super.key, required this.check});
+  const PostListItem({super.key, required this.check, required this.suppPost});
 
+  final GetPostDTO suppPost;
   final int check;
 
   @override
@@ -179,10 +197,23 @@ class PostListItem extends StatefulWidget {
 class _PostListItemState extends State<PostListItem> {
   @override
   Widget build(BuildContext context) {
+    int EstimatedTotalSupporterMoney = 0;
+    for (SponGetDTO sgd in widget.suppPost.spon) {
+      EstimatedTotalSupporterMoney += sgd.ingredients.price;
+    }
+
+    DateTime dt = new DateFormat('yyyy-mm-dd').parse(widget.suppPost.post_date);
+
+    String d1 = DateFormat('yyyy-mm-dd').format(dt);
+    String d2 = DateFormat('hh:mm a').format(dt);
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
       child: GestureDetector(
         onTap: () {
+          context
+              .read<SupporterPostService>()
+              .viewSuppPost(widget.suppPost.post_id);
+
           (widget.check == 1)
               ? Navigator.pushNamed(context, '/SupporterViewPostDetailPage')
               : Navigator.pushNamed(
@@ -208,7 +239,7 @@ class _PostListItemState extends State<PostListItem> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
-                              '이번에 김치찌개를 만들거에요~',
+                              '${widget.suppPost.post_title}',
                               style: TextStyle(
                                   fontFamily: 'SUITE',
                                   fontWeight: FontWeight.normal,
@@ -221,7 +252,7 @@ class _PostListItemState extends State<PostListItem> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 4.0, 0.0, 0.0),
                           child: Text(
-                            '안녕하세요, 다음주에 김치찌개를 끓일려는데 , 제일 중요한 김치가 다 떨어졌어요.. 이번에도 잘 부탁드리겠습니다 ㅠㅠ',
+                            '${widget.suppPost.post_txt}',
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               color: secondaryText,
@@ -244,7 +275,7 @@ class _PostListItemState extends State<PostListItem> {
                   Expanded(
                     child: Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                      EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
                       child: Text(
                         '필요한 식재료',
                         style: TextStyle(
@@ -260,7 +291,7 @@ class _PostListItemState extends State<PostListItem> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: '2023.07.16',
+                          text: '${d1}', // TODO : 날짜 포멧
                           style: TextStyle(),
                         ),
                         TextSpan(
@@ -268,7 +299,7 @@ class _PostListItemState extends State<PostListItem> {
                           style: TextStyle(),
                         ),
                         TextSpan(
-                          text: '4:20pm',
+                          text: '${d2}',
                           style: TextStyle(),
                         ),
                         TextSpan(
@@ -276,7 +307,7 @@ class _PostListItemState extends State<PostListItem> {
                           style: TextStyle(),
                         ),
                         TextSpan(
-                          text: '닉네임',
+                          text: '${widget.suppPost.bMember.bMember_nickname}',
                           style: TextStyle(),
                         )
                       ],
@@ -353,7 +384,7 @@ class _PostListItemState extends State<PostListItem> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
                     child: Text(
-                      '예상 후원액 : 4500원',
+                      '예상 후원액 : ${EstimatedTotalSupporterMoney}원',
                       style: TextStyle(
                         fontFamily: 'SUITE',
                         color: secondary,

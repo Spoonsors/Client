@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'dart:ui';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +8,6 @@ import 'package:save_children_v01/service/FridgesService.dart';
 import '../etc/Colors.dart';
 import '../etc/TextStyles.dart';
 import '../model/BMemberModel.dart';
-import '../model/FridgeModel.dart';
 
 //addFridgeItem
 
@@ -26,6 +24,7 @@ class _TeenagerAddIngredientPopWidgetState
     with TickerProviderStateMixin {
   XFile? item_img;
   final ImagePicker picker = ImagePicker();
+
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
     if (pickedFile != null) {

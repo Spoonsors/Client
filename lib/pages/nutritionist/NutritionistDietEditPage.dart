@@ -64,6 +64,7 @@ class _NutritionistDietEditPageWidgetState
                         carbohydrate: recipeService.carbo,
                         protein: recipeService.pro,
                         fat: recipeService.fat,
+                        na: recipeService.na,
                         level: "중",
                         timeRequired: "50");
 

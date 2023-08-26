@@ -314,9 +314,11 @@ class WaitingPostCard extends StatelessWidget {
       required this.post,
       required this.idx,
       required this.bMember});
+
   final Post post;
   final int idx;
   final BMember bMember;
+
   @override
   Widget build(BuildContext context) {
     PostsService _postService = PostsService(bMember: bMember);
@@ -533,9 +535,11 @@ class CompletedNoneReviewPostCard extends StatelessWidget {
       required this.post,
       required this.idx,
       required this.bMember});
+
   final Post post;
   final int idx;
   final BMember bMember;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -704,9 +708,11 @@ class CompletedReviewedPostCard extends StatelessWidget {
       required this.post,
       required this.idx,
       required this.bMember});
+
   final PostPosts post;
   final int idx;
   final BMember bMember;
+
   @override
   Widget build(BuildContext context) {
     return Padding(

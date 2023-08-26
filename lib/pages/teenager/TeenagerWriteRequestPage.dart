@@ -8,7 +8,9 @@ import '../../models/TeenagerWriteRequestPageModel.dart';
 
 class TeenagerWriteRequestPageWidget extends StatefulWidget {
   const TeenagerWriteRequestPageWidget({super.key, required this.recipe});
+
   final Recipe recipe;
+
   @override
   _TeenagerWriteRequestPageWidgetState createState() =>
       _TeenagerWriteRequestPageWidgetState();
@@ -19,6 +21,7 @@ class _TeenagerWriteRequestPageWidgetState
   late TeenagerWriteRequestPageModel _model;
   late Recipe _recipe;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();

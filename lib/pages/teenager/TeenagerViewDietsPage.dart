@@ -109,6 +109,7 @@ class _TeenagerViewDietsPageWidgetState
 
 class DietCard extends StatelessWidget {
   const DietCard({super.key, required this.diet, required this.idx});
+
   final MealPlanner diet;
   final int idx;
 

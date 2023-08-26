@@ -1,12 +1,5 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:save_children_v01/model/IngredientsModel.dart';
-import 'package:save_children_v01/service/IngredientsService.dart';
-import 'package:save_children_v01/service/PostsService.dart';
 
 import '../../model/PostModel.dart';
 import '../../model/SponModel.dart';
@@ -15,7 +8,9 @@ import '../../models/TeenagerViewRequestDetailPageModel.dart';
 //viewPost
 class TeenagerViewRequestDetailPageWidget extends StatefulWidget {
   const TeenagerViewRequestDetailPageWidget({super.key, required this.request});
+
   final Post request;
+
   @override
   _TeenagerViewRequestDetailPageWidgetState createState() =>
       _TeenagerViewRequestDetailPageWidgetState();
@@ -93,7 +88,8 @@ class _TeenagerViewRequestDetailPageWidgetState
                                     shape: BoxShape.circle,
                                   ),
                                   child: Image.asset(
-                                    'assets/images/익명.png', //bMember의 사진으로 변경 필요
+                                    'assets/images/익명.png',
+                                    //bMember의 사진으로 변경 필요
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -264,6 +260,7 @@ class _TeenagerViewRequestDetailPageWidgetState
 
 class IngredientImageCard extends StatelessWidget {
   const IngredientImageCard({super.key, required this.spon, required this.idx});
+
   final Spon spon;
   final int idx;
 

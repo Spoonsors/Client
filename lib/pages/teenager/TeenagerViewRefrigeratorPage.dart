@@ -1,11 +1,7 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/service/FridgesService.dart';
-import 'package:save_children_v01/service/IngredientsService.dart';
-import 'package:save_children_v01/service/PostsService.dart';
+
 import '../../components/teenagerAddIngredientPop.dart';
 import '../../model/FridgeModel.dart';
 import '../../models/TeenagerViewRefrigeratorPageModel.dart';

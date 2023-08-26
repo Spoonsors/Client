@@ -59,6 +59,7 @@ class _NutritionistDietRegisterPageWidgetState
                         carbohydrate: recipeService.carbo.toInt(),
                         protein: recipeService.pro.toInt(),
                         fat: recipeService.fat.toInt(),
+                        na: 0,
                         level: "중",
                         timeRequired: "50");
                     print(postMealPlanner.toString());

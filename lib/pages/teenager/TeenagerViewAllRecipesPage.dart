@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
-import 'package:save_children_v01/pages/teenager/TeenagerViewReviewsPage.dart';
 import 'package:save_children_v01/service/RecipeService.dart';
-import 'package:save_children_v01/service/ReviewsService.dart';
 
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerViewAllRecipesPageModel.dart';
@@ -16,6 +13,7 @@ class TeenagerViewAllRecipesPageWidget extends StatefulWidget {
 
   //diet_name라는 이름의 식단에 포함된 메뉴들 및 레시피 조회
   final String diet_name;
+
   @override
   _TeenagerViewAllRecipesPageWidgetState createState() =>
       _TeenagerViewAllRecipesPageWidgetState();
@@ -230,8 +228,8 @@ class RecipeCard extends StatelessWidget {
                                 alignment: AlignmentDirectional(0, 0),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(
-                                        0xffFF8A80), //재료를 갖고 있는지 아닌지에 따라 색깔 구분 필요
+                                    color: const Color(0xffFF8A80),
+                                    //재료를 갖고 있는지 아닌지에 따라 색깔 구분 필요
                                     borderRadius: BorderRadius.circular(20),
                                     shape: BoxShape.rectangle,
                                   ),

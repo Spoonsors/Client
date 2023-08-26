@@ -1,9 +1,10 @@
-import 'dart:ffi';
 import 'dart:convert';
-import 'package:http_parser/http_parser.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../model/BMemberModel.dart';
 import '../model/FridgeModel.dart';
 
@@ -28,6 +29,7 @@ class FridgesService extends ChangeNotifier {
   List<Fridge> fridgeList = []; //냉장
   List<Fridge> freezerList = []; //냉동,실온
   late BMember bMember;
+
   FridgesService() {
     getMyFridge(bMember.bMember_Id);
   }

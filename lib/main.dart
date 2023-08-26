@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Routes.dart';
 import 'package:save_children_v01/etc/ThemeData.dart';
 import 'package:save_children_v01/pages/supporter/SupporterMainPage.dart';
+import 'package:save_children_v01/service/AdminCertificatedItemsService.dart';
 import 'package:save_children_v01/service/IngredientsService.dart';
 import 'package:save_children_v01/service/MealPlannerService.dart';
 import 'package:save_children_v01/service/RecipeService.dart';
+import 'package:save_children_v01/service/SupporterPostService.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -13,6 +15,9 @@ void main() {
       ChangeNotifierProvider(create: (context) => RecipeService()),
       ChangeNotifierProvider(create: (context) => IngredientsService()),
       ChangeNotifierProvider(create: (context) => MealPlannerService()),
+      ChangeNotifierProvider(create: (context) => SupporterPostService()),
+      ChangeNotifierProvider(
+          create: (context) => AdminCertificateInfoService()),
     ],
     child: const MyApp(),
   ));

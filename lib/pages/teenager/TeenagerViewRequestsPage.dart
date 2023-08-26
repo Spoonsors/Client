@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/service/PostsService.dart';
@@ -201,8 +197,10 @@ class _TeenagerViewRequestsPageWidgetState
 
 class RequestCard extends StatelessWidget {
   const RequestCard({super.key, required this.request, required this.idx});
+
   final Post request;
   final int idx;
+
   @override
   Widget build(BuildContext context) {
     int totalPrice = 0;

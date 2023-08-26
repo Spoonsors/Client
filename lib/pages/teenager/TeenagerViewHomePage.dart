@@ -185,6 +185,7 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
 
 class RecommendedDietCard extends StatelessWidget {
   const RecommendedDietCard({super.key, required this.diet, required this.idx});
+
   final MealPlanner diet;
   final int idx;
 
@@ -474,8 +475,10 @@ class RecommendedDietCard extends StatelessWidget {
 
 class RecommendedMenuCard extends StatelessWidget {
   const RecommendedMenuCard({super.key, required this.menu, required this.idx});
+
   final Recipe menu;
   final int idx;
+
   @override
   Widget build(BuildContext context) {
     return Padding(

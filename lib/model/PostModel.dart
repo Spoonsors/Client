@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:save_children_v01/model/BMemberModel.dart';
 
@@ -10,7 +9,7 @@ Post PostJson(String str) => Post.fromJson(json.decode(str));
 String PostToJson(Post data) => json.encode(data.toJson());
 
 class Post {
-  Long post_id;
+  int post_id; // id를 int형으로.
   BMember bMember;
   String post_title;
   String post_txt;
