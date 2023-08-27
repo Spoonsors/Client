@@ -1,16 +1,9 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:save_children_v01/model/IngredientsModel.dart';
-import 'package:save_children_v01/service/IngredientsService.dart';
 import 'package:save_children_v01/service/PostsService.dart';
 
 import '../../model/PostModel.dart';
 import '../../model/SponModel.dart';
-import '../../models/TeenagerViewRequestDetailPageModel.dart';
 
 //viewPost
 class TeenagerViewRequestDetailPageWidget extends StatefulWidget {
@@ -23,27 +16,87 @@ class TeenagerViewRequestDetailPageWidget extends StatefulWidget {
 
 class _TeenagerViewRequestDetailPageWidgetState
     extends State<TeenagerViewRequestDetailPageWidget> {
-  late TeenagerViewRequestDetailPageModel _model;
   late Post _request;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = TeenagerViewRequestDetailPageModel();
     _request = widget.request;
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
-    _model.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        shape: RoundedRectangleBorder(
+            side: BorderSide(width: 3, color: Colors.transparent),
+            borderRadius: BorderRadius.circular(100)),
+        onPressed: () async {
+          PostsService _postsService = PostsService();
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0)),
+                  title: Column(
+                    children: <Widget>[
+                      Text("후원 삭제"),
+                    ],
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "이 후원을 삭제하시겠습니까?",
+                      ),
+                    ],
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.all(20.0),
+                        foregroundColor: Color(0xffFFB74D),
+                        textStyle: const TextStyle(fontSize: 20),
+                      ),
+                      child: Text("확인"),
+                      onPressed: () {
+                        print(_request.postId);
+                        _postsService.deletePost(_request);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                );
+              });
+          _postsService.deletePost((_request));
+        },
+        backgroundColor: const Color(0xffFFB74D),
+        icon: Icon(
+          Icons.delete_forever,
+          size: 20,
+          color: const Color(0xffffffff),
+        ),
+        elevation: 8,
+        label: Text(
+          '후원 삭제',
+          style: TextStyle(
+            fontFamily: 'SUITE',
+            color: const Color(0xffFFFFFF),
+            fontSize: 20,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ),
       key: scaffoldKey,
       backgroundColor: const Color(0xfff5f5f5),
       appBar: AppBar(
@@ -65,8 +118,7 @@ class _TeenagerViewRequestDetailPageWidgetState
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+            child: Container(
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
@@ -93,12 +145,15 @@ class _TeenagerViewRequestDetailPageWidgetState
                                     shape: BoxShape.circle,
                                   ),
                                   child: Image.asset(
-                                    'assets/images/익명.png', //bMember의 사진으로 변경 필요
+                                    _request.bmember!.profilePath! == ""
+                                        ? "assets/images/user.png"
+                                        : _request.bmember!
+                                            .profilePath!, //bMember의 사진으로 변경 필요
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
-                              Flexible(
+                              Container(
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       10, 0, 0, 0),
@@ -109,7 +164,7 @@ class _TeenagerViewRequestDetailPageWidgetState
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        _request.bMember.bMember_Nickname,
+                                        _request.bmember!.bMember_nickname!,
                                         style: TextStyle(
                                           fontFamily: 'SUITE',
                                           fontSize: 16,
@@ -123,7 +178,8 @@ class _TeenagerViewRequestDetailPageWidgetState
                                             children: [
                                               TextSpan(
                                                 text: DateFormat('yyyy/MM/dd')
-                                                    .format(_request.post_date),
+                                                    .format(DateTime.parse(
+                                                        _request.postDate!)),
                                                 style: TextStyle(),
                                               ),
                                               TextSpan(
@@ -132,7 +188,8 @@ class _TeenagerViewRequestDetailPageWidgetState
                                               ),
                                               TextSpan(
                                                 text: DateFormat('hh:mm')
-                                                    .format(_request.post_date),
+                                                    .format(DateTime.parse(
+                                                        _request.postDate!)),
                                                 style: TextStyle(),
                                               ),
                                               // TextSpan(
@@ -162,7 +219,7 @@ class _TeenagerViewRequestDetailPageWidgetState
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
                             child: Text(
-                              _request.post_title,
+                              _request.postTitle!,
                               style: TextStyle(
                                   fontSize: 24,
                                   fontFamily: 'SUITE',
@@ -174,7 +231,7 @@ class _TeenagerViewRequestDetailPageWidgetState
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
                             child: Text(
-                              _request.post_txt,
+                              _request.postTxt!,
                               style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'SUITE',
@@ -201,33 +258,35 @@ class _TeenagerViewRequestDetailPageWidgetState
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+                    Container(
+                      height: 130,
                       child: ListView.builder(
                           padding: EdgeInsets.zero,
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-                          itemCount: _request.spon.length,
+                          itemCount: _request.spon!.length,
                           itemBuilder: (context, index) {
-                            final _spon = _request.spon[index];
+                            final _spon = _request.spon![index];
+                            print(_request
+                                .spon![index].ingredients!.ingredients_image!);
                             return IngredientImageCard(spon: _spon, idx: index);
                           }),
                     ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                    Container(
+                      height: 500,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Divider(
-                            height: 32,
+                            height: 1,
                             thickness: 1,
                             color: const Color(0xffe0e0e0),
                           ),
                           Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+                            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 0),
                             child: Text(
-                              '만들 음식 (${_request.menu_name})',
+                              '만들 음식 (${_request.menuName})',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'SUITE',
@@ -241,7 +300,7 @@ class _TeenagerViewRequestDetailPageWidgetState
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(12),
                               child: Image.network(
-                                _request.menu_img,
+                                _request.menuImg!,
                                 width: MediaQuery.sizeOf(context).width,
                                 height: 230,
                                 fit: BoxFit.cover,
@@ -269,7 +328,7 @@ class IngredientImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (spon.spon_state == 0) {
+    if (spon.sponState == 0) {
       return Padding(
         padding: EdgeInsetsDirectional.fromSTEB(12, 12, 0, 12),
         child: Column(
@@ -297,7 +356,7 @@ class IngredientImageCard extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: Image.network(
-                        spon.ingredients.ingredients_image,
+                        spon.ingredients!.ingredients_image,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -308,7 +367,7 @@ class IngredientImageCard extends StatelessWidget {
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
               child: Text(
-                spon.ingredients.ingredients_name,
+                spon.ingredients!.ingredients_name,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Lexend Deca',
@@ -349,7 +408,7 @@ class IngredientImageCard extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: Image.network(
-                        spon.ingredients.ingredients_image,
+                        spon.ingredients!.ingredients_image,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -373,7 +432,7 @@ class IngredientImageCard extends StatelessWidget {
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
               child: Text(
-                spon.ingredients.ingredients_name,
+                spon.ingredients!.ingredients_name,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Lexend Deca',

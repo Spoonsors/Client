@@ -39,182 +39,186 @@ class _TeenagerViewRecipePageWidgetState
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Colors.white,
-        floatingActionButton: FloatingActionButton.extended(
-          shape: RoundedRectangleBorder(
-              side: BorderSide(width: 3, color: Colors.transparent),
-              borderRadius: BorderRadius.circular(100)),
-          onPressed: () async {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TeenagerWriteRequestPageWidget(recipe : _recipe)));
-          },
-          backgroundColor: const Color(0xffffb74d),
-          icon: FaIcon(
-            FontAwesomeIcons.pen,
-            size: 20,
-            color: const Color(0xffffffff),
-          ),
-          elevation: 8,
-          label: Text(
-            '후원 요청하기',
-            style: TextStyle(
-              fontFamily: 'SUITE',
-              color: const Color(0xffFFFFFF),
-              fontSize: 20,
-              fontWeight: FontWeight.normal,
+          key: scaffoldKey,
+          backgroundColor: Colors.white,
+          floatingActionButton: FloatingActionButton.extended(
+            shape: RoundedRectangleBorder(
+                side: BorderSide(width: 3, color: Colors.transparent),
+                borderRadius: BorderRadius.circular(100)),
+            onPressed: () async {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          TeenagerWriteRequestPageWidget(recipe: _recipe)));
+            },
+            backgroundColor: const Color(0xffffb74d),
+            icon: FaIcon(
+              FontAwesomeIcons.pen,
+              size: 20,
+              color: const Color(0xffffffff),
+            ),
+            elevation: 8,
+            label: Text(
+              '후원 요청하기',
+              style: TextStyle(
+                fontFamily: 'SUITE',
+                color: const Color(0xffFFFFFF),
+                fontSize: 20,
+                fontWeight: FontWeight.normal,
+              ),
             ),
           ),
-        ),
-        appBar: AppBar(
-          backgroundColor: const Color(0xffFFFFFF),
-          iconTheme: IconThemeData(color: const Color(0xff212121)),
-          automaticallyImplyLeading: true,
-          title: Text(
-            '레시피 상세',
-            style: TextStyle(
-              fontFamily: 'Plus Jakarta Sans',
-              color: Color(0xFF15161E),
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
+          appBar: AppBar(
+            backgroundColor: const Color(0xffFFFFFF),
+            iconTheme: IconThemeData(color: const Color(0xff212121)),
+            automaticallyImplyLeading: true,
+            title: Text(
+              '레시피 상세',
+              style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                color: Color(0xFF15161E),
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
             ),
+            actions: [],
+            centerTitle: false,
+            elevation: 2,
           ),
-          actions: [],
-          centerTitle: false,
-          elevation: 2,
-        ),
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 240,
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(0),
-                    child: Image.network(
-                      _recipe.att_FILE_NO_MK,
-                      width: double.infinity,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional(0, -0.13),
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
-                      child: Container(
-                        width: 64,
-                        height: 64,
-                        decoration: BoxDecoration(
-                          color: Color(0x9AFFFFFF),
-                          shape: BoxShape.circle,
-                        ),
-                        alignment: AlignmentDirectional(0, 0),
-                        child: Icon(
-                          Icons.play_arrow,
-                          color: const Color(0xff),
-                          size: 44,
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 240,
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(0),
+                        child: Image.network(
+                          _recipe.att_FILE_NO_MK,
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-              child: Text(
-                _recipe.rcp_NM,
-                style: TextStyle(
-                  fontFamily: 'Outfit',
-                  color: Color(0xFF15161E),
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: parts.length,
-                  itemBuilder: (context, index) {
-                    final _part = parts[index];
-                    return Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(4, 4, 4, 4),
-                        height: 32,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffff8a80), //색 변화 필요
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: const Color(0xffff8a80),
-                          ),
-                        ),
-                        child: Align(
-                          alignment: AlignmentDirectional(0, 0),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
-                            child: Text(
-                              _part,
-                              style: TextStyle(
-                                fontFamily: 'Plus Jakarta Sans',
-                                color: Color(0xFF15161E),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
+                      Align(
+                        alignment: AlignmentDirectional(0, -0.13),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+                          child: Container(
+                            width: 64,
+                            height: 64,
+                            decoration: BoxDecoration(
+                              color: Color(0x9AFFFFFF),
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: AlignmentDirectional(0, 0),
+                            child: Icon(
+                              Icons.play_arrow,
+                              color: const Color(0xff),
+                              size: 44,
                             ),
                           ),
                         ),
                       ),
-                    );
-                  }),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-              child: Text(
-                '조리 순서',
-                style: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
-                  color: Color(0xFF15161E),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Container(
-                width: MediaQuery.sizeOf(context).width,
-                height: 700,
-                decoration: BoxDecoration(),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: parts.length,
-                        itemBuilder: (context, index) {
-                          return RecipeStepCard(
-                              recipeExplain: _recipe.manual[index],
-                              recipeImg: _recipe.manual_IMG[index],
-                              idx: index);
-                        },
-                      ),
                     ],
                   ),
-                )),
-          ],
-        ),
-      ),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                  child: Text(
+                    _recipe.rcp_NM,
+                    style: TextStyle(
+                      fontFamily: 'Outfit',
+                      color: Color(0xFF15161E),
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 60,
+                  child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: parts.length,
+                      itemBuilder: (context, index) {
+                        final _part = parts[index];
+                        return Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(4, 4, 4, 4),
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: const Color(0xffff8a80), //색 변화 필요
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: const Color(0xffff8a80),
+                              ),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0, 0),
+                              child: Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                                child: Text(
+                                  _part,
+                                  style: TextStyle(
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    color: Color(0xFF15161E),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                  child: Text(
+                    '조리 순서',
+                    style: TextStyle(
+                      fontFamily: 'Plus Jakarta Sans',
+                      color: Color(0xFF15161E),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Container(
+                    width: MediaQuery.sizeOf(context).width,
+                    // height: 700,
+                    decoration: BoxDecoration(),
+                    child: Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: parts.length,
+                            itemBuilder: (context, index) {
+                              print(_recipe.manual[index]);
+                              return RecipeStepCard(
+                                  recipeExplain: _recipe.manual[index],
+                                  recipeImg: _recipe.manual_IMG[index],
+                                  idx: index);
+                            },
+                          ),
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          )),
     );
   }
 }

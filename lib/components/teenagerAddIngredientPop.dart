@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'dart:ui';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -8,13 +7,12 @@ import 'package:save_children_v01/service/FridgesService.dart';
 
 import '../etc/Colors.dart';
 import '../etc/TextStyles.dart';
-import '../model/BMemberModel.dart';
-import '../model/FridgeModel.dart';
 
 //addFridgeItem
 
 class TeenagerAddIngredientPopWidget extends StatefulWidget {
-  const TeenagerAddIngredientPopWidget({Key? key}) : super(key: key);
+  const TeenagerAddIngredientPopWidget({super.key, required this.bMember_id});
+  final String bMember_id;
 
   @override
   _TeenagerAddIngredientPopWidgetState createState() =>
@@ -24,7 +22,11 @@ class TeenagerAddIngredientPopWidget extends StatefulWidget {
 class _TeenagerAddIngredientPopWidgetState
     extends State<TeenagerAddIngredientPopWidget>
     with TickerProviderStateMixin {
-  XFile? item_img;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController explainController = TextEditingController();
+  TextEditingController expireController = TextEditingController();
+  late XFile item_img;
+  late String _bMember_id;
   final ImagePicker picker = ImagePicker();
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
@@ -35,16 +37,13 @@ class _TeenagerAddIngredientPopWidgetState
     }
   }
 
-  @override
-  void setState(VoidCallback callback) {
-    super.setState(callback);
-  }
+  int _selectedRadio = -1;
 
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    _bMember_id = widget.bMember_id;
   }
 
   @override
@@ -54,17 +53,8 @@ class _TeenagerAddIngredientPopWidgetState
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController nameController = TextEditingController();
-    TextEditingController explainController = TextEditingController();
-    TextEditingController expireController = TextEditingController();
     int frizeController = 1;
-    BMember bMember = BMember(
-        bMember_id: "cjw",
-        bMember_pwd: "0102",
-        bMember_nickname: "jinu",
-        bMember_phoneNumber: "010",
-        bMember_address: "인천",
-        bMember_certificate: "");
+
     //certificate은 회원가입 구현 후, 타입 변경(String -> XFile)
     bool _isChecked1 = false;
     bool _isChecked2 = false;
@@ -76,7 +66,8 @@ class _TeenagerAddIngredientPopWidgetState
             sigmaX: 5,
             sigmaY: 4,
           ),
-          child: Container(
+          child: SingleChildScrollView(
+              child: Container(
             width: double.infinity,
             height: 700,
             decoration: BoxDecoration(
@@ -511,12 +502,12 @@ class _TeenagerAddIngredientPopWidgetState
                                                 unselectedWidgetColor:
                                                     const Color(0xff757575),
                                               ),
-                                              child: CheckboxListTile(
-                                                value: _isChecked1,
-                                                onChanged: (newValue) async {
+                                              child: RadioListTile(
+                                                groupValue: _selectedRadio,
+                                                value: 0,
+                                                onChanged: (value) {
                                                   setState(() {
-                                                    _isChecked1 = newValue!;
-                                                    frizeController = 0;
+                                                    _selectedRadio = value!;
                                                   });
                                                 },
                                                 title: Text(
@@ -558,12 +549,12 @@ class _TeenagerAddIngredientPopWidgetState
                                                 unselectedWidgetColor:
                                                     const Color(0xff757575),
                                               ),
-                                              child: CheckboxListTile(
-                                                value: _isChecked2,
-                                                onChanged: (newValue) async {
+                                              child: RadioListTile(
+                                                groupValue: _selectedRadio,
+                                                value: 1,
+                                                onChanged: (value) {
                                                   setState(() {
-                                                    _isChecked2 = newValue!;
-                                                    frizeController = 1;
+                                                    _selectedRadio = value!;
                                                   });
                                                 },
                                                 title: Text(
@@ -605,12 +596,12 @@ class _TeenagerAddIngredientPopWidgetState
                                                 unselectedWidgetColor:
                                                     const Color(0xff757575),
                                               ),
-                                              child: CheckboxListTile(
-                                                value: _isChecked3,
-                                                onChanged: (newValue) async {
+                                              child: RadioListTile(
+                                                groupValue: _selectedRadio,
+                                                value: 1,
+                                                onChanged: (value) {
                                                   setState(() {
-                                                    _isChecked3 = newValue!;
-                                                    frizeController = 1;
+                                                    _selectedRadio = value!;
                                                   });
                                                 },
                                                 title: Text(
@@ -653,21 +644,21 @@ class _TeenagerAddIngredientPopWidgetState
                                                     PostFridges fridge =
                                                         PostFridges(
                                                             fridge_id: 1,
-                                                            bMember: bMember,
+                                                            bMember_id:
+                                                                _bMember_id,
                                                             item_name:
                                                                 nameController
                                                                     .text,
                                                             item_img: item_img,
                                                             is_frized:
-                                                                frizeController,
+                                                                _selectedRadio,
                                                             expiration_date:
-                                                                DateTime.parse(
-                                                                    expireController
-                                                                        .text));
-                                                    print(fridge.toString());
+                                                                expireController
+                                                                    .text);
+                                                    print(fridge.item_name);
+                                                    print(fridge.bMember_id);
                                                     fridgeservice.postFridge(
-                                                        fridge,
-                                                        bMember.bMember_Id);
+                                                        fridge, _bMember_id);
                                                     Navigator.pop(context);
                                                   },
                                                   child: Text("재료 추가",
@@ -702,7 +693,7 @@ class _TeenagerAddIngredientPopWidgetState
                     )),
               ],
             ),
-          ));
+          )));
     });
   }
 }

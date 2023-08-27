@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
-import 'package:save_children_v01/pages/teenager/TeenagerViewReviewsPage.dart';
 import 'package:save_children_v01/service/RecipeService.dart';
-import 'package:save_children_v01/service/ReviewsService.dart';
 
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerViewAllRecipesPageModel.dart';
@@ -47,80 +44,64 @@ class _TeenagerViewAllRecipesPageWidgetState
   @override
   Widget build(BuildContext context) {
     return Consumer<RecipeService>(builder: (context, recipeService, child) {
+      recipeService.get4RecipeInfo(_diet_name);
       return GestureDetector(
-        onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
-        child: Scaffold(
-          key: scaffoldKey,
-          backgroundColor: const Color(0xffffffff),
-          appBar: AppBar(
+          onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+          child: Scaffold(
+            key: scaffoldKey,
             backgroundColor: const Color(0xffffffff),
-            iconTheme: IconThemeData(color: const Color(0xff212121)),
-            automaticallyImplyLeading: true,
-            title: Text(
-              '모든 레시피 보기',
-              style: TextStyle(
-                fontFamily: 'SUITE',
-                color: const Color(0xff212121),
-                fontSize: 22,
+            appBar: AppBar(
+              backgroundColor: const Color(0xffffffff),
+              iconTheme: IconThemeData(color: const Color(0xff212121)),
+              automaticallyImplyLeading: true,
+              title: Text(
+                '모든 레시피 보기',
+                style: TextStyle(
+                  fontFamily: 'SUITE',
+                  color: const Color(0xff212121),
+                  fontSize: 22,
+                ),
               ),
+              actions: [],
+              centerTitle: false,
+              elevation: 2,
             ),
-            actions: [],
-            centerTitle: false,
-            elevation: 2,
-          ),
-          body: SafeArea(
-            top: true,
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-              child: SingleChildScrollView(
-                child: Column(mainAxisSize: MainAxisSize.max, children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                          child: Text(
-                            '현재 등록된 재료 기준으로 정렬합니다',
-                            style: TextStyle(
-                              fontFamily: 'SUITE',
-                              color: const Color(0xff757575),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: recipeService.recipeList.length,
-                              itemBuilder: (context, index) {
-                                if (_diet_name == '') {
-                                  final _recipe =
-                                      recipeService.recipeList[index];
-                                  return RecipeCard(
-                                      recipe: _recipe.recipe, idx: index);
-                                } else {
-                                  recipeService.get4RecipeInfo(_diet_name);
-                                  final _recipe = recipeService
-                                      .requested4RecipeInDiet[index];
-                                  return RecipeCard(
-                                      recipe: _recipe, idx: index);
-                                }
-                              }),
-                        )
-                      ],
-                    ),
+            body: Column(mainAxisSize: MainAxisSize.max, children: [
+              Container(
+                width: 300,
+                height: 30,
+                padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                child: Text(
+                  '현재 등록된 재료 기준으로 정렬합니다',
+                  style: TextStyle(
+                    fontFamily: 'SUITE',
+                    color: const Color(0xff757575),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
                   ),
-                ]),
+                ),
               ),
-            ),
-          ),
-        ),
-      );
+              Expanded(
+                child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: _diet_name == ""
+                        ? recipeService.recipeList.length
+                        : recipeService.requested4MenuInDiet.length,
+                    itemBuilder: (context, index) {
+                      if (_diet_name == '') {
+                        final _recipe = recipeService.recipeList[index];
+                        return RecipeCard(recipe: _recipe.recipe, idx: index);
+                      } else {
+                        final _recipe =
+                            recipeService.requested4RecipeInDiet[index];
+                        return RecipeCard(recipe: _recipe, idx: index);
+                      }
+                    }),
+              )
+            ]),
+          ));
     });
   }
 }
@@ -134,18 +115,20 @@ class RecipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> parts = recipe.rcp_PARTS_DTLS.split(',');
-    return Align(
+    return Container(
+      width: 400,
+      height: 300,
       alignment: AlignmentDirectional(0, 0),
-      child: Padding(
+      child: Container(
         padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
         child: Container(
           margin: EdgeInsets.fromLTRB(0, 8, 0, 8),
           width: double.infinity,
-          constraints: BoxConstraints(
-            minHeight: 220,
-            maxWidth: 530,
-            maxHeight: 260,
-          ),
+          // constraints: BoxConstraints(
+          //   minHeight: 220,
+          //   maxWidth: 530,
+          //   maxHeight: 260,
+          // ),
           decoration: BoxDecoration(
             color: const Color(0xffffffff),
             boxShadow: [
@@ -186,19 +169,19 @@ class RecipeCard extends StatelessWidget {
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                              child: Text(
-                                '쉬움, 30분', //난이도 변경 예정
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  color: Color(0xFF57636C),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
+                            // Padding(
+                            //   padding:
+                            //       EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                            //   child: Text(
+                            //     '${recipe.}, 30분', //난이도 변경 예정
+                            //     style: TextStyle(
+                            //       fontFamily: 'Inter',
+                            //       color: Color(0xFF57636C),
+                            //       fontSize: 12,
+                            //       fontWeight: FontWeight.normal,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -254,7 +237,7 @@ class RecipeCard extends StatelessWidget {
                         ),
                         Align(
                           alignment: AlignmentDirectional(0, 0.96),
-                          child: Padding(
+                          child: Container(
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
                             child: Row(

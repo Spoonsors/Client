@@ -1,8 +1,6 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:save_children_v01/service/LoginService.dart';
 import 'package:save_children_v01/service/ReviewsService.dart';
 
 import '../../model/ReviewModel.dart';
@@ -40,7 +38,9 @@ class _TeenagerViewReviewsPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ReviewsService>(builder: (context, reviewsService, child) {
+    return Consumer2<ReviewsService, LoginService>(
+        builder: (context, reviewsService, loginservice, child) {
+      reviewsService.getMyReviews(loginservice.loginB.bMember_id!);
       return Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
@@ -108,25 +108,24 @@ class _TeenagerViewReviewsPageWidgetState
                             ),
                           ],
                         ),
-                        Expanded(
-                          child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: reviewsService.reviewsList.length,
-                              itemBuilder: (context, index) {
-                                final _review =
-                                    reviewsService.reviewsList[index];
-                                return ReviewCard(
-                                  idx: index,
-                                  review: _review,
-                                );
-                              }),
-                        )
                       ],
                     ),
                   ),
                 ),
+                SingleChildScrollView(
+                  child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: reviewsService.reviewsList.length,
+                      itemBuilder: (context, index) {
+                        final _review = reviewsService.reviewsList[index];
+                        return ReviewCard(
+                          idx: index,
+                          review: _review,
+                        );
+                      }),
+                )
               ],
             ),
           ),
@@ -145,7 +144,7 @@ class ReviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
+      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 24),
       child: AnimatedContainer(
         duration: Duration(milliseconds: 100),
         curve: Curves.easeInOut,
@@ -175,21 +174,13 @@ class ReviewCard extends StatelessWidget {
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
                       child: Text(
-                        '첫 고등어 무조림!', //리뷰 타이틀로 변경
+                        review.review_txt!,
                         style: TextStyle(
-                            color: const Color(0xff212121),
+                            color: const Color(0xff757575),
                             fontFamily: "SUITE",
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400),
                       ),
-                    ),
-                    Text(
-                      review.review_txt,
-                      style: TextStyle(
-                          color: const Color(0xff757575),
-                          fontFamily: "SUITE",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -197,7 +188,7 @@ class ReviewCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  review.review_img,
+                  review.review_img!,
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,

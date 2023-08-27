@@ -33,7 +33,7 @@ class IngredientsService extends ChangeNotifier {
   void getAllProductInfo() async {
     // API 호출
     Response res = await Dio().get(
-      "http://3.86.110.15:8080/manager/findAll",
+      "http://15.165.106.139:8080/manager/findAll",
     );
 
     for (Map<String, dynamic> item in res.data) {
@@ -49,8 +49,8 @@ class IngredientsService extends ChangeNotifier {
   void deleteProduct(int ingredients_id) async {
     try {
       // DELETE 요청 보내기
-      Response response = await Dio()
-          .delete("http://3.86.110.15:8080/manager/delete/${ingredients_id}");
+      Response response = await Dio().delete(
+          "http://15.165.106.139:8080/manager/delete/${ingredients_id}");
 
       if (response.statusCode == 200) {
         print('DELETE 요청 성공');
@@ -90,7 +90,7 @@ class IngredientsService extends ChangeNotifier {
     print(formData);
     try {
       Response response = await Dio().post(
-        "http://3.86.110.15:8080/manager/create",
+        "http://15.165.106.139:8080/manager/create",
         data: formData,
       );
       if (response.statusCode == 200) {

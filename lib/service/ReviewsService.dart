@@ -1,11 +1,7 @@
-import 'dart:ffi';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:save_children_v01/model/SponModel.dart';
+
 import '../model/BMemberModel.dart';
 import '../model/PostModel.dart';
 import '../model/ReviewModel.dart';
@@ -29,13 +25,11 @@ class PostReview {
 class ReviewsService extends ChangeNotifier {
   List<Review> reviewsList = [];
   late BMember _bMember;
-  ReviewsService() {
-    getMyReviews(_bMember);
-  }
+  ReviewsService() {}
 
-  void getMyReviews(BMember bMember) async {
+  void getMyReviews(String bMember_Id) async {
     Response res = await Dio().get(
-      "http://3.86.110.15:8080/review/findMyReview/" + bMember.bMember_Id,
+      "http://15.165.106.139:8080/review/findMyReview/" + bMember_Id,
     );
     reviewsList.clear();
     for (Map<String, dynamic> item in res.data) {
@@ -46,25 +40,12 @@ class ReviewsService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void writeReview(BMember bMember, PostReview postReview) async {
-    final data = FormData.fromMap({
-      "review_img": await MultipartFile.fromFile(
-        postReview.review_img!.path,
-        filename: "${postReview.review_id}.jpg",
-      ),
-      "reviewDto": MultipartFile.fromString(
-          jsonEncode({
-            "review_id": postReview.review_id,
-            // "post": postReview.review_img?.path,x
-            "review_txt": postReview.review_txt,
-            "review_date": postReview.review_date.toString(),
-          }),
-          contentType: MediaType.parse('application/json'))
-    });
+  void writeReview(String bMember_id, PostReview postReview) async {
     try {
       Response response = await Dio().post(
-        "http://3.86.110.15:8080//review/create/${postReview.post.post_id}",
-        data: data,
+        "http://15.165.106.139:8080/review/create/${postReview.post.postId}",
+        data: FormData.fromMap(
+            {'img': postReview.review_img, 'reviewTxt': postReview.review_txt}),
       );
       if (response.statusCode == 200) {
         // 업로드 성공 시 처리
@@ -79,6 +60,6 @@ class ReviewsService extends ChangeNotifier {
       print('리뷰 POST 에러');
       print(e.toString());
     }
-    getMyReviews(bMember);
+    getMyReviews(bMember_id);
   }
 }

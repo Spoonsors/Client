@@ -6,11 +6,13 @@ import 'package:save_children_v01/pages/teenager/TeenagerWriteReviewPage.dart';
 import '../../model/BMemberModel.dart';
 import '../../model/PostModel.dart';
 import '../../models/TeenagerViewSupportsPageModel.dart';
+import '../../service/LoginService.dart';
 import '../../service/PostsService.dart';
 
 class TeenagerVIewSupportsPageWidget extends StatefulWidget {
-  const TeenagerVIewSupportsPageWidget({Key? key}) : super(key: key);
-
+  const TeenagerVIewSupportsPageWidget({
+    super.key,
+  });
   @override
   _TeenagerVIewSupportsPageWidgetState createState() =>
       _TeenagerVIewSupportsPageWidgetState();
@@ -20,12 +22,10 @@ class _TeenagerVIewSupportsPageWidgetState
     extends State<TeenagerVIewSupportsPageWidget> {
   late TeenagerVIewSupportsPageModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
     _model = TeenagerVIewSupportsPageModel();
-
     _model.searchBarController ??= TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
@@ -39,27 +39,16 @@ class _TeenagerVIewSupportsPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    BMember bMember = BMember(
-        bMember_id: "cjw",
-        bMember_pwd: "0102",
-        bMember_nickname: "jinu",
-        bMember_phoneNumber: "010",
-        bMember_address: "인천",
-        bMember_certificate: "");
-    return Consumer<PostsService>(builder: (context, postsService, child) {
-      postsService.getAllMyPosts(bMember.bMember_Id);
+    return Consumer2<PostsService, LoginService>(
+        builder: (context, postsService, loginservice, child) {
+      postsService.getAllMyPosts(loginservice.loginB.bMember_id!);
       List<Post> waitingPostList = [];
-      List<Post> completedNoReviewPostList = [];
-      List<Post> completedReviewedPostList = [];
+      List<Post> completedPostList = [];
       for (int i = 0; i < postsService.myPostList.length; i++) {
-        if (postsService.myPostList[i].post_state == 0) {
+        if (postsService.myPostList[i].postState == 0) {
           waitingPostList.add(postsService.myPostList[i]);
         } else {
-          if (postsService.myPostList[i].has_review == 0) {
-            completedNoReviewPostList.add(postsService.myPostList[i]);
-          } else {
-            completedReviewedPostList.add(postsService.myPostList[i]);
-          }
+          completedPostList.add(postsService.myPostList[i]);
         }
       }
       return GestureDetector(
@@ -221,20 +210,18 @@ class _TeenagerVIewSupportsPageWidgetState
                                             color: const Color(0xff212121)),
                                       ),
                                     ),
-                                    Expanded(
-                                      child: ListView.builder(
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.vertical,
-                                          itemCount: waitingPostList.length,
-                                          itemBuilder: (context, index) {
-                                            return WaitingPostCard(
-                                              bMember: bMember,
-                                              idx: index,
-                                              post: waitingPostList[index],
-                                            );
-                                          }),
-                                    ),
+                                    ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.vertical,
+                                        itemCount: waitingPostList.length,
+                                        itemBuilder: (context, index) {
+                                          return WaitingPostCard(
+                                            bMember: loginservice.loginB,
+                                            idx: index,
+                                            post: waitingPostList[index],
+                                          );
+                                        }),
                                   ],
                                 ),
                               ),
@@ -255,38 +242,18 @@ class _TeenagerVIewSupportsPageWidgetState
                                             color: const Color(0xff212121)),
                                       ),
                                     ),
-                                    Expanded(
-                                      child: ListView.builder(
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.vertical,
-                                          itemCount:
-                                              completedNoReviewPostList.length,
-                                          itemBuilder: (context, index) {
-                                            return CompletedNoneReviewPostCard(
-                                              bMember: bMember,
-                                              idx: index,
-                                              post: completedNoReviewPostList[
-                                                  index],
-                                            );
-                                          }),
-                                    ),
-                                    Expanded(
-                                      child: ListView.builder(
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.vertical,
-                                          itemCount:
-                                              completedReviewedPostList.length,
-                                          itemBuilder: (context, index) {
-                                            return CompletedNoneReviewPostCard(
-                                              bMember: bMember,
-                                              idx: index,
-                                              post: completedReviewedPostList[
-                                                  index],
-                                            );
-                                          }),
-                                    )
+                                    ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.vertical,
+                                        itemCount: completedPostList.length,
+                                        itemBuilder: (context, index) {
+                                          return CompletedPostCard(
+                                            bMember: loginservice.loginB,
+                                            idx: index,
+                                            post: completedPostList[index],
+                                          );
+                                        }),
                                   ],
                                 ),
                               ),
@@ -306,8 +273,6 @@ class _TeenagerVIewSupportsPageWidgetState
   }
 }
 
-//모든 post들에 대해 post.postState가 0인지 1인지에 따른
-//구분이 위에서 선행되어야함.
 class WaitingPostCard extends StatelessWidget {
   const WaitingPostCard(
       {super.key,
@@ -319,9 +284,9 @@ class WaitingPostCard extends StatelessWidget {
   final BMember bMember;
   @override
   Widget build(BuildContext context) {
-    PostsService _postService = PostsService(bMember: bMember);
-    _postService.getIngredientsOfPost(post);
-    List<String> _parts = _postService.post_Recipe.rcp_PARTS_DTLS.split(",");
+    PostsService _postService = PostsService();
+    // _postService.getIngredientsOfPost(post);
+    // List<String> _parts = _postService.post_Recipe.rcp_PARTS_DTLS.split(",");
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
       child: Container(
@@ -358,7 +323,7 @@ class WaitingPostCard extends StatelessWidget {
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Text(
-                                  post.post_title,
+                                  post.postTitle!,
                                   style: TextStyle(
                                       fontFamily: "SUITE",
                                       fontSize: 16,
@@ -371,7 +336,7 @@ class WaitingPostCard extends StatelessWidget {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                               child: Text(
-                                post.post_txt,
+                                post.postTxt!,
                                 style: TextStyle(
                                   fontFamily: 'SUITE',
                                   fontSize: 12,
@@ -407,7 +372,7 @@ class WaitingPostCard extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: DateFormat("yyyy.MM.dd")
-                                  .format(post.post_date),
+                                  .format(DateTime.parse(post.postDate!)),
                               style: TextStyle(),
                             ),
                             TextSpan(
@@ -415,7 +380,8 @@ class WaitingPostCard extends StatelessWidget {
                               style: TextStyle(),
                             ),
                             TextSpan(
-                              text: DateFormat("hh:mm").format(post.post_date),
+                              text: DateFormat("hh:mm")
+                                  .format(DateTime.parse(post.postDate!)),
                               style: TextStyle(),
                             ),
                             TextSpan(
@@ -423,7 +389,7 @@ class WaitingPostCard extends StatelessWidget {
                               style: TextStyle(),
                             ),
                             TextSpan(
-                              text: post.bMember.bMember_Nickname,
+                              text: post.bmember!.bMember_nickname,
                               style: TextStyle(),
                             )
                           ],
@@ -443,60 +409,82 @@ class WaitingPostCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(width: 150, child: Text("${_parts.length}")
-                          // child: Stack(
-                          //   alignment: AlignmentDirectional(-1, 0),
-                          //   children: [
-                          //     Align(
-                          //       alignment: AlignmentDirectional(-0.91, 0),
-                          //       child: Container(
-                          //         width: 30,
-                          //         height: 30,
-                          //         clipBehavior: Clip.antiAlias,
-                          //         decoration: BoxDecoration(
-                          //           shape: BoxShape.circle,
-                          //         ),
-                          //         child: Image.asset(
-                          //           'assets/images/배추김치_비비고.jpg',
-                          //           fit: BoxFit.fitWidth,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     Align(
-                          //       alignment: AlignmentDirectional(-0.62, 0),
-                          //       child: Container(
-                          //         width: 30,
-                          //         height: 30,
-                          //         clipBehavior: Clip.antiAlias,
-                          //         decoration: BoxDecoration(
-                          //           shape: BoxShape.circle,
-                          //         ),
-                          //         child: Image.asset(
-                          //           'assets/images/햄_스팸.jpg',
-                          //           fit: BoxFit.fitWidth,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     Align(
-                          //       alignment: AlignmentDirectional(-0.35, 0),
-                          //       child: Container(
-                          //         width: 30,
-                          //         height: 30,
-                          //         clipBehavior: Clip.antiAlias,
-                          //         decoration: BoxDecoration(
-                          //           shape: BoxShape.circle,
-                          //         ),
-                          //         child: Image.asset(
-                          //           'assets/images/대파.jpeg',
-                          //           fit: BoxFit.fitHeight,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
-                          ),
+                      Container(
+                        width: 150,
+                        height: 40,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: post.spon!.length > 3
+                              ? 3
+                              : post.spon!.length, // 생성할 아이템 개수
+                          itemBuilder: (BuildContext context, int index) {
+                            return Stack(
+                              alignment: AlignmentDirectional(-1, 0),
+                              children: [
+                                Align(
+                                  alignment: AlignmentDirectional(-0.62, 0),
+                                  child: Container(
+                                    width: 30,
+                                    height: 30,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Image.network(
+                                      post.spon![index].ingredients!
+                                          .ingredients_image,
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                       ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                    title: Column(
+                                      children: <Widget>[
+                                        Text("후원 상태 변경"),
+                                      ],
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          "후원 상태를 변경하시겠습니까?",
+                                        ),
+                                      ],
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.all(20.0),
+                                          foregroundColor: Color(0xffFFB74D),
+                                          textStyle:
+                                              const TextStyle(fontSize: 20),
+                                        ),
+                                        child: Text("확인"),
+                                        onPressed: () {
+                                          _postService.changeStateofPost(post);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
                           child: Text("후원 완료",
                               style: TextStyle(
                                 fontFamily: 'SUITE',
@@ -527,8 +515,8 @@ class WaitingPostCard extends StatelessWidget {
   }
 }
 
-class CompletedNoneReviewPostCard extends StatelessWidget {
-  const CompletedNoneReviewPostCard(
+class CompletedPostCard extends StatelessWidget {
+  const CompletedPostCard(
       {super.key,
       required this.post,
       required this.idx,
@@ -574,7 +562,7 @@ class CompletedNoneReviewPostCard extends StatelessWidget {
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Text(
-                                  post.post_title,
+                                  post.postTitle!,
                                   style: TextStyle(
                                       fontFamily: "SUITE",
                                       fontSize: 16,
@@ -587,7 +575,7 @@ class CompletedNoneReviewPostCard extends StatelessWidget {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                               child: Text(
-                                post.post_txt,
+                                post.postTxt!,
                                 style: TextStyle(
                                   fontFamily: 'SUITE',
                                   fontSize: 12,
@@ -623,7 +611,7 @@ class CompletedNoneReviewPostCard extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: DateFormat("yyyy.MM.dd")
-                                  .format(post.post_date),
+                                  .format(DateTime.parse(post.postDate!)),
                               style: TextStyle(),
                             ),
                             TextSpan(
@@ -631,7 +619,8 @@ class CompletedNoneReviewPostCard extends StatelessWidget {
                               style: TextStyle(),
                             ),
                             TextSpan(
-                              text: DateFormat("hh:mm").format(post.post_date),
+                              text: DateFormat("hh:mm")
+                                  .format(DateTime.parse(post.postDate!)),
                               style: TextStyle(),
                             ),
                             TextSpan(
@@ -639,7 +628,7 @@ class CompletedNoneReviewPostCard extends StatelessWidget {
                               style: TextStyle(),
                             ),
                             TextSpan(
-                              text: post.bMember.bMember_Nickname,
+                              text: post.bmember!.bMember_nickname,
                               style: TextStyle(),
                             )
                           ],
@@ -659,185 +648,51 @@ class CompletedNoneReviewPostCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Icon(
-                        Icons.message,
-                        color: const Color(0xff757575),
-                        size: 20,
-                      ),
-                      InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      TeenagerWriteReviewPageWidget(
-                                          post: post)));
-                        },
-                        child: Text(
-                          ' 리뷰 쓰기',
-                          style: TextStyle(
-                              fontFamily: "SUITE",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xff212121)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CompletedReviewedPostCard extends StatelessWidget {
-  const CompletedReviewedPostCard(
-      {super.key,
-      required this.post,
-      required this.idx,
-      required this.bMember});
-  final PostPosts post;
-  final int idx;
-  final BMember bMember;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: const Color(0xffffffff),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
-          child: InkWell(
-            splashColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onTap: () async {},
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                  post.menu_name,
-                                  style: TextStyle(
-                                      fontFamily: "SUITE",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: const Color(0xff212121)),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                      post.hasReview == 1
+                          ? InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
                               child: Text(
-                                post.post_txt,
+                                ' 리뷰 작성 완료',
                                 style: TextStyle(
-                                  fontFamily: 'SUITE',
-                                  fontSize: 12,
-                                ),
+                                    fontFamily: "SUITE",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: const Color(0xff212121)),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 6),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
-                          child: Text(
-                            '모든 후원 완료!',
-                            style: TextStyle(
-                              fontFamily: 'SUITE',
-                              color: const Color(0xffffb74d),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: DateFormat("yyyy.MM.dd")
-                                  .format(post.post_date),
-                              style: TextStyle(),
-                            ),
-                            TextSpan(
-                              text: ' | ',
-                              style: TextStyle(),
-                            ),
-                            TextSpan(
-                              text: DateFormat("hh:mm").format(post.post_date),
-                              style: TextStyle(),
-                            ),
-                            TextSpan(
-                              text: ' | ',
-                              style: TextStyle(),
-                            ),
-                            TextSpan(
-                              text: post.bMember.bMember_Nickname,
-                              style: TextStyle(),
                             )
-                          ],
-                          style: TextStyle(
-                            fontFamily: 'SUITE',
-                            color: const Color(0xff757575),
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 3),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        ' 리뷰 작성 완료',
-                        style: TextStyle(
-                            fontFamily: "SUITE",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xff212121)),
-                      ),
+                          : InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TeenagerWriteReviewPageWidget(
+                                                post: post)));
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.message,
+                                    color: const Color(0xff757575),
+                                    size: 20,
+                                  ),
+                                  Text(
+                                    ' 리뷰 쓰기',
+                                    style: TextStyle(
+                                        fontFamily: "SUITE",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: const Color(0xff212121)),
+                                  )
+                                ],
+                              )),
                     ],
                   ),
                 ),

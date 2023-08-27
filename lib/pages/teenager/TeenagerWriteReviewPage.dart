@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/BMemberModel.dart';
 import '../../model/PostModel.dart';
 import '../../models/TeenagerWriteReviewPageModel.dart';
+import '../../service/LoginService.dart';
 import '../../service/ReviewsService.dart';
 
 class TeenagerWriteReviewPageWidget extends StatefulWidget {
@@ -53,14 +53,8 @@ class _TeenagerWriteReviewPageWidgetState
   Widget build(BuildContext context) {
     final _titleTextController = TextEditingController();
     final _contentTextController = TextEditingController();
-    BMember bMember = BMember(
-        bMember_id: "cjw",
-        bMember_pwd: "0102",
-        bMember_nickname: "jinu",
-        bMember_phoneNumber: "010",
-        bMember_address: "인천",
-        bMember_certificate: "");
-    return Consumer<ReviewsService>(builder: (context, reviewsSerice, child) {
+    return Consumer2<ReviewsService, LoginService>(
+        builder: (context, reviewsSerice, loginservice, child) {
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
         child: Scaffold(
@@ -99,7 +93,7 @@ class _TeenagerWriteReviewPageWidgetState
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                       child: Text(
-                        _post.menu_name,
+                        _post.menuName!,
                         style: TextStyle(
                           fontFamily: 'SUITE',
                           color: const Color(0xff212121),
@@ -543,7 +537,9 @@ class _TeenagerWriteReviewPageWidgetState
                                 review_img: item_img,
                                 review_txt: _contentTextController.text,
                               );
-                              reviewsSerice.writeReview(bMember, _review);
+                              print(_review.review_img);
+                              reviewsSerice.writeReview(
+                                  loginservice.loginB.bMember_id!, _review);
                             },
                             label: Text("리뷰 올리기",
                                 style: TextStyle(
