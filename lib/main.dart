@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Routes.dart';
 import 'package:save_children_v01/etc/ThemeData.dart';
@@ -14,6 +15,8 @@ import 'package:save_children_v01/service/SMSService.dart';
 import 'package:save_children_v01/service/SignupService.dart';
 
 void main() {
+  KakaoSdk.init(nativeAppKey: 'b1c6065783d0a3451d239c15e0a28da3');
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => LoginService()),

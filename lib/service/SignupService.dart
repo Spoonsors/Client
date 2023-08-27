@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -52,21 +50,6 @@ class PostSMember {
 
 class SignupService extends ChangeNotifier {
   void signupBMember(PostBMember bMember) async {
-    final data = FormData.fromMap({
-      "img": bMember.bMember_certificate,
-      "dto": MultipartFile.fromString(jsonEncode({
-        "id": bMember.bMember_id,
-        "name": bMember.name,
-        "pwd": bMember.bMember_pwd,
-        "pwd_check": bMember.bMember_pwd_check,
-        "nickname": bMember.bMember_nickname,
-        "phoneNumber": bMember.bMember_phoneNumber,
-        "address": bMember.bMember_address,
-        "token": bMember.bMember_token,
-        "birth": bMember.birth,
-        "profilePath": bMember.profile_path,
-      }))
-    });
     Map<String, dynamic> data = {
       "id": bMember.bMember_id,
       "name": bMember.name,

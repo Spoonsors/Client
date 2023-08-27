@@ -65,12 +65,38 @@ class SMSService extends ChangeNotifier {
     }
   }
 
-  void verifyID(String id) async {
+  void verifyID(String name, String phoneNum) async {
+    //아이디 존재하는지 확인
     Dio dio = new Dio();
+    Map<String, dynamic> data = {"name": name, "phoneNum": phoneNum};
     try {
-      Response response = await dio.get(
-        "http://15.165.106.139:8080/join/matchId/" + id,
+      Response response = await dio.post(
+        "http://15.165.106.139:8080/join/matchId/",
+        data: data,
       );
+      if (response.statusCode == 200) {
+        // 업로드 성공 시 처리
+        print('아이디 전송 성공');
+        print(response.data);
+        pwAnswer = "success";
+      } else {
+        // 업로드 실패 시 처리
+        print('전송 실패');
+        print('Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('아이디 전송 에러');
+      print(e.toString());
+      pwAnswer = "fail";
+    }
+  }
+
+  void changePw(String id, String new_pw) async {
+    Dio dio = new Dio();
+    Map<String, dynamic> data = {"id": id, "pwd": new_pw};
+    try {
+      Response response = await dio
+          .post("http://15.165.106.139:8080/join/changePwd/", data: data);
       if (response.statusCode == 200) {
         // 업로드 성공 시 처리
         print('아이디 전송 성공');

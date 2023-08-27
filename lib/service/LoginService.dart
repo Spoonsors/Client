@@ -48,4 +48,21 @@ class LoginService extends ChangeNotifier {
           spons: []);
     } catch (e) {}
   }
+
+  Future<Uri> kakaoLogin() async {
+    Dio dio = new Dio();
+    dio.options.followRedirects = true;
+    dio.options.responseType = ResponseType.plain;
+    Response response = await dio.get(
+        "https://kauth.kakao.com/oauth/authorize?client_id=03bbdf71352156f08fd91cdbd4b861e1&redirect_uri=http://15.165.106.139:8080/join/kakao&response_type=code");
+
+    if (response.statusCode == 200) {
+      // API 호출이 성공한 경우
+      print('API response: ${response.data}');
+    } else {
+      // API 호출이 실패한 경우
+      print('API request failed with status code: ${response.statusCode}');
+    }
+    return response.realUri;
+  }
 }

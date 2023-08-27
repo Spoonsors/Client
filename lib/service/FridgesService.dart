@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../model/FridgeModel.dart';
 
 class PostFridges {
-  int fridge_id;
+  int? fridge_id;
   String bMember_id;
   String item_name;
   XFile? item_img;
@@ -16,7 +16,7 @@ class PostFridges {
   String? expiration_date;
 
   PostFridges(
-      {required this.fridge_id,
+      {this.fridge_id,
       required this.bMember_id,
       required this.item_name,
       this.item_img,

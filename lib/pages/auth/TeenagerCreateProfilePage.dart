@@ -60,6 +60,7 @@ class _TeenagerCreateProfilePageWidgetState
     TextEditingController nickController = TextEditingController();
     TextEditingController phoneController = TextEditingController();
     TextEditingController addressController = TextEditingController();
+    TextEditingController birthController = TextEditingController();
     return Consumer<SignupService>(builder: (context, signupservice, child) {
       return Scaffold(
         key: scaffoldKey,
@@ -429,6 +430,62 @@ class _TeenagerCreateProfilePageWidgetState
                           ),
                         ),
                         Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: birthController,
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                    labelText: '생년월일(YYYYMMDD)',
+                                    hintStyle: TextStyle(
+                                        fontFamily: 'SUITE',
+                                        color: const Color(0xff212121),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: const Color(0xffffffff),
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  style: TextStyle(
+                                      fontFamily: 'SUITE',
+                                      color: const Color(0xff212121),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                  maxLines: null,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
                             child: ElevatedButton(
@@ -449,7 +506,7 @@ class _TeenagerCreateProfilePageWidgetState
                                         bMember_certificate: item_img!,
                                         bMember_token: "example_token_b",
                                         profile_path: choosed_profile_path,
-                                        birth: '',
+                                        birth: birthController.text,
                                         name: nameController.text);
                                     signupservice.signupBMember(_bMember);
                                     Navigator.push(

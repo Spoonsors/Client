@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/pages/auth/AllWelcomeSignInPage.dart';
 import 'package:save_children_v01/service/LoginService.dart';
@@ -383,12 +384,25 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                                   0, 0, 0, 16),
                                           child: ElevatedButton.icon(
                                               icon: FaIcon(FontAwesomeIcons.k),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            TeenagerViewMainPageWidget()));
+                                              onPressed: () async {
+                                                try {
+                                                  final authCode =
+                                                      await AuthCodeClient
+                                                          .instance
+                                                          .authorize(
+                                                              redirectUri:
+                                                                  'https://kauth.kakao.com/oauth/authorize?client_id=03bbdf71352156f08fd91cdbd4b861e1&redirect_uri=http://15.165.106.139:8080/join/kakao&response_type=code');
+                                                } catch (e) {
+                                                  print('카카오계정으로 로그인 실패 $e');
+                                                }
+
+                                                // final token = await AuthApi
+                                                //     .instance
+                                                //     .issueAccessToken(
+                                                //         authCode: authCode);
+                                                // await TokenManagerProvider
+                                                //     .instance.manager
+                                                //     .setToken(token);
                                               },
                                               label: Text("카카오 계정으로 로그인",
                                                   style: TextStyle(

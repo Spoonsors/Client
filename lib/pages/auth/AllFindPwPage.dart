@@ -21,6 +21,7 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
   TextEditingController? nameController = TextEditingController();
   TextEditingController? phoneController = TextEditingController();
   TextEditingController? codeController = TextEditingController();
+  TextEditingController? pwController = TextEditingController();
   bool verifyState = false;
   @override
   void initState() {
@@ -273,6 +274,244 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16, 12, 16, 0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    smsservice.verifyID(nameController!.text,
+                                        phoneController!.text);
+                                    smsservice.pwAnswer == "fail"
+                                        ? showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                title: Column(
+                                                  children: <Widget>[
+                                                    Text("아이디 미인증"),
+                                                  ],
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "아이디가 존재하지 않습니다.",
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              20.0),
+                                                      foregroundColor:
+                                                          Color(0xffFFB74D),
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 20),
+                                                    ),
+                                                    child: Text("확인"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            })
+                                        : showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                title: Column(
+                                                  children: <Widget>[
+                                                    Text("아이디 확인"),
+                                                  ],
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "아이디가 확인되었습니다.",
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              20.0),
+                                                      foregroundColor:
+                                                          Color(0xffFFB74D),
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 20),
+                                                    ),
+                                                    child: Text("확인"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                      backgroundColor: const Color(0xff262D34),
+                                      minimumSize: Size(80, 30),
+                                      side: BorderSide(
+                                        color: Colors.transparent,
+                                        width: 1,
+                                      ),
+                                      elevation: 2),
+                                  child: Text("아이디 확인",
+                                      style: TextStyle(
+                                        fontFamily: 'Lexend Deca',
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.normal,
+                                      )),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16, 12, 16, 0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    smsservice.pwAnswer == "fail"
+                                        ? showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                title: Column(
+                                                  children: <Widget>[
+                                                    Text("아이디 미인증"),
+                                                  ],
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "아이디 인증부터 해주시기 바랍니다.",
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              20.0),
+                                                      foregroundColor:
+                                                          Color(0xffFFB74D),
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 20),
+                                                    ),
+                                                    child: Text("확인"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            })
+                                        : showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              smsservice.sendSMS(
+                                                  idController!.text,
+                                                  nameController!.text,
+                                                  phoneController!.text);
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                title: Column(
+                                                  children: <Widget>[
+                                                    Text("인증번호 전송"),
+                                                  ],
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "인증번호가 전송되었습니다.",
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              20.0),
+                                                      foregroundColor:
+                                                          Color(0xffFFB74D),
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 20),
+                                                    ),
+                                                    child: Text("확인"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                      backgroundColor: const Color(0xff262D34),
+                                      minimumSize: Size(80, 30),
+                                      side: BorderSide(
+                                        color: Colors.transparent,
+                                        width: 1,
+                                      ),
+                                      elevation: 2),
+                                  child: Text("인증번호 전송",
+                                      style: TextStyle(
+                                        fontFamily: 'Lexend Deca',
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.normal,
+                                      )),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16, 12, 16, 0),
                                 child: TextFormField(
                                   controller: codeController,
                                   textCapitalization: TextCapitalization.none,
@@ -333,32 +572,100 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                     16, 12, 16, 0),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    smsservice.verifyID(idController!.text);
+                                    smsservice.verifySMS(phoneController!.text,
+                                        codeController!.text);
+                                    smsservice.pwCodeVerified == "success"
+                                        ? showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                title: Column(
+                                                  children: <Widget>[
+                                                    Text("인증 성공공"),
+                                                  ],
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "인증되었습니다.",
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              20.0),
+                                                      foregroundColor:
+                                                          Color(0xffFFB74D),
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 20),
+                                                    ),
+                                                    child: Text("확인"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            })
+                                        : showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                title: Column(
+                                                  children: <Widget>[
+                                                    Text("인증 실패"),
+                                                  ],
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "인증번호가 틀립니다.",
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              20.0),
+                                                      foregroundColor:
+                                                          Color(0xffFFB74D),
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 20),
+                                                    ),
+                                                    child: Text("확인"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            });
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      backgroundColor: const Color(0xff262D34),
-                                      minimumSize: Size(80, 30),
-                                      side: BorderSide(
-                                        color: Colors.transparent,
-                                        width: 1,
-                                      ),
-                                      elevation: 2),
-                                  child: Text("인증번호 전송",
-                                      style: TextStyle(
-                                        fontFamily: 'Lexend Deca',
-                                        color: Colors.white,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.normal,
-                                      )),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16, 12, 16, 0),
-                                child: ElevatedButton(
-                                  onPressed: () async {},
                                   style: ElevatedButton.styleFrom(
                                       padding:
                                           const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -378,6 +685,64 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                       )),
                                 ),
                               ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16, 12, 16, 0),
+                                child: TextFormField(
+                                  controller: pwController,
+                                  textCapitalization: TextCapitalization.none,
+                                  decoration: InputDecoration(
+                                    labelText: '새 비밀번호호',
+                                    labelStyle: labelLarge,
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: alternate,
+                                        width: 2,
+                                      ),
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(4.0),
+                                        topRight: Radius.circular(4.0),
+                                      ),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: primary,
+                                        width: 2,
+                                      ),
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(4.0),
+                                        topRight: Radius.circular(4.0),
+                                      ),
+                                    ),
+                                    errorBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: error,
+                                        width: 2,
+                                      ),
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(4.0),
+                                        topRight: Radius.circular(4.0),
+                                      ),
+                                    ),
+                                    focusedErrorBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: error,
+                                        width: 2,
+                                      ),
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(4.0),
+                                        topRight: Radius.circular(4.0),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    fillColor: secondaryBackground,
+                                    contentPadding:
+                                        EdgeInsetsDirectional.fromSTEB(
+                                            0, 16, 16, 8),
+                                  ),
+                                  style: bodyLarge,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -387,7 +752,53 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                       padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
                       child: ElevatedButton(
                         onPressed: () {
-                          print('Button pressed ...');
+                          smsservice.changePw(
+                              idController!.text, pwController!.text);
+                              showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                title: Column(
+                                                  children: <Widget>[
+                                                    Text("아이디 미인증"),
+                                                  ],
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "아이디가 존재하지 않습니다.",
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              20.0),
+                                                      foregroundColor:
+                                                          Color(0xffFFB74D),
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 20),
+                                                    ),
+                                                    child: Text("확인"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            })
                         },
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),

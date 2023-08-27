@@ -274,10 +274,7 @@ class _AllFindIdPageWidgetState extends State<AllFindIdPageWidget> {
                                     16, 12, 16, 0),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    smsservice.getSMS(phoneController!.text);
-                                    if (smsservice.idAnswer == "success") {
-                                      verifyState = true;
-                                    }
+                                    //인증번호 전송송
                                   },
                                   style: ElevatedButton.styleFrom(
                                       padding:
@@ -303,8 +300,10 @@ class _AllFindIdPageWidgetState extends State<AllFindIdPageWidget> {
                                     16, 12, 16, 0),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    smsservice.verifySMS(phoneController!.text,
-                                        codeController!.text);
+                                    smsservice.verifySMS(
+                                        phoneController!.text,
+                                        codeController!
+                                            .text); //아이디 용으로 수정 필요 : 인증번호 인증
                                   },
                                   style: ElevatedButton.styleFrom(
                                       padding:
@@ -334,6 +333,7 @@ class _AllFindIdPageWidgetState extends State<AllFindIdPageWidget> {
                       padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
                       child: ElevatedButton(
                         onPressed: () {
+                          //찾은 아이디 보여주기기
                           print('Button pressed ...');
                         },
                         style: ElevatedButton.styleFrom(

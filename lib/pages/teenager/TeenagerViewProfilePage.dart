@@ -68,7 +68,8 @@ class _TeenagerViewProfilePageWidgetState
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: Image.asset(
-                                    'assets/images/익명.png', //profile 이미지 경로 필요
+                                    loginservice.loginB
+                                        .profilePath!, //profile 이미지 경로 필요
                                     width: 100,
                                     height: 100,
                                     fit: BoxFit.cover,
