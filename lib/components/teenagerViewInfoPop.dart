@@ -104,7 +104,9 @@ class _TeenagerViewInfoPopWidgetState extends State<TeenagerViewInfoPopWidget> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
                           child: Text("확인",
                               style: TextStyle(
                                 fontFamily: 'Lexend Deca',

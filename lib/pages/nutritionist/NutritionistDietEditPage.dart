@@ -41,29 +41,29 @@ class _NutritionistDietEditPageWidgetState
                 child: GestureDetector(
                   onTap: () {
                     MealPlanner putMealPlanner = MealPlanner(
-                        mealPlanner_id: mealPlannerService
-                            .mealPlannerList[idx].mealPlanner_id,
-                        menu_name1:
+                        mealPlannerId: mealPlannerService
+                            .mealPlannerList[idx].mealPlannerId,
+                        menuName1:
                             recipeService.selectedRecipeList[0].recipe.rcp_NM,
-                        menu_img1: recipeService
+                        menuImg1: recipeService
                             .selectedRecipeList[0].recipe.att_FILE_NO_MAIN,
-                        menu_name2:
+                        menuName2:
                             recipeService.selectedRecipeList[1].recipe.rcp_NM,
-                        menu_img2: recipeService
+                        menuImg2: recipeService
                             .selectedRecipeList[1].recipe.att_FILE_NO_MAIN,
-                        menu_name3:
+                        menuName3:
                             recipeService.selectedRecipeList[2].recipe.rcp_NM,
-                        menu_img3: recipeService
+                        menuImg3: recipeService
                             .selectedRecipeList[2].recipe.att_FILE_NO_MAIN,
-                        menu_name4:
+                        menuName4:
                             recipeService.selectedRecipeList[3].recipe.rcp_NM,
-                        menu_img4: recipeService
+                        menuImg4: recipeService
                             .selectedRecipeList[3].recipe.manual_IMG[0],
-                        mealPlanner_name: _mealPlannerTitleTextController.text,
-                        kcal: recipeService.kcal.toInt(),
-                        carbohydrate: recipeService.carbo.toInt(),
-                        protein: recipeService.pro.toInt(),
-                        fat: recipeService.fat.toInt(),
+                        mealPlannerName: _mealPlannerTitleTextController.text,
+                        kcal: recipeService.kcal.toDouble(),
+                        carbohydrate: recipeService.carbo.toDouble(),
+                        protein: recipeService.pro.toDouble(),
+                        fat: recipeService.fat.toDouble(),
                         level: "중",
                         timeRequired: "50");
 

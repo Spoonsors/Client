@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:save_children_v01/model/PostModel.dart';
 
@@ -8,11 +7,11 @@ Review ReviewJson(String str) => Review.fromJson(json.decode(str));
 String ReviewToJson(Review data) => json.encode(data.toJson());
 
 class Review {
-  Long review_id;
-  Post post;
-  String review_img;
-  String review_txt;
-  DateTime review_date;
+  int? review_id;
+  Post? post;
+  String? review_img; //img의 주소
+  String? review_txt;
+  String? review_date;
 
   Review({
     required this.review_id,
