@@ -15,7 +15,7 @@ class SupporterPostService extends ChangeNotifier {
   void getAllSuppPosts() async {
     // 완료된 목록 가져오기
     Response res = await Dio().get(
-      "http://3.86.110.15:8080/viewPosting",
+      "http://15.165.106.139:8080/viewPosting",
     );
     allPostCompleteList.clear();
     allPostInCompleteList.clear();
@@ -37,7 +37,7 @@ class SupporterPostService extends ChangeNotifier {
 
   void viewSuppPost(int post_id) async {
     Response res = await Dio().get(
-      "http://3.86.110.15:8080/viewPosting/${post_id}",
+      "http://15.165.106.139:8080/viewPosting/${post_id}",
     );
     post = GetDetailPostDTO.fromJson(res.data);
 
