@@ -26,13 +26,11 @@ class ReviewsService extends ChangeNotifier {
   List<Review> reviewsList = [];
   late BMember _bMember;
 
-  ReviewsService() {
-    getMyReviews(_bMember);
-  }
+  ReviewsService() {}
 
-  void getMyReviews(BMember bMember) async {
+  void getMyReviews(String bMember_Id) async {
     Response res = await Dio().get(
-      "http://3.86.110.15:8080/review/findMyReview/" + bMember.bMember_Id,
+      "http://15.165.106.139:8080/review/findMyReview/" + bMember_Id,
     );
     reviewsList.clear();
     for (Map<String, dynamic> item in res.data) {
@@ -43,21 +41,12 @@ class ReviewsService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void writeReview(BMember bMember, PostReview postReview) async {
-    Map<String, dynamic> data = {
-      "review_id": postReview.review_id,
-      "post": postReview.review_img?.path,
-      "review_img": await MultipartFile.fromFile(
-        postReview.review_img!.path,
-        filename: "${postReview.review_id}.jpg",
-      ),
-      "review_txt": postReview.review_txt,
-      "review_date": postReview.review_date,
-    };
+  void writeReview(String bMember_id, PostReview postReview) async {
     try {
       Response response = await Dio().post(
-        "http://3.86.110.15:8080//review/create/${postReview.post.post_id}",
-        data: data,
+        "http://15.165.106.139:8080/review/create/${postReview.post.postId}",
+        data: FormData.fromMap(
+            {'img': postReview.review_img, 'reviewTxt': postReview.review_txt}),
       );
       if (response.statusCode == 200) {
         // 업로드 성공 시 처리
@@ -72,6 +61,6 @@ class ReviewsService extends ChangeNotifier {
       print('리뷰 POST 에러');
       print(e.toString());
     }
-    getMyReviews(bMember);
+    getMyReviews(bMember_id);
   }
 }

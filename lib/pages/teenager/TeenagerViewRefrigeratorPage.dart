@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/service/FridgesService.dart';
 
-import '../../components/teenagerAddIngredientPop.dart';
+import 'package:save_children_v01/service/LoginService.dart';
+
+import '../../components/teenagerAddIngredientPop2.dart';
 import '../../model/FridgeModel.dart';
 import '../../models/TeenagerViewRefrigeratorPageModel.dart';
 
 class TeenagerViewRefrigeratorPageWidget extends StatefulWidget {
-  const TeenagerViewRefrigeratorPageWidget({Key? key}) : super(key: key);
-
+  const TeenagerViewRefrigeratorPageWidget({super.key});
   @override
   _TeenagerViewRefrigeratorPageWidgetState createState() =>
       _TeenagerViewRefrigeratorPageWidgetState();
@@ -17,7 +18,6 @@ class TeenagerViewRefrigeratorPageWidget extends StatefulWidget {
 class _TeenagerViewRefrigeratorPageWidgetState
     extends State<TeenagerViewRefrigeratorPageWidget> {
   late TeenagerViewRefrigeratorPageModel _model;
-
   @override
   void initState() {
     super.initState();
@@ -33,7 +33,9 @@ class _TeenagerViewRefrigeratorPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FridgesService>(builder: (context, fridgesService, child) {
+    return Consumer2<FridgesService, LoginService>(
+        builder: (context, fridgesService, loginservice, child) {
+      fridgesService.getMyFridge(loginservice.loginB.bMember_id!);
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
         child: Scaffold(
@@ -51,7 +53,7 @@ class _TeenagerViewRefrigeratorPageWidgetState
                   return GestureDetector(
                     child: Padding(
                       padding: MediaQuery.viewInsetsOf(context),
-                      child: TeenagerAddIngredientPopWidget(),
+                      child: TeenagerAddIngredientPop2Widget(),
                     ),
                   );
                 },
@@ -251,20 +253,20 @@ class IngredientCard extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text:
-                              '${DateTime.now().difference(fridgeItem.expiration_date).inDays.toString()}\n',
-                          style: TextStyle(
-                            color: const Color(0xffFF4081),
-                          ),
-                        ),
-                        TextSpan(
-                          text: '~${fridgeItem.expiration_date.toString()}',
+                          text: fridgeItem.expiration_date == null
+                              ? "-"
+                              : '~${fridgeItem.expiration_date.toString()}',
                           style: TextStyle(),
                         )
                       ],
                       style: TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
-                        color: Color(0xFF57636C),
+                        color: DateTime.now().isBefore(DateTime.parse(
+                                fridgeItem.expiration_date == null
+                                    ? "2099-08-30"
+                                    : fridgeItem.expiration_date!))
+                            ? Color(0xFF57636C)
+                            : Color.fromARGB(239, 204, 26, 26),
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),

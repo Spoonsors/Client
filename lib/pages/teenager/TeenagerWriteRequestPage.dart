@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:save_children_v01/service/FridgesService.dart';
+import 'package:save_children_v01/service/LoginService.dart';
 import 'package:save_children_v01/service/PostsService.dart';
 
-import '../../model/BMemberModel.dart';
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerWriteRequestPageModel.dart';
 
@@ -40,15 +41,17 @@ class _TeenagerWriteRequestPageWidgetState
   Widget build(BuildContext context) {
     final _titleTextController = TextEditingController();
     final _contentTextController = TextEditingController();
-    BMember bMember = BMember(
-        bMember_id: "cjw",
-        bMember_pwd: "0102",
-        bMember_nickname: "jinu",
-        bMember_phoneNumber: "010",
-        bMember_address: "인천",
-        bMember_certificate: "");
     List<String> parts = _recipe.rcp_PARTS_DTLS.split(',');
-    return Consumer<PostsService>(builder: (context, postsService, child) {
+    return Consumer3<PostsService, LoginService, FridgesService>(
+        builder: (context, postsService, loginservice, fridgesservice, child) {
+      List<String> availableIng = [];
+      fridgesservice.getMyFridge(loginservice.loginB.bMember_id!);
+      fridgesservice.fridgeList.forEach((value) {
+        availableIng.add(value.fridge_item_name);
+      });
+      fridgesservice.freezerList.forEach((value) {
+        availableIng.add(value.fridge_item_name);
+      });
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
         child: Scaffold(
@@ -74,11 +77,10 @@ class _TeenagerWriteRequestPageWidgetState
             centerTitle: false,
             elevation: 0,
           ),
-          body: SafeArea(
-            top: true,
+          body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-              child: SingleChildScrollView(
+              child: Container(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,47 +97,53 @@ class _TeenagerWriteRequestPageWidgetState
                       ),
                     ),
                     SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: parts.length,
-                          itemBuilder: (context, index) {
-                            final _part = parts[index];
-                            return Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(4, 4, 4, 4),
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffff8a80), //색 변화 필요
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: const Color(0xffff8a80),
-                                  ),
-                                ),
-                                child: Align(
-                                  alignment: AlignmentDirectional(0, 0),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8, 0, 8, 0),
-                                    child: Text(
-                                      _part,
-                                      style: TextStyle(
-                                        fontFamily: 'Plus Jakarta Sans',
-                                        color: Color(0xFF15161E),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
+                        scrollDirection: Axis.horizontal,
+                        child: SizedBox(
+                          height: 60,
+                          child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: parts.length,
+                              itemBuilder: (context, index) {
+                                final _part = parts[index];
+                                return Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 0, 8),
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(4, 4, 4, 4),
+                                    height: 32,
+                                    decoration: BoxDecoration(
+                                      color: availableIng.contains(_part)
+                                          ? Colors.white
+                                          : const Color(0xffff8a80),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: availableIng.contains(_part)
+                                            ? Colors.black
+                                            : const Color(0xffff8a80),
+                                      ),
+                                    ),
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0, 0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            8, 0, 8, 0),
+                                        child: Text(
+                                          _part,
+                                          style: TextStyle(
+                                            fontFamily: 'Plus Jakarta Sans',
+                                            color: Color(0xFF15161E),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
+                                );
+                              }),
+                        )),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                       child: Column(mainAxisSize: MainAxisSize.max, children: [
@@ -261,20 +269,18 @@ class _TeenagerWriteRequestPageWidgetState
                         padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
                         child: ElevatedButton.icon(
                             onPressed: () async {
+                              parts.removeWhere(
+                                  (element) => availableIng.contains(element));
+
                               PostPosts _post = PostPosts(
-                                post_id: 1,
-                                bMember: bMember,
-                                post_title: _titleTextController.text,
-                                post_txt: _contentTextController.text,
-                                post_state: 0,
-                                has_review: 0,
-                                menu_img: _recipe.att_FILE_NO_MAIN,
-                                menu_name: _recipe.rcp_NM,
-                                post_date: DateTime.now(),
-                                remain_spon: parts.length,
-                                spon: [],
-                              ); //후원이 하나도 없는 상태
-                              postsService.writePost(_post, bMember);
+                                  post_title: _titleTextController.text,
+                                  post_txt: _contentTextController.text,
+                                  menu_img: _recipe.att_FILE_NO_MAIN,
+                                  menu_name: _recipe.rcp_NM,
+                                  item_list: parts);
+                              postsService.writePost(
+                                  _post, loginservice.loginB.bMember_id!);
+
                               Navigator.pop(context);
                             },
                             icon: Icon(Icons.receipt_long,

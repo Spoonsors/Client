@@ -4,23 +4,21 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../model/BMemberModel.dart';
 import '../model/FridgeModel.dart';
 
 class PostFridges {
   int fridge_id;
-  BMember bMember;
+  String bMember_id;
   String item_name;
   XFile? item_img;
   int is_frized;
-  DateTime expiration_date;
+  String? expiration_date;
 
   PostFridges(
       {required this.fridge_id,
-      required this.bMember,
+      required this.bMember_id,
       required this.item_name,
-      required this.item_img,
+      this.item_img,
       required this.is_frized,
       required this.expiration_date});
 }
@@ -28,22 +26,26 @@ class PostFridges {
 class FridgesService extends ChangeNotifier {
   List<Fridge> fridgeList = []; //냉장
   List<Fridge> freezerList = []; //냉동,실온
-  late BMember bMember;
 
-  FridgesService() {
-    getMyFridge(bMember.bMember_Id);
-  }
+
+  FridgesService() {}
 
   void getMyFridge(String bMember_id) async {
     Dio dio = new Dio();
-    Response response =
-        await dio.get("http://3.86.110.15:8080/bMember/fridge/" + bMember_id);
+    Response response = await dio
+        .get("http://15.165.106.139:8080/bMember/fridge/" + bMember_id);
+    fridgeList.clear();
+    freezerList.clear();
     for (Map<String, dynamic> item in response.data) {
       Fridge fridge = Fridge.fromJson(item);
       if (fridge.is_frized == 0) {
-        fridgeList.add(fridge);
+        if (!fridgeList.contains(fridge)) {
+          fridgeList.add(fridge);
+        }
       } else {
-        freezerList.add(fridge);
+        if (!freezerList.contains(fridge)) {
+          freezerList.add(fridge);
+        }
       }
     }
 
@@ -53,7 +55,7 @@ class FridgesService extends ChangeNotifier {
   void deleteFridge(String item_id) async {
     try {
       Response response = await Dio()
-          .delete("http://3.86.110.15:8080/bMember/fridge/delete" + item_id);
+          .delete("http://15.165.106.139:8080/bMember/fridge/delete" + item_id);
 
       if (response.statusCode == 200) {
         print('DELETE 요청 성공');
@@ -73,12 +75,15 @@ class FridgesService extends ChangeNotifier {
   void postFridge(PostFridges postFridges, String bMember_id) async {
     final data = FormData.fromMap(
       {
-        "img": await MultipartFile.fromFile(
-          postFridges.item_img!.path,
-          filename: "${postFridges.item_name}.jpg",
-        ),
-        "FridgesDto": MultipartFile.fromString(
+        "img": null,
+        // await MultipartFile.fromFile(
+        //   postFridges.item_img!.path,
+
+        //   filename: "${postFridges.item_name}.jpg",
+        // ),
+        "fridgesDto": MultipartFile.fromString(
           jsonEncode({
+            "fridge_id": postFridges.fridge_id,
             "name": postFridges.item_name,
             "isFrized": postFridges.is_frized,
             "expirationDate": postFridges.expiration_date,
@@ -91,7 +96,7 @@ class FridgesService extends ChangeNotifier {
     print(data);
     try {
       Response response = await Dio().post(
-        "http://3.86.110.15:8080/bMember/fridge/add/" + bMember_id,
+        "http://15.165.106.139:8080/bMember/fridge/add/${bMember_id}",
         data: data,
       );
       if (response.statusCode == 200) {

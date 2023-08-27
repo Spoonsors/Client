@@ -77,17 +77,31 @@ class RecipeService extends ChangeNotifier {
     Response res = await Dio().get(
         "http://15.165.106.139:8080/mealplanner/findByName?mealPlanner_name=" +
             diet_name);
+    requested4MenuInDiet.clear();
+    requested4RecipeInDiet.clear();
     requestedDiet = MealPlanner.fromJson(res.data);
-    requested4MenuInDiet.add(requestedDiet.menu_name1);
-    requested4MenuInDiet.add(requestedDiet.menu_name2);
-    requested4MenuInDiet.add(requestedDiet.menu_name3);
-    requested4MenuInDiet.add(requestedDiet.menu_name4);
-    for (int i = 0; i < 4; i++) {
+    if (requestedDiet.menuName1 != null) {
+      requested4MenuInDiet.add(requestedDiet.menuName1!);
+    }
+    if (requestedDiet.menuName2 != null) {
+      requested4MenuInDiet.add(requestedDiet.menuName2!);
+    }
+    if (requestedDiet.menuName3 != null) {
+      requested4MenuInDiet.add(requestedDiet.menuName3!);
+    }
+    if (requestedDiet.menuName4 != null) {
+      requested4MenuInDiet.add(requestedDiet.menuName4!);
+    }
+
+    for (int i = 0; i < requested4MenuInDiet.length; i++) {
       Response res = await Dio().get(
           "http://15.165.106.139:8080/recipe/findByName?RCP_NM=" +
               requested4MenuInDiet[i]!);
-      Recipe _menu = Recipe.fromJson(res.data);
-      requested4RecipeInDiet.add(_menu);
+      for (Map<String, dynamic> item in res.data) {
+        Recipe _menu = Recipe.fromJson(item);
+        print("네입" + _menu.rcp_NM);
+        requested4RecipeInDiet.add(_menu);
+      }
     }
   }
 

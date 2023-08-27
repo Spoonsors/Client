@@ -59,7 +59,7 @@ class MealPlannerService extends ChangeNotifier {
     Response res = await Dio().get(
       "http://15.165.106.139:8080/mealplanner/findAll",
     );
-    mealPlannerList.clear();
+    // mealPlannerList.clear();
     for (Map<String, dynamic> item in res.data) {
       MealPlanner mealPlanner = MealPlanner.fromJson(item);
       mealPlannerList.add(mealPlanner);
@@ -89,7 +89,7 @@ class MealPlannerService extends ChangeNotifier {
     }
 
     for (int i = 0; i < mealPlannerList.length; i++) {
-      if (mealPlannerList[i].mealPlanner_id == mealPlanner_id) {
+      if (mealPlannerList[i].mealPlannerId == mealPlanner_id) {
         mealPlannerList.removeAt(i);
       }
     }
@@ -142,16 +142,16 @@ class MealPlannerService extends ChangeNotifier {
   // 상품 수정
   void updateMealPlanner(MealPlanner putMealPlanner, int idx) async {
     Map<String, dynamic> data = {
-      "mealPlanner_id": putMealPlanner.mealPlanner_id,
-      "menu_name1": putMealPlanner.menu_name1,
-      "menu_img1": putMealPlanner.menu_img1,
-      "menu_name2": putMealPlanner.menu_name2,
-      "menu_img2": putMealPlanner.menu_img2,
-      "menu_name3": putMealPlanner.menu_name3,
-      "menu_img3": putMealPlanner.menu_img3,
-      "menu_name4": putMealPlanner.menu_name4,
-      "menu_img4": putMealPlanner.menu_img4,
-      "mealPlanner_name": putMealPlanner.mealPlanner_name,
+      "mealPlanner_id": putMealPlanner.mealPlannerId,
+      "menu_name1": putMealPlanner.menuName1,
+      "menu_img1": putMealPlanner.menuImg1,
+      "menu_name2": putMealPlanner.menuName2,
+      "menu_img2": putMealPlanner.menuImg2,
+      "menu_name3": putMealPlanner.menuName3,
+      "menu_img3": putMealPlanner.menuImg3,
+      "menu_name4": putMealPlanner.menuName4,
+      "menu_img4": putMealPlanner.menuImg4,
+      "mealPlanner_name": putMealPlanner.mealPlannerName,
       "kcal": putMealPlanner.kcal,
       "carbohydrate": putMealPlanner.carbohydrate,
       "protein": putMealPlanner.protein,

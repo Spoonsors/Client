@@ -1,59 +1,56 @@
 class MealPlanner {
-  int? mealPlanner_id;
-  String? menu_name1;
-  String? menu_img1;
 
-  String? menu_name2;
-  String? menu_img2;
-
-  String? menu_name3;
-  String? menu_img3;
-
-  String? menu_name4;
-  String? menu_img4;
-
-  String? mealPlanner_name;
-
+  int? mealPlannerId;
+  String? menuName1;
+  String? menuImg1;
+  String? menuName2;
+  String? menuImg2;
+  String? menuName3;
+  String? menuImg3;
+  String? menuName4;
+  String? menuImg4;
+  String? mealPlannerName;
   double? kcal;
   double? carbohydrate;
   double? protein;
   double? fat;
   double? na;
-
   String? level;
   String? timeRequired;
 
   MealPlanner(
-      {required this.mealPlanner_id,
-      required this.menu_name1,
-      required this.menu_img1,
-      required this.menu_name2,
-      required this.menu_img2,
-      required this.menu_name3,
-      required this.menu_img3,
-      required this.menu_name4,
-      required this.menu_img4,
-      required this.mealPlanner_name,
-      required this.kcal,
-      required this.carbohydrate,
-      required this.protein,
-      required this.fat,
-      required this.level,
-      required this.na,
-      required this.timeRequired});
+      {this.mealPlannerId,
+      this.menuName1,
+      this.menuImg1,
+      this.menuName2,
+      this.menuImg2,
+      this.menuName3,
+      this.menuImg3,
+      this.menuName4,
+      this.menuImg4,
+      this.mealPlannerName,
+      this.kcal,
+      this.carbohydrate,
+      this.protein,
+      this.fat,
+      this.na,
+      this.level,
+      this.timeRequired});
 
   factory MealPlanner.fromJson(Map<String, dynamic> json) => MealPlanner(
-        mealPlanner_id: json["mealPlanner_id"],
-        menu_name1: json["menu_name1"],
-        menu_img1: json["menu_img1"],
-        menu_name2: json["menu_name2"],
-        menu_img2: json["menu_img2"],
-        menu_name3: json["menu_name3"],
-        menu_img3: json["menu_img3"],
-        menu_name4: json["menu_name4"],
-        menu_img4: json["menu_img4"],
-        mealPlanner_name: json["mealPlanner_name"],
-        kcal: json["kcal"],
+        mealPlannerId: json["mealPlanner_id"],
+        menuName1: json["menu_name1"],
+        menuImg1: json["menu_img1"],
+        menuName2: json["menu_name2"],
+        menuImg2: json["menu_img2"],
+        menuName3: json["menu_name3"],
+        menuImg3: json["menu_img3"],
+        menuName4: json["menu_name4"],
+        menuImg4: json["menu_img4"],
+        mealPlannerName: json["mealPlanner_name"],
+        kcal: (json["carbohydrate"] * 4 + json["protein"] * 4 + json["fat"] * 9)
+            .round()
+            .toDouble(),
         carbohydrate: json["carbohydrate"],
         protein: json["protein"],
         fat: json["fat"],
@@ -62,23 +59,25 @@ class MealPlanner {
         timeRequired: json["timeRequired"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "mealPlanner_id": mealPlanner_id,
-        "menu_name1": menu_name1,
-        "menu_img1": menu_img1,
-        "menu_name2": menu_name2,
-        "menu_img2": menu_img2,
-        "menu_name3": menu_name3,
-        "menu_img3": menu_img3,
-        "menu_name4": menu_name4,
-        "menu_img4": menu_img4,
-        "mealPlanner_name": mealPlanner_name,
-        "kcal": kcal,
-        "carbohydrate": carbohydrate,
-        "protein": protein,
-        "fat": fat,
-        "na": na,
-        "level": level,
-        "timeRequired": timeRequired,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['mealPlanner_id'] = this.mealPlannerId;
+    data['menu_name1'] = this.menuName1;
+    data['menu_img1'] = this.menuImg1;
+    data['menu_name2'] = this.menuName2;
+    data['menu_img2'] = this.menuImg2;
+    data['menu_name3'] = this.menuName3;
+    data['menu_img3'] = this.menuImg3;
+    data['menu_name4'] = this.menuName4;
+    data['menu_img4'] = this.menuImg4;
+    data['mealPlanner_name'] = this.mealPlannerName;
+    data['kcal'] = this.kcal;
+    data['carbohydrate'] = this.carbohydrate;
+    data['protein'] = this.protein;
+    data['fat'] = this.fat;
+    data['na'] = this.na;
+    data['level'] = this.level;
+    data['timeRequired'] = this.timeRequired;
+    return data;
+  }
 }

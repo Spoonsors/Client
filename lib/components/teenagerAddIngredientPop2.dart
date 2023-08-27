@@ -1,56 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Colors.dart';
-import 'package:save_children_v01/model/MealPlannerModel.dart';
-import 'package:save_children_v01/service/MealPlannerService.dart';
-import 'package:save_children_v01/service/RecipeService.dart';
+import 'package:save_children_v01/model/IngredientsModel.dart';
+import 'package:save_children_v01/service/FridgesService.dart';
+import 'package:save_children_v01/service/IngredientsService.dart';
+import 'package:save_children_v01/service/LoginService.dart';
 
-import 'NutritionistDietRegisterPage.dart';
-
-class NutritionistNutriHomePageWidget extends StatefulWidget {
-  const NutritionistNutriHomePageWidget({Key? key}) : super(key: key);
+class TeenagerAddIngredientPop2Widget extends StatefulWidget {
+  const TeenagerAddIngredientPop2Widget({Key? key}) : super(key: key);
 
   @override
-  _NutritionistNutriHomePageWidgetState createState() =>
-      _NutritionistNutriHomePageWidgetState();
+  _TeenagerAddIngredientPop2Widget createState() =>
+      _TeenagerAddIngredientPop2Widget();
 }
 
-class _NutritionistNutriHomePageWidgetState
-    extends State<NutritionistNutriHomePageWidget> {
+class _TeenagerAddIngredientPop2Widget
+    extends State<TeenagerAddIngredientPop2Widget> {
   List<String> items = [
     "최신 순",
     "가격 순",
   ];
+  late List<Ingredients> ingredientsList;
+
   String selectedItem = "최신 순";
+  List<Ingredients> filteredIngredientsList = [];
+  void filterSearchResults(String query) {
+    List<Ingredients> searchResults = [];
+    searchResults.addAll(ingredientsList);
+
+    if (query.isNotEmpty) {
+      searchResults = searchResults.where((item) {
+        return item.ingredients_name
+            .toLowerCase()
+            .contains(query.toLowerCase());
+      }).toList();
+    }
+
+    setState(() {
+      filteredIngredientsList = searchResults;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<MealPlannerService, RecipeService>(
-        builder: (context, mealPlannerService, recipeService, child) {
+    return Consumer3<IngredientsService, FridgesService, LoginService>(builder:
+        (context, ingredientsService, fridgesService, loginService, child) {
+      ingredientsList = ingredientsService.productList;
       return Scaffold(
         appBar: AppBar(
+          titleSpacing: 10.0,
           title: Text(
-            '추천 식단 목록',
-          ),
-          actions: [
-            // Logout button
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 0.0),
-              child: IconButton(
-                icon: Icon(
-                  Icons.login_rounded,
-                  size: 24.0,
-                ),
-                onPressed: () {}, // TODO : [Nutri] Logout 버튼 구현
-              ),
+            '재료 검색',
+            style: TextStyle(
+              fontFamily: 'SUITE',
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
             ),
-          ],
+          ),
+          actions: [],
+          centerTitle: false,
+          elevation: 2,
         ),
         body: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: (value) {
+                  filterSearchResults(value);
+                },
+                decoration: InputDecoration(
+                  labelText: 'Search',
+                  hintText: 'Search for fruits...',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  ),
+                ),
+              ),
+            ),
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -95,11 +126,12 @@ class _NutritionistNutriHomePageWidgetState
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: mealPlannerService.mealPlannerList.length,
+                itemCount: filteredIngredientsList.length,
                 itemBuilder: (context, index) {
-                  final mealPlanner = mealPlannerService.mealPlannerList[index];
+                  final ingredient = filteredIngredientsList[index];
                   return ProductDetailsWidget(
-                      mealPlanner: mealPlanner, idx: index);
+                      ingredients: ingredient,
+                      ingredientsService: ingredientsService);
                 },
               ),
             ),
@@ -107,25 +139,23 @@ class _NutritionistNutriHomePageWidgetState
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            for (int i = 0; i < recipeService.recipeList.length; i++) {
-              recipeService.recipeList[i].selected = false;
-            }
-            recipeService.selectedRecipeList.clear();
-            recipeService.calNutriInfo();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const NutritionistDietRegisterPageWidget()));
+            //재료 추가 구현
+            PostFridges ing = PostFridges(
+                fridge_id: 100,
+                bMember_id: loginService.loginB.bMember_id!,
+                item_name: "임의",
+                is_frized: 1,
+                expiration_date: "2023-08-25");
+            fridgesService.postFridge(ing, loginService.loginB.bMember_id!);
           },
           backgroundColor: primary,
           icon: Icon(
-            Icons.receipt,
+            Icons.add,
             color: primaryBackground,
           ),
           elevation: 8.0,
           label: Text(
-            '추천 식단 짜기',
+            '재료 추가',
             style: TextStyle(
               fontFamily: 'SUITE',
               color: primaryBackground,
@@ -138,13 +168,18 @@ class _NutritionistNutriHomePageWidgetState
   }
 }
 
-class ProductDetailsWidget extends StatelessWidget {
+class ProductDetailsWidget extends StatefulWidget {
   const ProductDetailsWidget(
-      {super.key, required this.mealPlanner, required this.idx});
+      {super.key, required this.ingredients, required this.ingredientsService});
 
-  final MealPlanner mealPlanner;
-  final int idx;
+  final Ingredients ingredients;
+  final IngredientsService ingredientsService;
 
+  @override
+  State<ProductDetailsWidget> createState() => _ProductDetailsWidgetState();
+}
+
+class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
   @override
   Widget build(BuildContext context) {
     return // Generated code for this UserList9 Widget...
@@ -164,19 +199,19 @@ class ProductDetailsWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(0.0),
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 12.0, 5.0),
+                padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 12.0, 8.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        "${mealPlanner.menuImg1}",
-                        width: 60.0,
-                        height: 60.0,
+                      child: Image.asset(
+                        'assets/images/돼지고기.jpeg',
+                        width: 70.0,
+                        height: 70.0,
                         fit: BoxFit.cover,
-                      ),
+                      ), // TODO : [admin] 이미지 확인
                     ),
                     Expanded(
                       child: Row(
@@ -191,7 +226,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 0.0, 0.0),
                                 child: Text(
-                                  '${mealPlanner.mealPlannerName}',
+                                  '${widget.ingredients.ingredients_name}',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       color: info,
@@ -203,7 +238,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '${mealPlanner.kcal!.toStringAsFixed(1)}kcal',
+                                  '${widget.ingredients.product_name}',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       fontSize: 13.0,
@@ -214,10 +249,10 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '탄수화물 ${mealPlanner.carbohydrate!.toStringAsFixed(1)}g, 단백질 ${mealPlanner.protein!.toStringAsFixed(1)}g, 지방 ${mealPlanner.fat!.toStringAsFixed(1)}g',
+                                  '${widget.ingredients.price}원',
                                   style: TextStyle(
                                     fontFamily: 'SUITE',
-                                    fontSize: 10.0,
+                                    fontSize: 12.0,
                                     color: secondaryText,
                                   ),
                                 ),
@@ -234,11 +269,9 @@ class ProductDetailsWidget extends StatelessWidget {
                                   size: 17.0,
                                 ),
                                 onPressed: () {
-                                  context
-                                      .read<MealPlannerService>()
-                                      .deleteMealPlanner(
-                                          mealPlanner.mealPlannerId!);
-                                },
+                                  widget.ingredientsService.deleteProduct(
+                                      widget.ingredients.ingredients_id);
+                                }, // TODO : [admin] 등록된 상품 제거 구현
                               ),
                               IconButton(
                                 icon: Icon(
@@ -247,24 +280,10 @@ class ProductDetailsWidget extends StatelessWidget {
                                   size: 17.0,
                                 ),
                                 onPressed: () {
-                                  // 식단 list의 idx.
-                                  // selectedList에 넣기.
-                                  final menus = [
-                                    mealPlanner.menuName1,
-                                    mealPlanner.menuName2,
-                                    mealPlanner.menuName3,
-                                    mealPlanner.menuName4,
-                                  ];
-
-                                  context
-                                      .read<RecipeService>()
-                                      .selectMenus(menus);
-                                  context.read<RecipeService>().calNutriInfo();
-
                                   Navigator.pushNamed(
-                                      context, "/NutritionistDietEditPage",
-                                      arguments: idx); // TODO : 수정 구현
-                                },
+                                      context, '/AdminProductRegisterPage',
+                                      arguments: widget.ingredients);
+                                }, // TODO : [admin] 등록된 상품 수정 구현
                               ),
                             ],
                           ),

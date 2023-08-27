@@ -5,6 +5,7 @@ import 'package:save_children_v01/service/PostsService.dart';
 
 import '../../model/PostModel.dart';
 import '../../models/TeenagerViewRequestsPageModel.dart';
+import '../../service/LoginService.dart';
 import 'TeenagerViewRequestDetailPage.dart';
 
 //viewAllPosts
@@ -13,8 +14,7 @@ import 'TeenagerViewRequestDetailPage.dart';
 //changePostState?
 
 class TeenagerViewRequestsPageWidget extends StatefulWidget {
-  const TeenagerViewRequestsPageWidget({Key? key}) : super(key: key);
-
+  const TeenagerViewRequestsPageWidget({super.key});
   @override
   _TeenagerViewRequestsPageWidgetState createState() =>
       _TeenagerViewRequestsPageWidgetState();
@@ -25,13 +25,11 @@ class _TeenagerViewRequestsPageWidgetState
   final _sortList = ['최신 순', '가격 순', '후원이 완료된 게시글', '후원이 완료되지 않은 게시글'];
   var _selectedSort = '최신 순';
   late TeenagerViewRequestsPageModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
     _model = TeenagerViewRequestsPageModel();
-
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -43,7 +41,10 @@ class _TeenagerViewRequestsPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PostsService>(builder: (context, postsService, child) {
+    return Consumer2<PostsService, LoginService>(
+        builder: (context, postsService, loginservice, child) {
+      postsService.getAllMyPosts(loginservice.loginB.bMember_id!);
+      postsService.getAllPosts();
       return Scaffold(
         key: scaffoldKey,
         backgroundColor: const Color(0xffFFFFFF),
@@ -204,8 +205,8 @@ class RequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int totalPrice = 0;
-    for (int i = 0; i < request.spon.length; i++) {
-      totalPrice += request.spon[i].ingredients.price;
+    for (int i = 0; i < request.spon!.length; i++) {
+      totalPrice += request.spon![i].ingredients!.price;
     }
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
@@ -241,7 +242,7 @@ class RequestCard extends StatelessWidget {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
-                              request.post_title,
+                              request.postTitle!,
                               style: TextStyle(
                                 fontFamily: 'SUITE',
                                 fontSize: 16,
@@ -252,7 +253,7 @@ class RequestCard extends StatelessWidget {
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                           child: Text(
-                            request.post_txt,
+                            request.postTxt!,
                             style: TextStyle(
                               fontFamily: 'SUITE',
                               fontSize: 12,
@@ -288,7 +289,7 @@ class RequestCard extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: DateFormat('yyyy/MM/dd')
-                              .format(request.post_date),
+                              .format(DateTime.parse(request.postDate!)),
                           style: TextStyle(),
                         ),
                         TextSpan(
@@ -296,7 +297,8 @@ class RequestCard extends StatelessWidget {
                           style: TextStyle(),
                         ),
                         TextSpan(
-                          text: DateFormat('hh:mm').format(request.post_date),
+                          text: DateFormat('hh:mm')
+                              .format(DateTime.parse(request.postDate!)),
                           style: TextStyle(),
                         ),
                         TextSpan(
@@ -304,7 +306,7 @@ class RequestCard extends StatelessWidget {
                           style: TextStyle(),
                         ),
                         TextSpan(
-                          text: request.bMember.bMember_Nickname,
+                          text: request.bmember!.bMember_nickname,
                           style: TextStyle(),
                         )
                       ],
@@ -326,70 +328,35 @@ class RequestCard extends StatelessWidget {
                 children: [
                   Container(
                     width: 150,
-                    child: Stack(
-                      alignment: AlignmentDirectional(-1, 0),
-                      children: [
-                        Align(
-                          alignment: AlignmentDirectional(-0.91, 0),
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
+                    height: 40,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: request.spon!.length > 3
+                          ? 3
+                          : request.spon!.length, // 생성할 아이템 개수
+                      itemBuilder: (BuildContext context, int index) {
+                        return Stack(
+                          alignment: AlignmentDirectional(-1, 0),
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional(-0.62, 0),
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Image.network(
+                                  request.spon![index].ingredients!
+                                      .ingredients_image,
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
                             ),
-                            child: Image.asset(
-                              'assets/images/배추김치_비비고.jpg',
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(-0.62, 0),
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: Image.network(
-                              request.spon[0].ingredients.ingredients_image,
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(-0.35, 0),
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: Image.network(
-                              request.spon[1].ingredients.ingredients_image,
-                              fit: BoxFit.fitHeight,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(-0.35, 0),
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: Image.network(
-                              request.spon[2].ingredients.ingredients_image,
-                              fit: BoxFit.fitHeight,
-                            ),
-                          ),
-                        ),
-                      ],
+                          ],
+                        );
+                      },
                     ),
                   ),
                   Padding(

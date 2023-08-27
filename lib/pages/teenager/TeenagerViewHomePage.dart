@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/model/MealPlannerModel.dart';
@@ -14,8 +13,7 @@ import '../../service/MealPlannerService.dart';
 import '../../service/RecipeService.dart';
 
 class TeenagerViewHomePageWidget extends StatefulWidget {
-  const TeenagerViewHomePageWidget({Key? key}) : super(key: key);
-
+  const TeenagerViewHomePageWidget({super.key});
   @override
   _TeenagerViewHomePageWidgetState createState() =>
       _TeenagerViewHomePageWidgetState();
@@ -127,21 +125,31 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
                       ],
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    height: 350,
-                    decoration: BoxDecoration(),
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 3,
-                      itemBuilder: (context, index) {
-                        final _diet = mealPlannerService.mealPlannerList[index];
-                        return RecommendedDietCard(diet: _diet, idx: index);
-                      },
-                    ),
-                  ),
+                  recipeService.recipeList.isNotEmpty
+                      ? Container(
+                          width: double.infinity,
+                          height: 350,
+                          decoration: BoxDecoration(),
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 3,
+                            itemBuilder: (context, index) {
+                              final _diet =
+                                  mealPlannerService.mealPlannerList[index];
+                              return RecommendedDietCard(
+                                  diet: _diet, idx: index);
+                            },
+                          ),
+                        )
+                      : Container(
+                          height: 350,
+                          child: Container(
+                              width: 200,
+                              height: 200,
+                              child: CircularProgressIndicator()),
+                        ),
                   Container(
                     width: double.infinity,
                     height: 70,
@@ -158,21 +166,31 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
                       ),
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    height: 240,
-                    decoration: BoxDecoration(),
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: 3,
-                      itemBuilder: (context, index) {
-                        final _menu = recipeService.recipeList[index].recipe;
-                        return RecommendedMenuCard(menu: _menu, idx: index);
-                      },
-                    ),
-                  ),
+                  recipeService.recipeList.isNotEmpty
+                      ? Container(
+                          width: double.infinity,
+                          height: 240,
+                          decoration: BoxDecoration(),
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: 3,
+                            itemBuilder: (context, index) {
+                              final _menu =
+                                  recipeService.recipeList[index].recipe;
+                              return RecommendedMenuCard(
+                                  menu: _menu, idx: index);
+                            },
+                          ),
+                        )
+                      : Container(
+                          height: 350,
+                          child: Container(
+                              width: 200,
+                              height: 200,
+                              child: CircularProgressIndicator()),
+                        ),
                 ],
               ),
             ),
@@ -203,7 +221,7 @@ class RecommendedDietCard extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => TeenagerViewAllRecipesPageWidget(
-                          diet_name: diet.mealPlanner_name,
+                          diet_name: diet.mealPlannerName!,
                         )));
           },
           child: Container(
@@ -228,7 +246,7 @@ class RecommendedDietCard extends StatelessWidget {
                   children: [
                     Container(
                       width: 140,
-                      height: 100,
+                      height: 102,
                       decoration: BoxDecoration(),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -236,44 +254,57 @@ class RecommendedDietCard extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              diet.menu_img1,
+                              diet.menuImg1!,
                               width: 140,
                               height: 80,
                               fit: BoxFit.cover,
                             ),
                           ),
                           Text(
-                            diet.menu_name1,
+                            diet.menuName1!,
                             style: TextStyle(
-                              fontFamily: 'SUITE',
-                              color: const Color(0xff212121),
-                            ),
+                                fontFamily: 'SUITE',
+                                color: const Color(0xff212121),
+                                fontSize: diet.menuName1 != null &&
+                                        diet.menuName1!.length > 10
+                                    ? diet.menuName1!.length > 15
+                                        ? 8.0
+                                        : 10.0
+                                    : 14.0),
                           ),
                         ],
                       ),
                     ),
                     Container(
                       width: 140,
-                      height: 100,
+                      height: 102,
                       decoration: BoxDecoration(),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              diet.menu_img2,
-                              width: 140,
-                              height: 80,
-                              fit: BoxFit.cover,
-                            ),
+                            child: diet.menuImg2 == null
+                                ? Image.asset("assets/images/empty.jpeg",
+                                    width: 140, height: 80, fit: BoxFit.cover)
+                                : Image.network(
+                                    diet.menuImg2!,
+                                    width: 140,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                           Text(
-                            diet.menu_name2,
+                            diet.menuName2 == null ? "없음" : diet.menuName2!,
                             style: TextStyle(
-                              fontFamily: 'SUITE',
-                              color: const Color(0xff212121),
-                            ),
+                                fontFamily: 'SUITE',
+                                color: const Color(0xff212121),
+                                fontSize: diet.menuName2 != null &&
+                                        diet.menuName2!.length > 10
+                                    ? diet.menuName2!.length > 15
+                                        ? 8.0
+                                        : 10.0
+                                    : 14.0),
                           ),
                         ],
                       ),
@@ -286,52 +317,68 @@ class RecommendedDietCard extends StatelessWidget {
                   children: [
                     Container(
                       width: 140,
-                      height: 100,
+                      height: 102,
                       decoration: BoxDecoration(),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              diet.menu_img3,
-                              width: 140,
-                              height: 80,
-                              fit: BoxFit.cover,
-                            ),
+                            child: diet.menuImg3 == null
+                                ? Image.asset("assets/images/empty.jpeg",
+                                    width: 140, height: 80, fit: BoxFit.cover)
+                                : Image.network(
+                                    diet.menuImg3!,
+                                    width: 140,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                           Text(
-                            diet.menu_name3,
+                            diet.menuName3 == null ? "없음" : diet.menuName3!,
                             style: TextStyle(
-                              fontFamily: 'SUITE',
-                              color: const Color(0xff212121),
-                            ),
+                                fontFamily: 'SUITE',
+                                color: const Color(0xff212121),
+                                fontSize: diet.menuName3 != null &&
+                                        diet.menuName3!.length > 10
+                                    ? diet.menuName3!.length > 15
+                                        ? 8.0
+                                        : 10.0
+                                    : 14.0),
                           ),
                         ],
                       ),
                     ),
                     Container(
                       width: 140,
-                      height: 100,
+                      height: 102,
                       decoration: BoxDecoration(),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              diet.menu_img4,
-                              width: 140,
-                              height: 80,
-                              fit: BoxFit.cover,
-                            ),
+                            child: diet.menuImg4 == null
+                                ? Image.asset("assets/images/empty.jpeg",
+                                    width: 140, height: 80, fit: BoxFit.cover)
+                                : Image.network(
+                                    diet.menuImg4!,
+                                    width: 140,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                           Text(
-                            diet.menu_name4,
+                            diet.menuName4 == null ? "없음" : diet.menuName4!,
                             style: TextStyle(
-                              fontFamily: 'SUITE',
-                              color: const Color(0xff212121),
-                            ),
+                                fontFamily: 'SUITE',
+                                color: const Color(0xff212121),
+                                fontSize: diet.menuName4 != null &&
+                                        diet.menuName4!.length > 10
+                                    ? diet.menuName4!.length > 15
+                                        ? 8.0
+                                        : 10.0
+                                    : 14.0),
                           ),
                         ],
                       ),
@@ -348,15 +395,14 @@ class RecommendedDietCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          RatingBarIndicator(
-                            itemBuilder: (context, index) => Icon(
-                              Icons.star_rounded,
-                              color: const Color(0xffFFD740),
+                          Text(
+                            diet.mealPlannerName!,
+                            style: TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
+                              color: Color(0xFFFF8D00),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
                             ),
-                            direction: Axis.horizontal,
-                            rating: 3,
-                            itemCount: 5,
-                            itemSize: 20,
                           ),
                         ],
                       ),
@@ -365,7 +411,10 @@ class RecommendedDietCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(diet.timeRequired,
+                          Text(
+                              diet.timeRequired == null
+                                  ? "-"
+                                  : diet.timeRequired!,
                               style: GoogleFonts.outfit(
                                 textStyle: TextStyle(
                                   color: Color(0xFF14181B),
@@ -374,7 +423,11 @@ class RecommendedDietCard extends StatelessWidget {
                                 ),
                               )),
                           Text(
-                            diet.level,
+                            diet.level == "하"
+                                ? "쉬움"
+                                : diet.level == "중"
+                                    ? "보통"
+                                    : "어려움",
                             style: TextStyle(
                               fontFamily: 'Plus Jakarta Sans',
                               color: Color(0xFF57636C),
@@ -388,7 +441,7 @@ class RecommendedDietCard extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -552,7 +605,8 @@ class RecommendedMenuCard extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      TeenagerWriteRequestPageWidget()));
+                                      TeenagerWriteRequestPageWidget(
+                                          recipe: menu)));
                         },
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
