@@ -22,13 +22,13 @@ class TeenagerCreateProfilePageWidget extends StatefulWidget {
 
 class _TeenagerCreateProfilePageWidgetState
     extends State<TeenagerCreateProfilePageWidget> {
-  XFile? item_img;
+  String? item_img;
   final ImagePicker picker = ImagePicker();
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
     if (pickedFile != null) {
       setState(() {
-        item_img = pickedFile;
+        item_img = pickedFile.path;
       });
     }
   }
@@ -493,8 +493,17 @@ class _TeenagerCreateProfilePageWidgetState
                                   bool isNickAvailable = await signupservice
                                       .DuplicateCheckNickname(
                                           nickController.text);
-                                  print(item_img);
                                   if (isNickAvailable) {
+                                    print(_email);
+                                    print(_pw);
+                                    print(nickController.text);
+                                    print(phoneController.text);
+                                    print(addressController.text);
+                                    print(item_img!);
+                                    print(choosed_profile_path);
+                                    print(birthController.text);
+                                    print(nameController.text);
+
                                     PostBMember _bMember = PostBMember(
                                         bMember_id: _email,
                                         bMember_pwd: _pw,

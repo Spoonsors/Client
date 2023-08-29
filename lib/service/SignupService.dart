@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:http_parser/http_parser.dart';
 
 class PostBMember {
   String bMember_id;
@@ -10,7 +12,7 @@ class PostBMember {
   String bMember_nickname;
   String bMember_phoneNumber;
   String bMember_address;
-  XFile? bMember_certificate;
+  String? bMember_certificate;
   String bMember_token;
   String profile_path;
   String birth;
@@ -50,18 +52,31 @@ class PostSMember {
 
 class SignupService extends ChangeNotifier {
   void signupBMember(PostBMember bMember) async {
-    Map<String, dynamic> data = {
-      "id": bMember.bMember_id,
-      "name": bMember.name,
-      "pwd": bMember.bMember_pwd,
-      "pwd_check": bMember.bMember_pwd_check,
-      "nickname": bMember.bMember_nickname,
-      "phoneNumber": bMember.bMember_phoneNumber,
-      "address": bMember.bMember_address,
-      "token": bMember.bMember_token,
-      "birth": bMember.birth,
-      "profilePath": bMember.profile_path,
-    };
+    final data = FormData.fromMap(
+      {
+        "img": await MultipartFile.fromFile(
+          bMember.bMember_certificate!,
+          filename: "${bMember.name}.jpg",
+          contentType: MediaType.parse('multipart/form-data'),
+        ),
+        "dto": MultipartFile.fromString(
+          jsonEncode({
+            "id": bMember.bMember_id,
+            "name": bMember.name,
+            "pwd": bMember.bMember_pwd,
+            "pwd_check": bMember.bMember_pwd_check,
+            "nickname": bMember.bMember_nickname,
+            "phoneNumber": bMember.bMember_phoneNumber,
+            "address": bMember.bMember_address,
+            "birth": bMember.birth,
+            "profilePath": bMember.profile_path,
+            "token": bMember.bMember_token
+          }),
+          contentType: MediaType.parse('application/json'),
+        ),
+      },
+      ListFormat.multiCompatible,
+    );
     try {
       Response response = await Dio()
           .post("http://15.165.106.139:8080/join/bMember", data: data);

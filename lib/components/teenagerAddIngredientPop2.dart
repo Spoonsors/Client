@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:save_children_v01/components/teenagerAddIngredientPop.dart';
 import 'package:save_children_v01/etc/Colors.dart';
 import 'package:save_children_v01/model/IngredientsModel.dart';
 import 'package:save_children_v01/service/FridgesService.dart';
@@ -137,32 +138,32 @@ class _TeenagerAddIngredientPop2Widget
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            //재료 추가 구현
-            PostFridges ing = PostFridges(
-                fridge_id: 100,
-                bMember_id: loginService.loginB.bMember_id!,
-                item_name: "임의",
-                is_frized: 1,
-                expiration_date: "2023-08-25");
-            fridgesService.postFridge(ing, loginService.loginB.bMember_id!);
-          },
-          backgroundColor: primary,
-          icon: Icon(
-            Icons.add,
-            color: primaryBackground,
-          ),
-          elevation: 8.0,
-          label: Text(
-            '재료 추가',
-            style: TextStyle(
-              fontFamily: 'SUITE',
-              color: primaryBackground,
-              fontSize: 20.0,
-            ),
-          ),
-        ),
+        // floatingActionButton: FloatingActionButton.extended(
+        //   onPressed: () {
+        //     //재료 추가 구현
+        //     PostFridges ing = PostFridges(
+        //         fridge_id: 100,
+        //         bMember_id: loginService.loginB.bMember_id!,
+        //         item_name: "임의",
+        //         is_frized: 1,
+        //         expiration_date: "2023-08-25");
+        //     fridgesService.postFridge(ing, loginService.loginB.bMember_id!);
+        //   },
+        //   backgroundColor: primary,
+        //   icon: Icon(
+        //     Icons.add,
+        //     color: primaryBackground,
+        //   ),
+        //   elevation: 8.0,
+        //   label: Text(
+        //     '재료 추가',
+        //     style: TextStyle(
+        //       fontFamily: 'SUITE',
+        //       color: primaryBackground,
+        //       fontSize: 20.0,
+        //     ),
+        //   ),
+        // ),
       );
     });
   }
@@ -182,117 +183,83 @@ class ProductDetailsWidget extends StatefulWidget {
 class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
   @override
   Widget build(BuildContext context) {
-    return // Generated code for this UserList9 Widget...
-        Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 0.0),
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: secondaryBackground,
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 0.0,
-                    color: primaryBackground,
-                    offset: Offset(0.0, 1.0),
-                  )
-                ],
-                borderRadius: BorderRadius.circular(0.0),
-              ),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 12.0, 8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(
-                        'assets/images/돼지고기.jpeg',
-                        width: 70.0,
-                        height: 70.0,
-                        fit: BoxFit.cover,
-                      ), // TODO : [admin] 이미지 확인
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 0.0, 0.0),
-                                child: Text(
-                                  '${widget.ingredients.ingredients_name}',
-                                  style: TextStyle(
-                                      fontFamily: 'SUITE',
-                                      color: info,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 2.0, 0.0, 0.0),
-                                child: Text(
-                                  '${widget.ingredients.product_name}',
-                                  style: TextStyle(
-                                      fontFamily: 'SUITE',
-                                      fontSize: 13.0,
-                                      color: secondaryText),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 2.0, 0.0, 0.0),
-                                child: Text(
-                                  '${widget.ingredients.price}원',
-                                  style: TextStyle(
+    return Consumer<LoginService>(builder: (context, loginService, child) {
+      return Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 0.0),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: secondaryBackground,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 0.0,
+                  color: primaryBackground,
+                  offset: Offset(0.0, 1.0),
+                )
+              ],
+              borderRadius: BorderRadius.circular(0.0),
+            ),
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 12.0, 8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 0.0, 0.0, 0.0),
+                              child: Text(
+                                '${widget.ingredients.ingredients_name}',
+                                style: TextStyle(
                                     fontFamily: 'SUITE',
-                                    fontSize: 12.0,
-                                    color: secondaryText,
-                                  ),
-                                ),
+                                    color: info,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),
                               ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete_sharp,
-                                  color: secondaryText,
-                                  size: 17.0,
-                                ),
-                                onPressed: () {
-                                  widget.ingredientsService.deleteProduct(
-                                      widget.ingredients.ingredients_id);
-                                }, // TODO : [admin] 등록된 상품 제거 구현
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.mode_edit_sharp,
+                                color: secondaryText,
+                                size: 17.0,
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.mode_edit_sharp,
-                                  color: secondaryText,
-                                  size: 17.0,
-                                ),
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/AdminProductRegisterPage',
-                                      arguments: widget.ingredients);
-                                }, // TODO : [admin] 등록된 상품 수정 구현
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TeenagerAddIngredientPopWidget(
+                                              ingredient_name: widget
+                                                  .ingredients.ingredients_name,
+                                              bMember_id: loginService
+                                                  .loginB.bMember_id!,
+                                            )));
+                                //유통기한 입력
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ));
+            ),
+          ));
+    });
   }
 }

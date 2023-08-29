@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../model/FridgeModel.dart';
 
@@ -11,7 +10,7 @@ class PostFridges {
   int? fridge_id;
   String bMember_id;
   String item_name;
-  XFile? item_img;
+  String? item_img;
   int is_frized;
   String? expiration_date;
 
@@ -54,8 +53,8 @@ class FridgesService extends ChangeNotifier {
 
   void deleteFridge(String item_id) async {
     try {
-      Response response = await Dio()
-          .delete("http://15.165.106.139:8080/bMember/fridge/delete" + item_id);
+      Response response = await Dio().delete(
+          "http://15.165.106.139:8080/bMember/fridge/delete/" + item_id);
 
       if (response.statusCode == 200) {
         print('DELETE 요청 성공');
@@ -73,17 +72,16 @@ class FridgesService extends ChangeNotifier {
   }
 
   void postFridge(PostFridges postFridges, String bMember_id) async {
+    print("예스 이미지");
     final data = FormData.fromMap(
       {
-        "img": null,
-        // await MultipartFile.fromFile(
-        //   postFridges.item_img!.path,
-
-        //   filename: "${postFridges.item_name}.jpg",
-        // ),
-        "fridgesDto": MultipartFile.fromString(
+        "img": await MultipartFile.fromFile(
+          postFridges.item_img!,
+          contentType: MediaType.parse('multipart/form-data'),
+        ),
+        "fridgeDto": MultipartFile.fromString(
           jsonEncode({
-            "fridge_id": postFridges.fridge_id,
+            "fridge_id": null,
             "name": postFridges.item_name,
             "isFrized": postFridges.is_frized,
             "expirationDate": postFridges.expiration_date,
@@ -93,6 +91,42 @@ class FridgesService extends ChangeNotifier {
       },
       ListFormat.multiCompatible,
     );
+    print(postFridges.item_img!);
+    try {
+      Response response = await Dio().post(
+        "http://15.165.106.139:8080/bMember/fridge/add/${bMember_id}",
+        data: data,
+      );
+      if (response.statusCode == 200) {
+        // 업로드 성공 시 처리
+        print('냉장고 재료 POST 성공');
+        print(response.data);
+      } else {
+        // 업로드 실패 시 처리
+        print('이미지 업로드 실패');
+        print('Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('냉장고 재료 POST 에러');
+      print(e.toString());
+    }
+
+    getMyFridge(bMember_id);
+  }
+
+  void postFridgeNoImg(PostFridges postFridges, String bMember_id) async {
+    print("노이미지");
+    final FormData data = FormData.fromMap({
+      "fridgeDto": MultipartFile.fromString(
+        jsonEncode({
+          "fridge_id": null,
+          "name": postFridges.item_name,
+          "isFrized": postFridges.is_frized,
+          "expirationDate": postFridges.expiration_date
+        }),
+        contentType: MediaType.parse('application/json'),
+      ),
+    });
     print(data);
     try {
       Response response = await Dio().post(

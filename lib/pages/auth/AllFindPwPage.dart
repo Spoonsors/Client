@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:save_children_v01/pages/auth/AllLoginPage.dart';
 
 import '../../etc/Colors.dart';
 import '../../etc/TextStyles.dart';
@@ -22,7 +23,7 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
   TextEditingController? phoneController = TextEditingController();
   TextEditingController? codeController = TextEditingController();
   TextEditingController? pwController = TextEditingController();
-  bool verifyState = false;
+  bool isVerified = false;
   @override
   void initState() {
     super.initState();
@@ -276,13 +277,13 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                     16, 12, 16, 0),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    smsservice.verifyID(nameController!.text,
-                                        phoneController!.text);
-                                    smsservice.pwAnswer == "fail"
+                                    smsservice.verifyId(idController!.text);
+                                    smsservice.pwAnswer != "success"
                                         ? showDialog(
                                             context: context,
                                             barrierDismissible: false,
                                             builder: (BuildContext context) {
+                                              isVerified = false;
                                               return AlertDialog(
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius:
@@ -328,6 +329,7 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                             context: context,
                                             barrierDismissible: false,
                                             builder: (BuildContext context) {
+                                              isVerified = true;
                                               return AlertDialog(
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius:
@@ -394,7 +396,7 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                     16, 12, 16, 0),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    smsservice.pwAnswer == "fail"
+                                    !isVerified
                                         ? showDialog(
                                             context: context,
                                             barrierDismissible: false,
@@ -444,7 +446,7 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                             context: context,
                                             barrierDismissible: false,
                                             builder: (BuildContext context) {
-                                              smsservice.sendSMS(
+                                              smsservice.sendCode(
                                                   idController!.text,
                                                   nameController!.text,
                                                   phoneController!.text);
@@ -586,7 +588,7 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                                             10.0)),
                                                 title: Column(
                                                   children: <Widget>[
-                                                    Text("인증 성공공"),
+                                                    Text("인증 성공"),
                                                   ],
                                                 ),
                                                 content: Column(
@@ -692,7 +694,7 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                   controller: pwController,
                                   textCapitalization: TextCapitalization.none,
                                   decoration: InputDecoration(
-                                    labelText: '새 비밀번호호',
+                                    labelText: '새 비밀번호',
                                     labelStyle: labelLarge,
                                     enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
@@ -754,51 +756,49 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                         onPressed: () {
                           smsservice.changePw(
                               idController!.text, pwController!.text);
-                              showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("아이디 미인증"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "아이디가 존재하지 않습니다.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            })
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)),
+                                  title: Column(
+                                    children: <Widget>[
+                                      Text("변경 완료"),
+                                    ],
+                                  ),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "새 비밀번호로 로그인 하십시오",
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.all(20.0),
+                                        foregroundColor: Color(0xffFFB74D),
+                                        textStyle:
+                                            const TextStyle(fontSize: 20),
+                                      ),
+                                      child: Text("확인"),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AllLoginPageWidget()));
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
                         },
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),

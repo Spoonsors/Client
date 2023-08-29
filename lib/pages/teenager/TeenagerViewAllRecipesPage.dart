@@ -46,8 +46,8 @@ class _TeenagerViewAllRecipesPageWidgetState
     return Consumer<RecipeService>(builder: (context, recipeService, child) {
       recipeService.get4RecipeInfo(_diet_name);
       return GestureDetector(
-          onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
-          child: Scaffold(
+        onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+        child: Scaffold(
             key: scaffoldKey,
             backgroundColor: const Color(0xffffffff),
             appBar: AppBar(
@@ -66,42 +66,49 @@ class _TeenagerViewAllRecipesPageWidgetState
               centerTitle: false,
               elevation: 2,
             ),
-            body: Column(mainAxisSize: MainAxisSize.max, children: [
-              Container(
-                width: 300,
-                height: 30,
-                padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                child: Text(
-                  '현재 등록된 재료 기준으로 정렬합니다',
-                  style: TextStyle(
-                    fontFamily: 'SUITE',
-                    color: const Color(0xff757575),
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
+            body: SafeArea(
+              top: true,
+              child: SingleChildScrollView(
+                child: Column(mainAxisSize: MainAxisSize.max, children: [
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                    child: Text(
+                      '현재 등록된 재료 기준으로 정렬합니다',
+                      style: TextStyle(
+                        fontFamily: 'SUITE',
+                        color: const Color(0xff757575),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                    ),
                   ),
-                ),
+                  SingleChildScrollView(
+                    child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: _diet_name == ''
+                            ? recipeService.recipeList.length
+                            : recipeService.requested4MenuInDiet.length,
+                        itemBuilder: (context, index) {
+                          if (_diet_name == '') {
+                            final _recipe = recipeService.recipeList[index];
+                            return RecipeCard(
+                                recipe: _recipe.recipe, idx: index);
+                          } else {
+                            print("hello");
+                            final _recipe =
+                                recipeService.requested4RecipeInDiet[index];
+                            return RecipeCard(recipe: _recipe, idx: index);
+                          }
+                        }),
+                  )
+                ]),
               ),
-              Expanded(
-                child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: _diet_name == ""
-                        ? recipeService.recipeList.length
-                        : recipeService.requested4MenuInDiet.length,
-                    itemBuilder: (context, index) {
-                      if (_diet_name == '') {
-                        final _recipe = recipeService.recipeList[index];
-                        return RecipeCard(recipe: _recipe.recipe, idx: index);
-                      } else {
-                        final _recipe =
-                            recipeService.requested4RecipeInDiet[index];
-                        return RecipeCard(recipe: _recipe, idx: index);
-                      }
-                    }),
-              )
-            ]),
-          ));
+            )),
+      );
     });
   }
 }
@@ -115,20 +122,18 @@ class RecipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> parts = recipe.rcp_PARTS_DTLS.split(',');
-    return Container(
-      width: 400,
-      height: 300,
+    return Align(
       alignment: AlignmentDirectional(0, 0),
-      child: Container(
+      child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
         child: Container(
           margin: EdgeInsets.fromLTRB(0, 8, 0, 8),
           width: double.infinity,
-          // constraints: BoxConstraints(
-          //   minHeight: 220,
-          //   maxWidth: 530,
-          //   maxHeight: 260,
-          // ),
+          constraints: BoxConstraints(
+            minHeight: 220,
+            maxWidth: 530,
+            maxHeight: 260,
+          ),
           decoration: BoxDecoration(
             color: const Color(0xffffffff),
             boxShadow: [
@@ -169,19 +174,19 @@ class RecipeCard extends StatelessWidget {
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
-                            // Padding(
-                            //   padding:
-                            //       EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                            //   child: Text(
-                            //     '${recipe.}, 30분', //난이도 변경 예정
-                            //     style: TextStyle(
-                            //       fontFamily: 'Inter',
-                            //       color: Color(0xFF57636C),
-                            //       fontSize: 12,
-                            //       fontWeight: FontWeight.normal,
-                            //     ),
-                            //   ),
-                            // ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                              child: Text(
+                                '쉬움, 30분', //난이도 변경 예정
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  color: Color(0xFF57636C),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -237,7 +242,7 @@ class RecipeCard extends StatelessWidget {
                         ),
                         Align(
                           alignment: AlignmentDirectional(0, 0.96),
-                          child: Container(
+                          child: Padding(
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
                             child: Row(
