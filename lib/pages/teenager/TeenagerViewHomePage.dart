@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'package:save_children_v01/pages/teenager/TeenagerWriteRequestPage.dart';
 
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerViewHomePageModel.dart';
+import '../../service/LoginService.dart';
 import '../../service/MealPlannerService.dart';
 import '../../service/RecipeService.dart';
 
@@ -29,7 +31,7 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
   void initState() {
     super.initState();
     _model = TeenagerViewHomePageModel();
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    // WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -40,8 +42,8 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<RecipeService, MealPlannerService>(
-        builder: (context, recipeService, mealPlannerService, child) {
+    return Consumer3<RecipeService, MealPlannerService, LoginService>(builder:
+        (context, recipeService, mealPlannerService, loginService, child) {
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
         child: Scaffold(
@@ -125,7 +127,7 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
                       ],
                     ),
                   ),
-                  recipeService.recipeList.isNotEmpty
+                  mealPlannerService.mealPlannerList.isNotEmpty
                       ? Container(
                           width: double.infinity,
                           height: 350,
@@ -180,7 +182,9 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
                               final _menu =
                                   recipeService.recipeList[index].recipe;
                               return RecommendedMenuCard(
-                                  menu: _menu, idx: index);
+                                  menu: _menu,
+                                  id: loginService.loginB.bMember_id!,
+                                  idx: index);
                             },
                           ),
                         )
@@ -526,9 +530,18 @@ class RecommendedDietCard extends StatelessWidget {
 }
 
 class RecommendedMenuCard extends StatelessWidget {
-  const RecommendedMenuCard({super.key, required this.menu, required this.idx});
+  const RecommendedMenuCard(
+      {super.key, required this.menu, required this.id, required this.idx});
   final Recipe menu;
+  final String id;
   final int idx;
+  Future<int> isAvailablePost(String id) async {
+    Response res = await Dio().get(
+      "http://15.165.106.139:8080/bMember/canPost/${id}",
+    );
+    return res.data;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -598,12 +611,52 @@ class RecommendedMenuCard extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      TeenagerWriteRequestPageWidget(
-                                          recipe: menu)));
+                          await isAvailablePost(id) == 1
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TeenagerWriteRequestPageWidget(
+                                              recipe: menu)))
+                              : showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0)),
+                                      title: Column(
+                                        children: <Widget>[
+                                          Text("후원 글 작성 불가"),
+                                        ],
+                                      ),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "리뷰 작성 후 후원 글을 작성할 수 있습니다..",
+                                          ),
+                                        ],
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.all(20.0),
+                                            foregroundColor: Color(0xffFFB74D),
+                                            textStyle:
+                                                const TextStyle(fontSize: 20),
+                                          ),
+                                          child: Text("확인"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  });
                         },
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
