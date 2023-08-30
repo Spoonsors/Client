@@ -35,8 +35,8 @@ class SMember {
       this.spons});
 
   SMember.fromJson(Map<String, dynamic> json) {
-    createDate = json['createDate'];
-    modifiedDate = json['modifiedDate'];
+    createDate = json['createDate'].toString();
+    modifiedDate = json['modifiedDate'].toString();
     role = json['role'];
     token = json['token'];
     profilePath = json['profile_path'];

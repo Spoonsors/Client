@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:save_children_v01/pages/auth/AllLoginPage.dart';
 
 import '../../etc/Colors.dart';
+import '../../etc/Dialog.dart';
 import '../../etc/TextStyles.dart';
 import '../../service/SMSService.dart';
 
@@ -279,98 +280,10 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                   onPressed: () async {
                                     smsservice.verifyId(idController!.text);
                                     smsservice.pwAnswer != "success"
-                                        ? showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              isVerified = false;
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("아이디 미인증"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "아이디가 존재하지 않습니다.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            })
-                                        : showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              isVerified = true;
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("아이디 확인"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "아이디가 확인되었습니다.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            });
+                                        ? dialog("아이디 미인증", "아이디가 존재하지 않습니다.",
+                                            context)
+                                        : dialog(
+                                            "아이디 확인", "아이디가 확인되었습니다.", context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       padding:
@@ -397,100 +310,10 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     !isVerified
-                                        ? showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("아이디 미인증"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "아이디 인증부터 해주시기 바랍니다.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            })
-                                        : showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              smsservice.sendCode(
-                                                  idController!.text,
-                                                  nameController!.text,
-                                                  phoneController!.text);
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("인증번호 전송"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "인증번호가 전송되었습니다.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            });
+                                        ? dialog("아이디 미인증",
+                                            "아이디 인증부터 해주시기 바랍니다.", context)
+                                        : dialog("인증번호 전송", "인증번호가 전송되었습니다.",
+                                            context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       padding:
@@ -577,96 +400,9 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                     smsservice.verifySMS(phoneController!.text,
                                         codeController!.text);
                                     smsservice.pwCodeVerified == "success"
-                                        ? showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("인증 성공"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "인증되었습니다.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            })
-                                        : showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("인증 실패"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "인증번호가 틀립니다.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            });
+                                        ? dialog("인증 성공", "인증되었습니다.", context)
+                                        : dialog(
+                                            "인증 실피", "인증번호가 틀립니다.", context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       padding:

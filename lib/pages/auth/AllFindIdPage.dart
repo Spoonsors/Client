@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../etc/Colors.dart';
+import '../../etc/Dialog.dart';
 import '../../etc/TextStyles.dart';
 import '../../service/SMSService.dart';
 
@@ -24,8 +25,6 @@ class _AllFindIdPageWidgetState extends State<AllFindIdPageWidget> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -273,101 +272,18 @@ class _AllFindIdPageWidgetState extends State<AllFindIdPageWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16, 12, 16, 0),
                                 child: ElevatedButton(
-                                  onPressed: () async {
-                                    await smsservice.verifyIdAndSendCode(
-                                                nameController!.text,
-                                                phoneController!.text) ==
-                                            "사용자 확인 완료"
-                                        ? showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("아이디 확인"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "인증번호를 입력하세요.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            })
-                                        : showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("아이디 확인"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "가입하신 아이디가 없습니다.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            });
+                                  onPressed: () {
+                                    print("이름 : " + nameController!.text);
+                                    print("폰 : " + phoneController!.text);
+                                    smsservice.verifyIdAndSendCode(
+                                        nameController!.text,
+                                        phoneController!.text);
+                                    print("aaaa" + smsservice.pwAnswer);
+                                    smsservice.pwAnswer != "fail"
+                                        ? dialog(
+                                            "아이디 확인", "인증번호를 입력하세요.", context)
+                                        : dialog("아이디 확인", "가입하신 아이디가 없습니다.",
+                                            context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       padding:
@@ -393,101 +309,19 @@ class _AllFindIdPageWidgetState extends State<AllFindIdPageWidget> {
                                     16, 12, 16, 0),
                                 child: ElevatedButton(
                                   onPressed: () async {
+                                    print("이름 : " + nameController!.text);
+                                    print("폰 : " + phoneController!.text);
+                                    print("인증번호 : " + codeController!.text);
                                     await smsservice.verifyCodeId(
-                                                nameController!.text,
-                                                phoneController!.text,
-                                                codeController!.text) ==
-                                            "fail"
-                                        ? showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("인증 실패"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "잘못된 인증 번호입니다.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            })
-                                        : showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                title: Column(
-                                                  children: <Widget>[
-                                                    Text("인증 완료"),
-                                                  ],
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "인증되었습니다. 아이디를 확인해주세요.",
-                                                    ),
-                                                  ],
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      foregroundColor:
-                                                          Color(0xffFFB74D),
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 20),
-                                                    ),
-                                                    child: Text("확인"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            });
+                                        nameController!.text,
+                                        phoneController!.text,
+                                        codeController!.text);
+                                    print("내 아이디는 " + smsservice.requestedId);
+                                    smsservice.requestedId == "fail"
+                                        ? dialog(
+                                            "인증 실패", "잘못된 인증 번호입니다.", context)
+                                        : dialog("인증 완료",
+                                            "인증되었습니다. 아이디를 확인해주세요.", context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       padding:
@@ -516,50 +350,11 @@ class _AllFindIdPageWidgetState extends State<AllFindIdPageWidget> {
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
                       child: ElevatedButton(
-                        onPressed: () async {
-                          String? myId = await smsservice.verifyCodeId(
-                              nameController!.text,
-                              phoneController!.text,
-                              codeController!.text);
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
-                                  title: Column(
-                                    children: <Widget>[
-                                      Text("아이디 확인"),
-                                    ],
-                                  ),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        "가입하신 아이디는 ${myId}입니다.",
-                                      ),
-                                    ],
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.all(20.0),
-                                        foregroundColor: Color(0xffFFB74D),
-                                        textStyle:
-                                            const TextStyle(fontSize: 20),
-                                      ),
-                                      child: Text("확인"),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              });
+                        onPressed: () {
+                          dialog(
+                              "아이디 확인",
+                              "가입하신 아이디는 ${smsservice.requestedId}입니다.",
+                              context);
                         },
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),

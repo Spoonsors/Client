@@ -4,6 +4,7 @@ import 'package:save_children_v01/service/FridgesService.dart';
 import 'package:save_children_v01/service/LoginService.dart';
 import 'package:save_children_v01/service/PostsService.dart';
 
+import '../../etc/Dialog.dart';
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerWriteRequestPageModel.dart';
 
@@ -277,6 +278,10 @@ class _TeenagerWriteRequestPageWidgetState
                                   item_list: parts);
                               postsService.writePost(
                                   _post, loginservice.loginB.bMember_id!);
+                              if (!postsService.isVerified) {
+                                dialog(
+                                    "후원 글 작성 불가", "인증되지 않은 사용자입니다.", context);
+                              }
 
                               Navigator.pop(context);
                             },

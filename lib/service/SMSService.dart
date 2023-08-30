@@ -20,10 +20,13 @@ class RequestSMS {
 }
 
 class SMSService extends ChangeNotifier {
+  String requestedId = "";
   String idAnswer = "";
   String idCodeVerified = "";
   String pwAnswer = "";
   String pwCodeVerified = "";
+  dynamic sessionId = "";
+  Dio dioId = new Dio();
   void sendCode(String id, String name, String phone) async {
     //비밀번호 : 인증번호 전송
     Dio dio = new Dio();
@@ -72,12 +75,11 @@ class SMSService extends ChangeNotifier {
     }
   }
 
-  Future<String?> verifyIdAndSendCode(String name, String phoneNum) async {
+  Future<void> verifyIdAndSendCode(String name, String phoneNum) async {
     //아이디 : 아이디 존재하는지 확인하고 있으면 인증번호 전송
-    Dio dio = new Dio();
     Map<String, dynamic> data = {"name": name, "phoneNum": phoneNum};
     try {
-      Response response = await dio.post(
+      Response response = await dioId.post(
         "http://15.165.106.139:8080/join/matchId",
         data: data,
       );
@@ -85,28 +87,30 @@ class SMSService extends ChangeNotifier {
         // 업로드 성공 시 처리
         print('아이디 전송 성공');
         print(response.data);
+
+        sessionId = response.headers["Set-Cookie"]![0];
+        print("세션 아이디는" + sessionId);
+        sessionId = sessionId.replaceAll("JSESSIONID=", "");
+        sessionId = sessionId.replaceAll("; Path=/; HttpOnly", "");
+        print("세션 아이디는" + sessionId);
         pwAnswer = "success";
-        return response.data.toString();
       } else {
         // 업로드 실패 시 처리
         print('전송 실패');
         print('Status Code: ${response.statusCode}');
         pwAnswer = "fail";
-        return "fail";
       }
     } catch (e) {
       print('아이디 전송 에러');
       print(e.toString());
       pwAnswer = "fail";
-      return "fail";
     }
   }
 
   void verifyId(String id) async {
     //비밀번호 : 아이디가 있는지 확인
-    Dio dio = new Dio();
     try {
-      Response response = await dio.get(
+      Response response = await Dio().get(
         "http://15.165.106.139:8080/join/matchId/${id}",
       );
       if (response.statusCode == 200) {
@@ -127,35 +131,37 @@ class SMSService extends ChangeNotifier {
     }
   }
 
-  Future<String?> verifyCodeId(
-      String name, String phoneNum, String code) async {
+  Future<void> verifyCodeId(String name, String phoneNum, String code) async {
     //아이디 : 인증번호 일치 확인
-    Dio dio = new Dio();
     Map<String, dynamic> data = {
       "name": name,
       "phoneNum": phoneNum,
       "code": code
     };
+    dioId.options.headers["Auth"] = sessionId;
+    // dioId.options.headers["Cookie"] =
+    //     dioId.options.headers["Cookie"] + "; sessionId = " + sessionId;
     try {
-      Response response = await dio.post(
+      Response response = await dioId.post(
         "http://15.165.106.139:8080/join/findId",
         data: data,
       );
+
       if (response.statusCode == 200) {
         // 업로드 성공 시 처리
         print('아이디 : 인증 성공');
         print("내 아이디는" + response.data);
-        return response.data.toString();
+        requestedId = response.data.toString();
       } else {
         // 업로드 실패 시 처리
         print('아이디 : 인증 실패');
         print('Status Code: ${response.statusCode}');
-        return "fail";
+        requestedId = "fail";
       }
     } catch (e) {
       print('아이디 : 에러');
       print(e.toString());
-      return "fail";
+      requestedId = "fail";
     }
   }
 
