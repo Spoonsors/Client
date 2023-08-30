@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:save_children_v01/pages/auth/SupporterCreateProfilePage.dart';
 import 'package:save_children_v01/service/SignupService.dart';
 
+import '../../etc/Dialog.dart';
 import '../../models/AllSignInPageModel.dart';
 import 'TeenagerCreateProfilePage.dart';
 
@@ -449,175 +450,22 @@ class _AllSignInPageWidgetState extends State<AllSignInPageWidget> {
                                                                   )));
                                                     }
                                                   } else {
-                                                    showDialog(
-                                                        context: context,
-                                                        barrierDismissible:
-                                                            false,
-                                                        builder: (BuildContext
-                                                            context) {
-                                                          return AlertDialog(
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0)),
-                                                            title: Column(
-                                                              children: <
-                                                                  Widget>[
-                                                                Text("비밀번호 확인"),
-                                                              ],
-                                                            ),
-                                                            content: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: <
-                                                                  Widget>[
-                                                                Text(
-                                                                  "비밀번호를 확인해주세요.",
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            actions: <Widget>[
-                                                              TextButton(
-                                                                style: TextButton
-                                                                    .styleFrom(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .all(
-                                                                          20.0),
-                                                                  foregroundColor:
-                                                                      Color(
-                                                                          0xffFFB74D),
-                                                                  textStyle:
-                                                                      const TextStyle(
-                                                                          fontSize:
-                                                                              20),
-                                                                ),
-                                                                child:
-                                                                    Text("확인"),
-                                                                onPressed: () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                },
-                                                              ),
-                                                            ],
-                                                          );
-                                                        });
+                                                    dialog(
+                                                        "비밀번호 확인",
+                                                        "비밀번호를 확인해주세요",
+                                                        context);
                                                   }
                                                 } else {
-                                                  showDialog(
-                                                      context: context,
-                                                      barrierDismissible: false,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return AlertDialog(
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10.0)),
-                                                          title: Column(
-                                                            children: <Widget>[
-                                                              Text("비밀번호 확인"),
-                                                            ],
-                                                          ),
-                                                          content: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: <Widget>[
-                                                              Text(
-                                                                "비밀번호는 8~15자여야 합니다.",
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          actions: <Widget>[
-                                                            TextButton(
-                                                              style: TextButton
-                                                                  .styleFrom(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .all(
-                                                                        20.0),
-                                                                foregroundColor:
-                                                                    Color(
-                                                                        0xffFFB74D),
-                                                                textStyle:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            20),
-                                                              ),
-                                                              child: Text("확인"),
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                            ),
-                                                          ],
-                                                        );
-                                                      });
+                                                  dialog(
+                                                      "비밀번호 확인",
+                                                      "비밀번호는 8~15자여야 합니다.",
+                                                      context);
                                                 }
                                               } else {
-                                                showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10.0)),
-                                                        title: Column(
-                                                          children: <Widget>[
-                                                            Text("ID 중복"),
-                                                          ],
-                                                        ),
-                                                        content: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: <Widget>[
-                                                            Text(
-                                                              "이미 사용 중인 ID입니다.",
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            style: TextButton
-                                                                .styleFrom(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .all(
-                                                                      20.0),
-                                                              foregroundColor:
-                                                                  Color(
-                                                                      0xffFFB74D),
-                                                              textStyle:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          20),
-                                                            ),
-                                                            child: Text("확인"),
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                          ),
-                                                        ],
-                                                      );
-                                                    });
+                                                dialog(
+                                                    "아이디 중복",
+                                                    "이미 사용 중인 아이디입니다.",
+                                                    context);
                                               }
                                             },
                                             child: Text("계정 생성하기",

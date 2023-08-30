@@ -8,6 +8,7 @@ import 'package:save_children_v01/pages/teenager/TeenagerViewDietsPage.dart';
 import 'package:save_children_v01/pages/teenager/TeenagerViewRecipePage.dart';
 import 'package:save_children_v01/pages/teenager/TeenagerWriteRequestPage.dart';
 
+import '../../etc/Dialog.dart';
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerViewHomePageModel.dart';
 import '../../service/LoginService.dart';
@@ -31,7 +32,7 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
   void initState() {
     super.initState();
     _model = TeenagerViewHomePageModel();
-    // WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -618,45 +619,8 @@ class RecommendedMenuCard extends StatelessWidget {
                                       builder: (context) =>
                                           TeenagerWriteRequestPageWidget(
                                               recipe: menu)))
-                              : showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0)),
-                                      title: Column(
-                                        children: <Widget>[
-                                          Text("후원 글 작성 불가"),
-                                        ],
-                                      ),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            "리뷰 작성 후 후원 글을 작성할 수 있습니다..",
-                                          ),
-                                        ],
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          style: TextButton.styleFrom(
-                                            padding: const EdgeInsets.all(20.0),
-                                            foregroundColor: Color(0xffFFB74D),
-                                            textStyle:
-                                                const TextStyle(fontSize: 20),
-                                          ),
-                                          child: Text("확인"),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  });
+                              : dialog("후원 글 작성 불가",
+                                  "리뷰 작성 후 후원 글을 작성할 수 있습니다...", context);
                         },
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),

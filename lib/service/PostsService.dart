@@ -23,7 +23,7 @@ class PostsService extends ChangeNotifier {
   List<Post> allPostList = [];
   List<Post> myPostList = [];
   late Post _post;
-
+  bool isVerified = true;
   // 후원에 올리는 메뉴의 레시피
   late Recipe post_Recipe;
 
@@ -87,6 +87,10 @@ class PostsService extends ChangeNotifier {
     } catch (e) {
       print('후원 POST 에러');
       print(e.toString());
+      if (e.toString() ==
+          "DioError [DioErrorType.response]: Http status error [403]") {
+        isVerified = false;
+      }
     }
     getAllPosts();
   }

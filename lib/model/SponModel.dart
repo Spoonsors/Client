@@ -29,7 +29,7 @@ class Spon {
     ingredients = json['ingredients'] != null
         ? new Ingredients.fromJson(json['ingredients'])
         : null;
-    sponDate = json['spon_date'];
+    sponDate = json['spon_date'].toString();
     sponState = json['spon_state'];
     tid = json['tid'];
     smember =
