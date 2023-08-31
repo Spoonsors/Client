@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Dialog.dart';
@@ -304,13 +303,13 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                           child: Text("로그인",
                                               style: TextStyle(
                                                 fontFamily: 'Lexend Deca',
-                                                color: Colors.white,
+                                                color: Color(0xffFFB74D),
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500,
                                               )),
                                           style: ElevatedButton.styleFrom(
-                                            minimumSize: Size(230, 44),
-                                            backgroundColor: Color(0xffFFB74D),
+                                            minimumSize: Size(180, 44),
+                                            backgroundColor: Colors.white,
                                             side: BorderSide(
                                               color: Colors.transparent,
                                               width: 1,
@@ -334,112 +333,97 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
                                                   0, 0, 0, 16),
-                                          child: ElevatedButton.icon(
-                                              icon: FaIcon(FontAwesomeIcons.k),
-                                              onPressed: () async {
-                                                User kakaoUser =
-                                                    await loginservice
-                                                        .kakaoLogin();
-                                                if (kakaoUser != false) {
-                                                  loginservice.loginBMember(
-                                                      kakaoUser
-                                                          .kakaoAccount!.email!,
-                                                      kakaoUser.id
-                                                          .toString()); //아이디 : 카카오 계정 / 비번 :  카카오 회원번호
-                                                  loginservice.isLogin
-                                                      ? Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  TeenagerViewMainPageWidget()))
-                                                      : showDialog(
-                                                          context: context,
-                                                          barrierDismissible:
-                                                              false,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return AlertDialog(
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10.0)),
-                                                              title: Column(
-                                                                children: <
-                                                                    Widget>[
-                                                                  Text(
-                                                                      "앱 정보 등록 필요"),
-                                                                ],
-                                                              ),
-                                                              content: Column(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: <
-                                                                    Widget>[
-                                                                  Text(
-                                                                    "계정 정보를 등록해야합니다.",
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              actions: <Widget>[
-                                                                TextButton(
-                                                                  style: TextButton
-                                                                      .styleFrom(
-                                                                    padding: const EdgeInsets
-                                                                            .all(
-                                                                        20.0),
-                                                                    foregroundColor:
-                                                                        Color(
-                                                                            0xffFFB74D),
-                                                                    textStyle: const TextStyle(
-                                                                        fontSize:
-                                                                            20),
-                                                                  ),
-                                                                  child: Text(
-                                                                      "확인"),
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) => AllWelcomeSignInPageWidget(
-                                                                                  isKakao: loginservice.isKakao,
-                                                                                  kakaoUser: kakaoUser,
-                                                                                )));
-                                                                  },
+                                          child: InkWell(
+                                            child: Image.asset(
+                                                'assets/images/kakao_login.png'),
+                                            onTap: () async {
+                                              User kakaoUser =
+                                                  await loginservice
+                                                      .kakaoLogin();
+                                              if (kakaoUser != false) {
+                                                loginservice.loginBMember(
+                                                    kakaoUser
+                                                        .kakaoAccount!.email!,
+                                                    kakaoUser.id
+                                                        .toString()); //아이디 : 카카오 계정 / 비번 :  카카오 회원번호
+                                                loginservice.isLogin
+                                                    ? Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                TeenagerViewMainPageWidget()))
+                                                    : showDialog(
+                                                        context: context,
+                                                        barrierDismissible:
+                                                            false,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return AlertDialog(
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10.0)),
+                                                            title: Column(
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                    "앱 정보 등록 필요"),
+                                                              ],
+                                                            ),
+                                                            content: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  "계정 정보를 등록해야합니다.",
                                                                 ),
                                                               ],
-                                                            );
-                                                          });
-                                                } else {
-                                                  dialog(
-                                                      "로그인 실패",
-                                                      "아이디와 비밀번호를 다시 입력해주시기 바랍니다.",
-                                                      context);
-                                                }
-                                              },
-                                              label: Text("카카오 계정으로 로그인",
-                                                  style: TextStyle(
-                                                    fontFamily: 'Lexend Deca',
-                                                    color:
-                                                        const Color(0xff212121),
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w700,
-                                                  )),
-                                              style: ElevatedButton.styleFrom(
-                                                minimumSize: Size(230, 44),
-                                                backgroundColor:
-                                                    Color(0xfff5f5f5),
-                                                side: BorderSide(
-                                                  color:
-                                                      const Color(0xffe0e0e0),
-                                                  width: 2,
-                                                ),
-                                              ))),
+                                                            ),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                style: TextButton
+                                                                    .styleFrom(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          20.0),
+                                                                  foregroundColor:
+                                                                      Color(
+                                                                          0xffFFB74D),
+                                                                  textStyle:
+                                                                      const TextStyle(
+                                                                          fontSize:
+                                                                              20),
+                                                                ),
+                                                                child:
+                                                                    Text("확인"),
+                                                                onPressed: () {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) => AllWelcomeSignInPageWidget(
+                                                                                isKakao: loginservice.isKakao,
+                                                                                kakaoUser: kakaoUser,
+                                                                              )));
+                                                                },
+                                                              ),
+                                                            ],
+                                                          );
+                                                        });
+                                              } else {
+                                                dialog(
+                                                    "로그인 실패",
+                                                    "아이디와 비밀번호를 다시 입력해주시기 바랍니다.",
+                                                    context);
+                                              }
+                                            },
+                                          )),
                                     ],
                                   ),
                                 ),

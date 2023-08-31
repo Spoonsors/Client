@@ -65,7 +65,7 @@ class _TeenagerViewRefrigeratorPageWidgetState
             ),
             elevation: 8,
             label: Text(
-              '재료추가',
+              '재료 추가',
               style: TextStyle(
                 fontFamily: 'SUITE',
                 color: const Color(0xffFFFFFF),

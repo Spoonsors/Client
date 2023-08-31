@@ -9,7 +9,6 @@ import '../../models/TeenagerViewSupportsPageModel.dart';
 import '../../service/LoginService.dart';
 import '../../service/PostsService.dart';
 import 'TeenagerViewCompletePostDetailPage.dart';
-import 'TeenagerViewRequestDetailPage.dart';
 
 class TeenagerVIewSupportsPageWidget extends StatefulWidget {
   const TeenagerVIewSupportsPageWidget({
@@ -553,10 +552,11 @@ class CompletedPostCard extends StatelessWidget {
             highlightColor: Colors.transparent,
             onTap: () {
               Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TeenagerViewCompletePostDetailPageWidget(post : post, review : )));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          TeenagerViewCompletePostDetailPageWidget(
+                              post: post)));
             },
             child: Column(
               mainAxisSize: MainAxisSize.max,
