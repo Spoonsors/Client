@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/model/MealPlannerModel.dart';
 import 'package:save_children_v01/pages/teenager/TeenagerViewAllRecipesPage.dart';
@@ -265,16 +264,14 @@ class RecommendedDietCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            diet.menuName1!,
+                            diet.menuName1 != null &&
+                                    diet.menuName1!.length < 10
+                                ? diet.menuName1!
+                                : diet.menuName1!.substring(0, 10) + "...",
                             style: TextStyle(
                                 fontFamily: 'SUITE',
                                 color: const Color(0xff212121),
-                                fontSize: diet.menuName1 != null &&
-                                        diet.menuName1!.length > 10
-                                    ? diet.menuName1!.length > 15
-                                        ? 8.0
-                                        : 10.0
-                                    : 14.0),
+                                fontSize: 14.0),
                           ),
                         ],
                       ),
@@ -289,8 +286,17 @@ class RecommendedDietCard extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: diet.menuImg2 == null
-                                ? Image.asset("assets/images/empty.jpeg",
-                                    width: 140, height: 80, fit: BoxFit.cover)
+                                ? Stack(alignment: Alignment.center, children: [
+                                    Image.asset("assets/images/empty.jpeg",
+                                        width: 140,
+                                        height: 80,
+                                        fit: BoxFit.cover),
+                                    Icon(
+                                      Icons.no_food,
+                                      color: Colors.yellow,
+                                      size: 48.0,
+                                    ),
+                                  ])
                                 : Image.network(
                                     diet.menuImg2!,
                                     width: 140,
@@ -299,16 +305,15 @@ class RecommendedDietCard extends StatelessWidget {
                                   ),
                           ),
                           Text(
-                            diet.menuName2 == null ? "없음" : diet.menuName2!,
+                            diet.menuName2 == null
+                                ? ""
+                                : diet.menuName2!.length < 10
+                                    ? diet.menuName2!
+                                    : diet.menuName2!.substring(0, 10) + "...",
                             style: TextStyle(
                                 fontFamily: 'SUITE',
                                 color: const Color(0xff212121),
-                                fontSize: diet.menuName2 != null &&
-                                        diet.menuName2!.length > 10
-                                    ? diet.menuName2!.length > 15
-                                        ? 8.0
-                                        : 10.0
-                                    : 14.0),
+                                fontSize: 14.0),
                           ),
                         ],
                       ),
@@ -329,8 +334,17 @@ class RecommendedDietCard extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: diet.menuImg3 == null
-                                ? Image.asset("assets/images/empty.jpeg",
-                                    width: 140, height: 80, fit: BoxFit.cover)
+                                ? Stack(alignment: Alignment.center, children: [
+                                    Image.asset("assets/images/empty.jpeg",
+                                        width: 140,
+                                        height: 80,
+                                        fit: BoxFit.cover),
+                                    Icon(
+                                      Icons.no_food,
+                                      color: Colors.yellow,
+                                      size: 48.0,
+                                    ),
+                                  ])
                                 : Image.network(
                                     diet.menuImg3!,
                                     width: 140,
@@ -339,16 +353,15 @@ class RecommendedDietCard extends StatelessWidget {
                                   ),
                           ),
                           Text(
-                            diet.menuName3 == null ? "없음" : diet.menuName3!,
+                            diet.menuName3 == null
+                                ? ""
+                                : diet.menuName3!.length < 10
+                                    ? diet.menuName3!
+                                    : diet.menuName3!.substring(0, 10) + "...",
                             style: TextStyle(
                                 fontFamily: 'SUITE',
                                 color: const Color(0xff212121),
-                                fontSize: diet.menuName3 != null &&
-                                        diet.menuName3!.length > 10
-                                    ? diet.menuName3!.length > 15
-                                        ? 8.0
-                                        : 10.0
-                                    : 14.0),
+                                fontSize: 14.0),
                           ),
                         ],
                       ),
@@ -363,8 +376,17 @@ class RecommendedDietCard extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: diet.menuImg4 == null
-                                ? Image.asset("assets/images/empty.jpeg",
-                                    width: 140, height: 80, fit: BoxFit.cover)
+                                ? Stack(alignment: Alignment.center, children: [
+                                    Image.asset("assets/images/empty.jpeg",
+                                        width: 140,
+                                        height: 80,
+                                        fit: BoxFit.cover),
+                                    Icon(
+                                      Icons.no_food,
+                                      color: Colors.grey,
+                                      size: 24.0,
+                                    ),
+                                  ])
                                 : Image.network(
                                     diet.menuImg4!,
                                     width: 140,
@@ -373,16 +395,15 @@ class RecommendedDietCard extends StatelessWidget {
                                   ),
                           ),
                           Text(
-                            diet.menuName4 == null ? "없음" : diet.menuName4!,
+                            diet.menuName4 == null
+                                ? ""
+                                : diet.menuName4!.length < 10
+                                    ? diet.menuName4!
+                                    : diet.menuName4!.substring(0, 10) + "...",
                             style: TextStyle(
                                 fontFamily: 'SUITE',
                                 color: const Color(0xff212121),
-                                fontSize: diet.menuName4 != null &&
-                                        diet.menuName4!.length > 10
-                                    ? diet.menuName4!.length > 15
-                                        ? 8.0
-                                        : 10.0
-                                    : 14.0),
+                                fontSize: 14.0),
                           ),
                         ],
                       ),
@@ -415,17 +436,17 @@ class RecommendedDietCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                              diet.timeRequired == null
-                                  ? "-"
-                                  : diet.timeRequired!,
-                              style: GoogleFonts.outfit(
-                                textStyle: TextStyle(
-                                  color: Color(0xFF14181B),
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )),
+                          // Text(
+                          //     diet.timeRequired == null
+                          //         ? "-"
+                          //         : diet.timeRequired!,
+                          //     style: GoogleFonts.outfit(
+                          //       textStyle: TextStyle(
+                          //         color: Color(0xFF14181B),
+                          //         fontSize: 24,
+                          //         fontWeight: FontWeight.w500,
+                          //       ),
+                          //     )),
                           Text(
                             diet.level == "하"
                                 ? "쉬움"
