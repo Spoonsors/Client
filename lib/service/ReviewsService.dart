@@ -25,6 +25,7 @@ class PostReview {
 class ReviewsService extends ChangeNotifier {
   List<Review> reviewsList = [];
   late BMember _bMember;
+  Review? review_of_post;
   ReviewsService() {}
 
   void getMyReviews(String bMember_Id) async {
@@ -72,5 +73,15 @@ class ReviewsService extends ChangeNotifier {
       print(e.toString());
     }
     getMyReviews(bMember_id);
+  }
+
+  Future<void> getReviewOfPost(int post_id) async {
+    Response res = await Dio().get(
+      "http://15.165.106.139:8080/viewPosting/" + post_id.toString(),
+    );
+
+    Map<String, dynamic> data = res.data["review"];
+
+    review_of_post = Review.fromJson(data);
   }
 }

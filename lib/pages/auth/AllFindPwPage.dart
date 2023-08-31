@@ -279,6 +279,9 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     smsservice.verifyId(idController!.text);
+                                    if (smsservice.pwAnswer == "success") {
+                                      isVerified = true;
+                                    }
                                     smsservice.pwAnswer != "success"
                                         ? dialog("아이디 미인증", "아이디가 존재하지 않습니다.",
                                             context)
@@ -314,6 +317,12 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                             "아이디 인증부터 해주시기 바랍니다.", context)
                                         : dialog("인증번호 전송", "인증번호가 전송되었습니다.",
                                             context);
+                                    if (isVerified) {
+                                      smsservice.sendCodePw(
+                                          idController!.text,
+                                          nameController!.text,
+                                          phoneController!.text);
+                                    }
                                   },
                                   style: ElevatedButton.styleFrom(
                                       padding:
@@ -397,12 +406,13 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                     16, 12, 16, 0),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    smsservice.verifySMS(phoneController!.text,
+                                    smsservice.verifyCodePw(
+                                        phoneController!.text,
                                         codeController!.text);
                                     smsservice.pwCodeVerified == "success"
                                         ? dialog("인증 성공", "인증되었습니다.", context)
                                         : dialog(
-                                            "인증 실피", "인증번호가 틀립니다.", context);
+                                            "인증 실패", "인증번호가 틀립니다.", context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       padding:
@@ -490,51 +500,55 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                       padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
                       child: ElevatedButton(
                         onPressed: () {
-                          smsservice.changePw(
-                              idController!.text, pwController!.text);
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
-                                  title: Column(
-                                    children: <Widget>[
-                                      Text("변경 완료"),
-                                    ],
-                                  ),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        "새 비밀번호로 로그인 하십시오",
-                                      ),
-                                    ],
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.all(20.0),
-                                        foregroundColor: Color(0xffFFB74D),
-                                        textStyle:
-                                            const TextStyle(fontSize: 20),
-                                      ),
-                                      child: Text("확인"),
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AllLoginPageWidget()));
-                                      },
+                          if (smsservice.pwCodeVerified == "success") {
+                            smsservice.changePw(
+                                idController!.text, pwController!.text);
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                    title: Column(
+                                      children: <Widget>[
+                                        Text("변경 완료"),
+                                      ],
                                     ),
-                                  ],
-                                );
-                              });
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          "새 비밀번호로 로그인 하십시오",
+                                        ),
+                                      ],
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.all(20.0),
+                                          foregroundColor: Color(0xffFFB74D),
+                                          textStyle:
+                                              const TextStyle(fontSize: 20),
+                                        ),
+                                        child: Text("확인"),
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AllLoginPageWidget()));
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                });
+                          } else {
+                            dialog("인증 실패", "인증부터 해주시기 바랍니다.", context);
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),

@@ -27,53 +27,6 @@ class SMSService extends ChangeNotifier {
   String pwCodeVerified = "";
   dynamic sessionId = "";
   Dio dioId = new Dio();
-  void sendCode(String id, String name, String phone) async {
-    //비밀번호 : 인증번호 전송
-    Dio dio = new Dio();
-    Map<String, dynamic> data = {"id": id, "name": name, "phoneNum": phone};
-    try {
-      Response response = await dio
-          .post("http://15.165.106.139:8080/join/matchPwd", data: data);
-      if (response.statusCode == 200) {
-        // 업로드 성공 시 처리
-        print('문자 전송 성공');
-        print(response.data);
-        idAnswer = "success";
-      } else {
-        // 업로드 실패 시 처리
-        print('전송 실패');
-        print('Status Code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('문자 전송 에러');
-      print(e.toString());
-    }
-  }
-
-  void verifySMS(String phoneNum, String code) async {
-    //비밀번호 : 인증번호 인증
-    Dio dio = new Dio();
-    Map<String, dynamic> data = {"phoneNum": phoneNum, "code": code};
-    try {
-      Response response = await dio
-          .post("http://15.165.106.139:8080/join/verifyPwd", data: data);
-      if (response.statusCode == 200) {
-        // 업로드 성공 시 처리
-        print('정보 전송 성공');
-        print(response.data.toString);
-        pwCodeVerified = "success";
-      } else {
-        // 업로드 실패 시 처리
-        print('전송 실패');
-        print('Status Code: ${response.statusCode}');
-        pwCodeVerified = "fail";
-      }
-    } catch (e) {
-      print('정보 전송 에러');
-      print(e.toString());
-      pwCodeVerified = "fail";
-    }
-  }
 
   Future<void> verifyIdAndSendCode(String name, String phoneNum) async {
     //아이디 : 아이디 존재하는지 확인하고 있으면 인증번호 전송
@@ -102,30 +55,6 @@ class SMSService extends ChangeNotifier {
       }
     } catch (e) {
       print('아이디 전송 에러');
-      print(e.toString());
-      pwAnswer = "fail";
-    }
-  }
-
-  void verifyId(String id) async {
-    //비밀번호 : 아이디가 있는지 확인
-    try {
-      Response response = await Dio().get(
-        "http://15.165.106.139:8080/join/matchId/${id}",
-      );
-      if (response.statusCode == 200) {
-        // 업로드 성공 시 처리
-        print('아이디 : 인증 성공');
-        print("내 아이디" + response.data.toString());
-        pwAnswer = "success";
-      } else {
-        // 업로드 실패 시 처리
-        print('아이디 : 인증 실패');
-        print('Status Code: ${response.statusCode}');
-        pwAnswer = "fail";
-      }
-    } catch (e) {
-      print('아이디 : 에러');
       print(e.toString());
       pwAnswer = "fail";
     }
@@ -162,6 +91,78 @@ class SMSService extends ChangeNotifier {
       print('아이디 : 에러');
       print(e.toString());
       requestedId = "fail";
+    }
+  }
+
+  void verifyId(String id) async {
+    //비밀번호 : 아이디가 있는지 확인
+    try {
+      Response response = await Dio().get(
+        "http://15.165.106.139:8080/join/matchId/${id}",
+      );
+      if (response.statusCode == 200) {
+        // 업로드 성공 시 처리
+        print('아이디 : 인증 성공');
+        print("내 아이디" + response.data.toString());
+        pwAnswer = "success";
+      } else {
+        // 업로드 실패 시 처리
+        print('아이디 : 인증 실패');
+        print('Status Code: ${response.statusCode}');
+        pwAnswer = "fail";
+      }
+    } catch (e) {
+      print('아이디 : 에러');
+      print(e.toString());
+      pwAnswer = "fail";
+    }
+  }
+
+  void sendCodePw(String id, String name, String phone) async {
+    //비밀번호 : 인증번호 전송
+    Dio dio = new Dio();
+    Map<String, dynamic> data = {"id": id, "name": name, "phoneNum": phone};
+    try {
+      Response response = await dio
+          .post("http://15.165.106.139:8080/join/matchPwd", data: data);
+      if (response.statusCode == 200) {
+        // 업로드 성공 시 처리
+        print('문자 전송 성공');
+        print(response.data);
+        idAnswer = "success";
+      } else {
+        // 업로드 실패 시 처리
+        print('전송 실패');
+        print('Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('문자 전송 에러');
+      print(e.toString());
+    }
+  }
+
+  void verifyCodePw(String phoneNum, String code) async {
+    //비밀번호 : 인증번호 인증
+    Dio dio = new Dio();
+    Map<String, dynamic> data = {"phoneNum": phoneNum, "code": code};
+    try {
+      Response response = await dio
+          .post("http://15.165.106.139:8080/join/verifyPwd", data: data);
+      if (response.statusCode == 200) {
+        // 업로드 성공 시 처리
+        print('정보 전송 성공');
+        print(response.data.toString);
+        pwCodeVerified = "success";
+      } else {
+        // 업로드 실패 시 처리
+        print('전송 실패');
+        print('Status Code: ${response.statusCode}');
+        pwCodeVerified = "fail";
+      }
+    } catch (e) {
+      print('정보 전송 에러');
+      print(e.toString());
+      pwCodeVerified = "fail";
     }
   }
 
