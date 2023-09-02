@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Routes.dart';
 import 'package:save_children_v01/etc/ThemeData.dart';
-
-import 'package:save_children_v01/pages/auth/AllLoginPage.dart';
+import 'package:save_children_v01/pages/admin/AdminViewAllProductPage.dart';
 import 'package:save_children_v01/service/AdminCertificatedItemsService.dart';
+import 'package:save_children_v01/service/CheckMyReviewService.dart';
 import 'package:save_children_v01/service/FridgesService.dart';
 import 'package:save_children_v01/service/IngredientsService.dart';
 import 'package:save_children_v01/service/LoginService.dart';
@@ -15,6 +15,8 @@ import 'package:save_children_v01/service/ReviewsService.dart';
 import 'package:save_children_v01/service/SMSService.dart';
 import 'package:save_children_v01/service/SignupService.dart';
 import 'package:save_children_v01/service/SupporterPostService.dart';
+import 'package:save_children_v01/service/SupporterSponListService.dart';
+import 'package:save_children_v01/service/ViewPostingService.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -25,11 +27,15 @@ void main() {
       ChangeNotifierProvider(create: (context) => PostsService()),
       ChangeNotifierProvider(create: (context) => MealPlannerService()),
       ChangeNotifierProvider(create: (context) => SupporterPostService()),
-      ChangeNotifierProvider(create: (context) => AdminCertificateInfoService()),
+      ChangeNotifierProvider(
+          create: (context) => AdminCertificateInfoService()),
       ChangeNotifierProvider(create: (context) => SignupService()),
       ChangeNotifierProvider(create: (context) => FridgesService()),
       ChangeNotifierProvider(create: (context) => ReviewsService()),
       ChangeNotifierProvider(create: (context) => SMSService()),
+      ChangeNotifierProvider(create: (context) => ViewPostingService()),
+      ChangeNotifierProvider(create: (context) => SupporterSponListService()),
+      ChangeNotifierProvider(create: (context) => CheckMyReviewService()),
     ],
     child: const MyApp(),
   ));
@@ -47,7 +53,7 @@ class MyApp extends StatelessWidget {
       theme: themeData,
       routes: namedRoutes,
       // initialRoute: "/login",
-      home: AllLoginPageWidget(),
+      home: AdminViewAllProductPageWidget(),
     );
     //routes: {"/login": (context) => AdminViewAllProductPageWidget()});
     //routes: {"/login": (context) => AllLoginPageWidget()});

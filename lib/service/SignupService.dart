@@ -67,18 +67,18 @@ class SignupService extends ChangeNotifier {
         "profilePath": bMember.profile_path,
       }))
     });
-    Map<String, dynamic> data = {
-      "id": bMember.bMember_id,
-      "name": bMember.name,
-      "pwd": bMember.bMember_pwd,
-      "pwd_check": bMember.bMember_pwd_check,
-      "nickname": bMember.bMember_nickname,
-      "phoneNumber": bMember.bMember_phoneNumber,
-      "address": bMember.bMember_address,
-      "token": bMember.bMember_token,
-      "birth": bMember.birth,
-      "profilePath": bMember.profile_path,
-    };
+    // Map<String, dynamic> data = { TODO : 확인 필요
+    //   "id": bMember.bMember_id,
+    //   "name": bMember.name,
+    //   "pwd": bMember.bMember_pwd,
+    //   "pwd_check": bMember.bMember_pwd_check,
+    //   "nickname": bMember.bMember_nickname,
+    //   "phoneNumber": bMember.bMember_phoneNumber,
+    //   "address": bMember.bMember_address,
+    //   "token": bMember.bMember_token,
+    //   "birth": bMember.birth,
+    //   "profilePath": bMember.profile_path,
+    // };
     try {
       Response response = await Dio()
           .post("http://15.165.106.139:8080/join/bMember", data: data);

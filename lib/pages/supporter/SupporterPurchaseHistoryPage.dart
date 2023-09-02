@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:save_children_v01/service/SupporterSponListService.dart';
 
 import '../../etc/Colors.dart';
 
@@ -12,44 +14,36 @@ class SupporterPurchaseHistoryPageWidget extends StatefulWidget {
 
 class _SupporterPurchaseHistoryPageWidgetState
     extends State<SupporterPurchaseHistoryPageWidget> {
-  final List<String> images = [
-    "https://img-cf.kurly.com/shop/data/goodsview/20191213/gv10000072801_1.jpg",
-    "https://i.namu.wiki/i/hpNKO-WVGSNMmidWZP8FEr4pR8xOBS_itU4Y0qRjMSXjkizMhhqe2UkLobGIjevtQozkCmNuivfQrqlQgx2Jog.webp",
-    "https://img.choroc.com/newshop/goods/009179/009179_1.jpg",
-    "https://res.heraldm.com/phpwas/restmb_idxmake.php?idx=507&simg=/content/image/2019/10/14/20191014000235_0.jpg",
-    "https://cdn2.thecatapi.com/images/aph.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-    "https://cdn2.thecatapi.com/images/1rd.jpg",
-  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('후원 내역'),
-      ),
-      body: ListView.builder(
-        padding: EdgeInsets.symmetric(vertical: 10.0),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: images.length,
-        itemBuilder: (context, index) {
-          final imageUrl = images[index];
-          return SupporterProductPurchaseDetailsListItem(imageUrl: imageUrl);
-        },
-      ),
-    );
+    return Consumer<SupporterSponListService>(
+        builder: (context, supporterSponListService, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('후원 내역'),
+        ),
+        body: ListView.builder(
+          padding: EdgeInsets.symmetric(vertical: 10.0),
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: supporterSponListService.items.length,
+          itemBuilder: (context, index) {
+            final item = supporterSponListService.items[index];
+            return SupporterProductPurchaseDetailsListItem(
+                supporterSponListModel: item);
+          },
+        ),
+      );
+    });
   }
 }
 
 class SupporterProductPurchaseDetailsListItem extends StatelessWidget {
   const SupporterProductPurchaseDetailsListItem(
-      {super.key, required this.imageUrl});
+      {super.key, required this.supporterSponListModel});
 
-  final String imageUrl;
+  final SupporterSponListModel supporterSponListModel;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +72,7 @@ class SupporterProductPurchaseDetailsListItem extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.network(
-                        imageUrl,
+                        supporterSponListModel.ingredientsImage,
                         width: 70.0,
                         height: 70.0,
                         fit: BoxFit.cover,
@@ -95,9 +89,9 @@ class SupporterProductPurchaseDetailsListItem extends StatelessWidget {
                             children: [
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 0.0, 0.0),
+                                    10.0, 0.0, 0.0, 0.0),
                                 child: Text(
-                                  '스팸',
+                                  '${supporterSponListModel.ingredientsName}',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       color: info,
@@ -107,20 +101,27 @@ class SupporterProductPurchaseDetailsListItem extends StatelessWidget {
                               ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 2.0, 0.0, 0.0),
-                                child: Text(
-                                  'CJ 제일제당 스팸 200g',
-                                  style: TextStyle(
-                                      fontFamily: 'SUITE',
-                                      fontSize: 13.0,
-                                      color: secondaryText),
+                                    10.0, 2.0, 0.0, 0.0),
+                                child: Container(
+                                  width: 200,
+                                  child: RichText(
+                                    maxLines: 3,
+                                    text: TextSpan(
+                                      text:
+                                          '${supporterSponListModel.productName}',
+                                      style: TextStyle(
+                                          fontFamily: 'SUITE',
+                                          fontSize: 13.0,
+                                          color: secondaryText),
+                                    ),
+                                  ),
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 2.0, 0.0, 0.0),
+                                    10.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '4500원',
+                                  '${supporterSponListModel.price}원',
                                   style: TextStyle(
                                     fontFamily: 'SUITE',
                                     fontSize: 12.0,
@@ -130,28 +131,15 @@ class SupporterProductPurchaseDetailsListItem extends StatelessWidget {
                               ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 2.0, 0.0, 0.0),
+                                    10.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '수혜자 : 닉네임 1',
+                                  '수혜자 : ${supporterSponListModel.writerNickname}',
                                   style: TextStyle(
                                     fontFamily: 'SUITE',
                                     fontSize: 12.0,
                                     color: secondaryText,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.more,
-                                  color: secondaryText,
-                                  size: 24.0,
-                                ),
-                                onPressed: () {}, // TODO : [Suppt] 등록된 상품 제거 구현
                               ),
                             ],
                           ),

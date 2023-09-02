@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:save_children_v01/service/SupporterPostService.dart';
+import 'package:save_children_v01/service/ViewPostingService.dart';
 
 import '../../etc/Colors.dart';
 import '../../etc/TextStyles.dart';
-import '../../model/GetPostDTOModel.dart';
 
 class SupporterViewPostsPageWidget extends StatefulWidget {
   const SupporterViewPostsPageWidget({super.key});
@@ -25,8 +24,8 @@ class _SupporterViewPostsPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SupporterPostService>(
-        builder: (context, supporterPostService, child) {
+    return Consumer<ViewPostingService>(
+        builder: (context, viewPostService, child) {
       return Scaffold(
         appBar: AppBar(
           title: Text('후원 게시판'),
@@ -95,20 +94,26 @@ class _SupporterViewPostsPageWidgetState
                           ],
                         ),
                         Expanded(
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: supporterPostService
-                                .allPostInCompleteList.length,
-                            itemBuilder: (context, index) {
-                              final suppPost = supporterPostService
-                                  .allPostInCompleteList[index];
-                              return PostListItem(
-                                suppPost: suppPost,
-                                check: 1,
-                              );
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              viewPostService.getAllSuppViewPosts();
                             },
+                            color: primary,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount:
+                                  viewPostService.allPostInCompleteList.length,
+                              itemBuilder: (context, index) {
+                                final suppPost = viewPostService
+                                    .allPostInCompleteList[index];
+                                return PostListItem(
+                                  suppPost: suppPost,
+                                  check: 1,
+                                  spon_idx: index,
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
@@ -155,20 +160,27 @@ class _SupporterViewPostsPageWidgetState
                           ],
                         ),
                         Expanded(
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount:
-                                supporterPostService.allPostCompleteList.length,
-                            itemBuilder: (context, index) {
-                              final suppPost = supporterPostService
-                                  .allPostCompleteList[index];
-                              return PostListItem(
-                                suppPost: suppPost,
-                                check: 2,
-                              );
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              viewPostService.getAllSuppViewPosts();
                             },
+                            color: primary,
+                            child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount:
+                                  viewPostService.allPostCompleteList.length,
+                              itemBuilder: (context, index) {
+                                final suppPost =
+                                    viewPostService.allPostCompleteList[index];
+                                return PostListItem(
+                                  suppPost: suppPost,
+                                  check: 2,
+                                  spon_idx: index,
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
@@ -185,10 +197,15 @@ class _SupporterViewPostsPageWidgetState
 }
 
 class PostListItem extends StatefulWidget {
-  const PostListItem({super.key, required this.check, required this.suppPost});
+  const PostListItem(
+      {super.key,
+      required this.check,
+      required this.suppPost,
+      required this.spon_idx});
 
-  final GetPostDTO suppPost;
+  final ViewPosting suppPost;
   final int check;
+  final int spon_idx;
 
   @override
   State<PostListItem> createState() => _PostListItemState();
@@ -198,209 +215,228 @@ class _PostListItemState extends State<PostListItem> {
   @override
   Widget build(BuildContext context) {
     int EstimatedTotalSupporterMoney = 0;
-    for (SponGetDTO sgd in widget.suppPost.spon) {
-      EstimatedTotalSupporterMoney += sgd.ingredients.price;
+    for (Spon sgd in widget.suppPost.spon!) {
+      // 총 후원 예상 금액
+      EstimatedTotalSupporterMoney += sgd.ingredients!.price!;
     }
-
-    DateTime dt = new DateFormat('yyyy-mm-dd').parse(widget.suppPost.post_date);
+    var _visible = (widget.check == 1);
+    DateTime dt = new DateFormat('yyyy-mm-dd').parse(widget.suppPost.postDate!);
 
     String d1 = DateFormat('yyyy-mm-dd').format(dt);
     String d2 = DateFormat('hh:mm a').format(dt);
-    return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
-      child: GestureDetector(
-        onTap: () {
-          context
-              .read<SupporterPostService>()
-              .viewSuppPost(widget.suppPost.post_id);
+    int cnt = 0;
 
-          (widget.check == 1)
-              ? Navigator.pushNamed(context, '/SupporterViewPostDetailPage')
-              : Navigator.pushNamed(
+    return Consumer<ViewPostingService>(
+        builder: (context, viewPostingService, child) {
+      return Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
+        child: GestureDetector(
+          onTap: () async {
+            if (widget.check == 1) {
+              await viewPostingService.selectNowView(widget.spon_idx);
+              Navigator.pushNamed(context, '/SupporterViewPostDetailPage');
+            } else {
+              await viewPostingService.selectComNowView(widget.spon_idx);
+              await viewPostingService.getReview(widget.suppPost.postId);
+              Navigator.pushNamed(
                   context, '/SupporterViewCompletePostDetailPage');
-        },
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 4.0, 0.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              '${widget.suppPost.post_title}',
+            }
+            ;
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 4.0, 0.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                '${widget.suppPost.postTitle}',
+                                style: TextStyle(
+                                    fontFamily: 'SUITE',
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    color: primaryText),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 4.0, 0.0, 0.0),
+                            child: Text(
+                              '${widget.suppPost.postTxt}',
                               style: TextStyle(
-                                  fontFamily: 'SUITE',
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 16,
-                                  color: primaryText),
+                                fontWeight: FontWeight.w400,
+                                color: secondaryText,
+                                fontFamily: 'SUITE',
+                                fontSize: 12.0,
+                              ),
                             ),
-                          ],
-                        ),
-                        Padding(
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 6.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Visibility(
+                      visible: _visible,
+                      replacement: Expanded(
+                        child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 4.0, 0.0, 0.0),
+                              4.0, 0.0, 0.0, 0.0),
                           child: Text(
-                            '${widget.suppPost.post_txt}',
+                            '       ',
                             style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              color: secondaryText,
                               fontFamily: 'SUITE',
+                              color: primary,
                               fontSize: 12.0,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
-                      ],
+                      ),
+                      child: Expanded(
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              4.0, 0.0, 0.0, 0.0),
+                          child: Text(
+                            '필요한 식재료',
+                            style: TextStyle(
+                              fontFamily: 'SUITE',
+                              color: primary,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 6.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding:
-                      EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
-                      child: Text(
-                        '필요한 식재료',
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${d1}', // TODO : 날짜 포멧
+                            style: TextStyle(),
+                          ),
+                          TextSpan(
+                            text: ' | ',
+                            style: TextStyle(),
+                          ),
+                          TextSpan(
+                            text: '${d2}',
+                            style: TextStyle(),
+                          ),
+                          TextSpan(
+                            text: ' | ',
+                            style: TextStyle(),
+                          ),
+                          TextSpan(
+                            text: '${widget.suppPost.bmember!.bmemberNickname}',
+                            style: TextStyle(),
+                          )
+                        ],
                         style: TextStyle(
                           fontFamily: 'SUITE',
-                          color: primary,
-                          fontSize: 12.0,
+                          color: secondaryText,
+                          fontSize: 10.0,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '${d1}', // TODO : 날짜 포멧
-                          style: TextStyle(),
-                        ),
-                        TextSpan(
-                          text: ' | ',
-                          style: TextStyle(),
-                        ),
-                        TextSpan(
-                          text: '${d2}',
-                          style: TextStyle(),
-                        ),
-                        TextSpan(
-                          text: ' | ',
-                          style: TextStyle(),
-                        ),
-                        TextSpan(
-                          text: '${widget.suppPost.bMember.bMember_nickname}',
-                          style: TextStyle(),
-                        )
-                      ],
-                      style: TextStyle(
-                        fontFamily: 'SUITE',
-                        color: secondaryText,
-                        fontSize: 10.0,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 3.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 150.0,
-                    child: Stack(
-                      alignment: AlignmentDirectional(-1.0, 0.0),
-                      children: [
-                        Align(
-                          alignment: AlignmentDirectional(-0.91, 0.0),
-                          child: Container(
-                            width: 30.0,
-                            height: 30.0,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: Image.network(
-                              'https://img.danawa.com/prod_img/500000/406/197/img/4197406_1.jpg?_v=20161103141854',
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
+              if (widget.check == 1)
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 3.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 150.0,
+                        child: Stack(
+                          alignment: AlignmentDirectional(-1.0, 0.0),
+                          children: [
+                            for (var item in widget.suppPost.spon!)
+                              PostIngredientListItem(
+                                  image: item.ingredients!.ingredientsImage,
+                                  idx: cnt++),
+                          ],
                         ),
-                        Align(
-                          alignment: AlignmentDirectional(-0.62, 0.0),
-                          child: Container(
-                            width: 30.0,
-                            height: 30.0,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: Image.network(
-                              'https://i.namu.wiki/i/y1vEkfKabfcqbF-qZ79SHA1UTT8j4V2VHltkcy5zXhz_bXaTYm_z3JRJikOf616oLd8ldnjQTYTV2wYneZabsg.webp',
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(-0.35, 0.0),
-                          child: Container(
-                            width: 30.0,
-                            height: 30.0,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: Image.network(
-                              'https://healingfactory.co.kr/data/files/cc7a540d5846dbbfa238bfdf499c2d2b.jpg',
-                              fit: BoxFit.fitHeight,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
-                    child: Text(
-                      '예상 후원액 : ${EstimatedTotalSupporterMoney}원',
-                      style: TextStyle(
-                        fontFamily: 'SUITE',
-                        color: secondary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
                       ),
-                    ),
+                      Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
+                        child: Text(
+                          '예상 후원액 : ${EstimatedTotalSupporterMoney}원',
+                          style: TextStyle(
+                            fontFamily: 'SUITE',
+                            color: secondary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
+              Divider(
+                thickness: 1.0,
+                color: alternate,
               ),
-            ),
-            Divider(
-              thickness: 1.0,
-              color: alternate,
-            ),
-          ],
+            ],
+          ),
+        ),
+      );
+    });
+  }
+}
+
+class PostIngredientListItem extends StatefulWidget {
+  const PostIngredientListItem(
+      {super.key, required this.image, required this.idx});
+
+  final String? image;
+  final int idx;
+
+  @override
+  State<PostIngredientListItem> createState() => _PostIngredientListItemState();
+}
+
+class _PostIngredientListItemState extends State<PostIngredientListItem> {
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: AlignmentDirectional(-0.9 + (0.3 * widget.idx), 0.0),
+      child: Container(
+        width: 30.0,
+        height: 30.0,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+        child: Image.network(
+          '${widget.image}',
+          fit: BoxFit.fitWidth,
         ),
       ),
     );

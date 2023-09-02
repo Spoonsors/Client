@@ -6,8 +6,16 @@ import '../model/SMemberModel.dart';
 
 class LoginService extends ChangeNotifier {
   late BMember loginB;
-  late SMember loginS;
+  SMember loginS = SMember(
+      // TODO : 바꾸기!!
+      smemberId: "sid1",
+      smemberNickname: "taeseung",
+      smemberName: "taeseung",
+      sMember_phoneNumber: "01084204241",
+      profilePath: "assets/images/profiles/후원자1.png");
+
   late bool answer;
+
   void loginBMember(String id, String pwd) async {
     Map<String, dynamic> data = {
       "id": id,
@@ -46,6 +54,7 @@ class LoginService extends ChangeNotifier {
           sMember_pwd: "null",
           sMember_phoneNumber: response.data["member_phoneNumber"],
           spons: []);
+      answer = true;
     } catch (e) {}
   }
 }

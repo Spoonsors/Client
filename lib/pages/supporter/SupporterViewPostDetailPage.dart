@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Colors.dart';
 import 'package:save_children_v01/etc/TextStyles.dart';
-import 'package:save_children_v01/service/SupporterPostService.dart';
+import 'package:save_children_v01/service/ViewPostingService.dart';
 
 class SupporterViewPostDetailPageWidget extends StatefulWidget {
   const SupporterViewPostDetailPageWidget({super.key});
@@ -16,8 +17,8 @@ class _SupporterViewPostDetailPageWidgetState
     extends State<SupporterViewPostDetailPageWidget> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<SupporterPostService>(
-        builder: (context, supporterPostService, child) {
+    return Consumer<ViewPostingService>(
+        builder: (context, viewPostingService, child) {
       return Scaffold(
         appBar: AppBar(
           title: Text('후원 정보'),
@@ -54,8 +55,8 @@ class _SupporterViewPostDetailPageWidgetState
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                     ),
-                                    child: Image.network(
-                                      'https://mvp.microsoft.com/ko-kr/PublicProfile/Photo/4025200',
+                                    child: Image.asset(
+                                      '${viewPostingService.nowView.bmember!.profilePath}',
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -72,7 +73,7 @@ class _SupporterViewPostDetailPageWidgetState
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '${supporterPostService.post.post.bMember.bMember_nickname}',
+                                          '${viewPostingService.nowView.bmember!.bmemberNickname}',
                                           style: TextStyle(
                                             color: primaryText,
                                             fontWeight: FontWeight.normal,
@@ -88,7 +89,8 @@ class _SupporterViewPostDetailPageWidgetState
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
-                                                  text: '2023.07.16',
+                                                  text:
+                                                      '${DateFormat('yyyy-mm-dd').format(new DateFormat('yyyy-mm-dd').parse(viewPostingService.nowView.postDate!))}',
                                                   style: TextStyle(),
                                                 ),
                                                 TextSpan(
@@ -96,7 +98,8 @@ class _SupporterViewPostDetailPageWidgetState
                                                   style: TextStyle(),
                                                 ),
                                                 TextSpan(
-                                                  text: '4:20pm',
+                                                  text:
+                                                      '${DateFormat('hh:mm a').format(new DateFormat('yyyy-mm-dd').parse(viewPostingService.nowView.postDate!))}',
                                                   style: TextStyle(),
                                                 )
                                               ],
@@ -114,7 +117,7 @@ class _SupporterViewPostDetailPageWidgetState
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 10.0, 0.0, 0.0),
                               child: Text(
-                                '${supporterPostService.post.post.post_title}',
+                                '${viewPostingService.nowView.postTitle}',
                                 style: headlineSmall,
                               ),
                             ),
@@ -122,7 +125,7 @@ class _SupporterViewPostDetailPageWidgetState
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 10.0, 0.0, 0.0),
                               child: Text(
-                                '${supporterPostService.post.post.post_txt}',
+                                '${viewPostingService.nowView.postTxt}',
                                 style: bodyLarge,
                               ),
                             ),
@@ -142,192 +145,22 @@ class _SupporterViewPostDetailPageWidgetState
                           ],
                         ),
                       ),
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 8.0),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12.0, 12.0, 0.0, 12.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Container(
-                                      width: 64.0,
-                                      height: 64.0,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: primary,
-                                          width: 1.0,
-                                        ),
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    4.0, 4.0, 4.0, 4.0),
-                                            child: Container(
-                                              width: 70.0,
-                                              height: 70.0,
-                                              clipBehavior: Clip.antiAlias,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Image.network(
-                                                'https://i.namu.wiki/i/y1vEkfKabfcqbF-qZ79SHA1UTT8j4V2VHltkcy5zXhz_bXaTYm_z3JRJikOf616oLd8ldnjQTYTV2wYneZabsg.webp',
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 8.0, 0.0, 0.0),
-                                      child: Text(
-                                        '스팸',
-                                        textAlign: TextAlign.center,
-                                        style: bodySmall,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12.0, 12.0, 0.0, 12.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Container(
-                                      width: 64.0,
-                                      height: 64.0,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: primary,
-                                          width: 1.0,
-                                        ),
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    4.0, 4.0, 4.0, 4.0),
-                                            child: Container(
-                                              width: 70.0,
-                                              height: 70.0,
-                                              clipBehavior: Clip.antiAlias,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Image.network(
-                                                'https://img.danawa.com/prod_img/500000/406/197/img/4197406_1.jpg?_v=20161103141854',
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 70.0,
-                                            height: 70.0,
-                                            decoration: BoxDecoration(
-                                              color: overlay,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              Icons.check_rounded,
-                                              color: success,
-                                              size: 50.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 8.0, 0.0, 0.0),
-                                      child: Text(
-                                        '김치',
-                                        textAlign: TextAlign.center,
-                                        style: bodySmall,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12.0, 12.0, 0.0, 12.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Container(
-                                      width: 64.0,
-                                      height: 64.0,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: primary,
-                                          width: 1.0,
-                                        ),
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    4.0, 4.0, 4.0, 4.0),
-                                            child: Container(
-                                              width: 70.0,
-                                              height: 70.0,
-                                              clipBehavior: Clip.antiAlias,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Image.network(
-                                                'https://healingfactory.co.kr/data/files/cc7a540d5846dbbfa238bfdf499c2d2b.jpg',
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 70.0,
-                                            height: 70.0,
-                                            decoration: BoxDecoration(
-                                              color: overlay,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              Icons.check_rounded,
-                                              color: success,
-                                              size: 50.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 8.0, 0.0, 0.0),
-                                      child: Text(
-                                        '대파',
-                                        textAlign: TextAlign.center,
-                                        style: bodySmall,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                      SizedBox(
+                        height: 150,
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 8.0, 0.0, 8.0),
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal, //TODO : 수정
+                              itemCount:
+                                  viewPostingService.nowView.spon!.length,
+                              itemBuilder: (context, index) {
+                                return NeededIngredientsListItem(
+                                  sponItem:
+                                      viewPostingService.nowView.spon![index],
+                                );
+                              }),
                         ),
                       ),
                       Padding(
@@ -346,7 +179,7 @@ class _SupporterViewPostDetailPageWidgetState
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 8.0, 0.0, 0.0),
                               child: Text(
-                                '만들 음식 (스팸김치찌개)',
+                                '만들 음식 (${viewPostingService.nowView.menuName})',
                                 style: labelMedium,
                               ),
                             ),
@@ -356,7 +189,7 @@ class _SupporterViewPostDetailPageWidgetState
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12.0),
                                 child: Image.network(
-                                  'https://i.ytimg.com/vi/PH_-nGRatgo/maxresdefault.jpg',
+                                  '${viewPostingService.nowView.menuImg}',
                                   width: MediaQuery.sizeOf(context).width * 1.0,
                                   height: 230.0,
                                   fit: BoxFit.cover,
@@ -377,13 +210,15 @@ class _SupporterViewPostDetailPageWidgetState
                 padding: EdgeInsetsDirectional.fromSTEB(16.0, 10.0, 16.0, 10.0),
                 child: ElevatedButton(
                   onPressed: () async {
+                    viewPostingService
+                        .putCart(); // TODO : index 넘겨주서 장바구니 업데이트하기
                     Navigator.pushNamed(context, '/SupporterPurchasePage');
                   },
                   style: ElevatedButton.styleFrom(
                     fixedSize: Size(double.infinity, 55.0),
                   ),
                   child: Text(
-                    '1개 상품 후원',
+                    '${viewPostingService.nowView.remainSpon}개 상품 후원',
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 18,
@@ -398,5 +233,81 @@ class _SupporterViewPostDetailPageWidgetState
         ),
       );
     });
+  }
+}
+
+class NeededIngredientsListItem extends StatefulWidget {
+  const NeededIngredientsListItem({super.key, required this.sponItem});
+
+  final Spon sponItem;
+
+  @override
+  State<NeededIngredientsListItem> createState() =>
+      _NeededIngredientsListItemState();
+}
+
+class _NeededIngredientsListItemState extends State<NeededIngredientsListItem> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 0.0, 12.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: 64.0,
+            height: 64.0,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: primary,
+                width: 1.0,
+              ),
+            ),
+            child: Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(4.0, 4.0, 4.0, 4.0),
+                  child: Container(
+                    width: 70.0,
+                    height: 70.0,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: Image.network(
+                      '${widget.sponItem.ingredients!.ingredientsImage}',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                if (widget.sponItem.sponState == 1)
+                  Container(
+                    width: 70.0,
+                    height: 70.0,
+                    decoration: BoxDecoration(
+                      color: overlay,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.check_rounded,
+                      color: success,
+                      size: 50.0,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+            child: Text(
+              '${widget.sponItem.ingredients!.ingredientsName}',
+              textAlign: TextAlign.center,
+              style: bodySmall,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

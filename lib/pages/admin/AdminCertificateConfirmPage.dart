@@ -59,7 +59,7 @@ class _AdminCertificateConfirmPageWidgetState
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     8.0, 0.0, 8.0, 0.0),
                                 child: Text(
-                                  '이미지 클릭 시 다운로드 할 수 있습니다.',
+                                  '이미지 클릭 시 크게 볼 수 있습니다.',
                                   style: TextStyle(
                                     fontFamily: 'SUITE',
                                     color: secondaryText,
@@ -140,13 +140,26 @@ class _AdminCertificateListItemState extends State<AdminCertificateListItem> {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              '${widget.adminCertificatedItemModel.bmemberCertificate}',
-                              width: 500.0,
-                              height: 500.0,
-                              fit: BoxFit.cover,
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                      pageBuilder: (_, __, ___) =>
+                                          DetailCertificateImagePage(
+                                            img: widget
+                                                .adminCertificatedItemModel
+                                                .bmemberCertificate,
+                                          )));
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.network(
+                                '${widget.adminCertificatedItemModel.bmemberCertificate}',
+                                width: 500.0,
+                                height: 500.0,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           Padding(
@@ -208,8 +221,12 @@ class _AdminCertificateListItemState extends State<AdminCertificateListItem> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       5.0, 0.0, 2.5, 5.0),
                                   child: OutlinedButton(
-                                    onPressed: () {
-                                      // TODO : 거부버튼 구현
+                                    onPressed: () async {
+                                      await context
+                                          .read<AdminCertificateInfoService>()
+                                          .putDeclineCerticiateInfo(widget
+                                              .adminCertificatedItemModel
+                                              .bmemberId);
                                     },
                                     child: Text(
                                       '거부',
@@ -234,8 +251,8 @@ class _AdminCertificateListItemState extends State<AdminCertificateListItem> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       2.5, 0.0, 5.0, 5.0),
                                   child: OutlinedButton(
-                                    onPressed: () {
-                                      context
+                                    onPressed: () async {
+                                      await context
                                           .read<AdminCertificateInfoService>()
                                           .putCerticiateInfo(widget
                                               .adminCertificatedItemModel
@@ -272,6 +289,52 @@ class _AdminCertificateListItemState extends State<AdminCertificateListItem> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class DetailCertificateImagePage extends StatelessWidget {
+  final String? img;
+
+  const DetailCertificateImagePage({
+    Key? key,
+    this.img,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          Center(
+            child: Image(
+              image: NetworkImage(
+                img!,
+              ),
+            ),
+          ),
+          Positioned(
+              right: 20,
+              top: 45,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.clear_outlined,
+                    size: 30,
+                    color: primary,
+                  ),
+                ),
+              )),
+        ],
       ),
     );
   }
