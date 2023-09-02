@@ -7,23 +7,24 @@ class PostMealPlanner {
   String menu_name1;
   String menu_img1;
 
-  String menu_name2;
-  String menu_img2;
+  String? menu_name2;
+  String? menu_img2;
 
-  String menu_name3;
-  String menu_img3;
+  String? menu_name3;
+  String? menu_img3;
 
-  String menu_name4;
-  String menu_img4;
+  String? menu_name4;
+  String? menu_img4;
 
   String mealPlanner_name;
 
-  int kcal;
+  int? kcal;
   int carbohydrate;
   int protein;
   int fat;
+  int? na;
 
-  String level;
+  String? level;
   String timeRequired;
 
   PostMealPlanner(
@@ -41,6 +42,7 @@ class PostMealPlanner {
       required this.protein,
       required this.fat,
       required this.level,
+      required this.na,
       required this.timeRequired});
 }
 
@@ -68,7 +70,7 @@ class MealPlannerService extends ChangeNotifier {
   }
 
   // 상품 삭제
-  void deleteMealPlanner(int mealPlanner_id) async {
+  void deleteMealPlanner(int? mealPlanner_id) async {
     try {
       // DELETE 요청 보내기
       Response response = await Dio().delete(

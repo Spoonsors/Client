@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'Colors.dart';
 
 // 자주 쓰이는 텍스트 모음
+const TextStyle displayLarge = TextStyle(
+  fontFamily: 'SUITE',
+  fontSize: 64,
+  fontWeight: FontWeight.normal,
+  color: primaryText,
+);
 
 const TextStyle displaySmall = TextStyle(
   fontFamily: 'SUITE',

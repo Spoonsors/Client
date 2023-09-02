@@ -7,7 +7,9 @@ import '../../models/TeenagerViewRecipePageModel.dart';
 
 class TeenagerViewRecipePageWidget extends StatefulWidget {
   const TeenagerViewRecipePageWidget({super.key, required this.recipe});
+
   final Recipe recipe;
+
   @override
   _TeenagerViewRecipePageWidgetState createState() =>
       _TeenagerViewRecipePageWidgetState();
@@ -232,6 +234,7 @@ class RecipeStepCard extends StatelessWidget {
       required this.recipeExplain,
       required this.recipeImg,
       required this.idx});
+
   final String recipeExplain;
   final String recipeImg;
   final int idx;

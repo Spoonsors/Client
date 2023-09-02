@@ -4,8 +4,14 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Routes.dart';
 import 'package:save_children_v01/etc/ThemeData.dart';
+
 import 'package:save_children_v01/pages/auth/AllLoginPage.dart';
 import 'package:save_children_v01/service/AlertService.dart';
+
+import 'package:save_children_v01/pages/admin/AdminViewAllProductPage.dart';
+import 'package:save_children_v01/service/AdminCertificatedItemsService.dart';
+import 'package:save_children_v01/service/CheckMyReviewService.dart';
+
 import 'package:save_children_v01/service/FridgesService.dart';
 import 'package:save_children_v01/service/IngredientsService.dart';
 import 'package:save_children_v01/service/LoginService.dart';
@@ -15,6 +21,9 @@ import 'package:save_children_v01/service/RecipeService.dart';
 import 'package:save_children_v01/service/ReviewsService.dart';
 import 'package:save_children_v01/service/SMSService.dart';
 import 'package:save_children_v01/service/SignupService.dart';
+import 'package:save_children_v01/service/SupporterPostService.dart';
+import 'package:save_children_v01/service/SupporterSponListService.dart';
+import 'package:save_children_v01/service/ViewPostingService.dart';
 
 void main() async {
   KakaoSdk.init(nativeAppKey: 'b1c6065783d0a3451d239c15e0a28da3');
@@ -30,10 +39,16 @@ void main() async {
       ChangeNotifierProvider(create: (context) => IngredientsService()),
       ChangeNotifierProvider(create: (context) => PostsService()),
       ChangeNotifierProvider(create: (context) => MealPlannerService()),
+      ChangeNotifierProvider(create: (context) => SupporterPostService()),
+      ChangeNotifierProvider(
+          create: (context) => AdminCertificateInfoService()),
       ChangeNotifierProvider(create: (context) => SignupService()),
       ChangeNotifierProvider(create: (context) => FridgesService()),
       ChangeNotifierProvider(create: (context) => ReviewsService()),
       ChangeNotifierProvider(create: (context) => SMSService()),
+      ChangeNotifierProvider(create: (context) => ViewPostingService()),
+      ChangeNotifierProvider(create: (context) => SupporterSponListService()),
+      ChangeNotifierProvider(create: (context) => CheckMyReviewService()),
     ],
     child: const MyApp(),
   ));
@@ -52,7 +67,7 @@ class MyApp extends StatelessWidget {
       theme: themeData,
       routes: namedRoutes,
       // initialRoute: "/login",
-      home: AllLoginPageWidget(),
+      home: AdminViewAllProductPageWidget(),
     );
     //routes: {"/login": (context) => AdminViewAllProductPageWidget()});
     //routes: {"/login": (context) => AllLoginPageWidget()});

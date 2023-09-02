@@ -4,6 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 
+
+import 'package:image_picker/image_picker.dart';
+
 import '../model/FridgeModel.dart';
 
 class PostFridges {
@@ -26,6 +29,7 @@ class PostFridges {
 class FridgesService extends ChangeNotifier {
   List<Fridge> fridgeList = []; //냉장
   List<Fridge> freezerList = []; //냉동,실온
+
 
   FridgesService() {}
 

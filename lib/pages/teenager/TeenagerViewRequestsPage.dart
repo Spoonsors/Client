@@ -198,8 +198,10 @@ class _TeenagerViewRequestsPageWidgetState
 
 class RequestCard extends StatelessWidget {
   const RequestCard({super.key, required this.request, required this.idx});
+
   final Post request;
   final int idx;
+
   @override
   Widget build(BuildContext context) {
     int totalPrice = 0;

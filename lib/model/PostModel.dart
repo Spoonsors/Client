@@ -8,6 +8,7 @@ Post PostJson(String str) => Post.fromJson(json.decode(str));
 String PostToJson(Post data) => json.encode(data.toJson());
 
 class Post {
+
   int? postId;
   String? postTitle;
   String? postTxt;

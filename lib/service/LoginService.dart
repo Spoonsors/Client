@@ -8,9 +8,11 @@ import '../model/SMemberModel.dart';
 
 class LoginService extends ChangeNotifier {
   late BMember loginB;
+
   late SMember loginS;
   bool isLogin = false;
   bool isKakao = false; //카카오 로그인인지 아닌지
+
   void loginBMember(String id, String pwd) async {
     Map<String, dynamic> data = {
       "id": id,
@@ -50,6 +52,7 @@ class LoginService extends ChangeNotifier {
           sMember_pwd: "null",
           sMember_phoneNumber: response.data["member_phoneNumber"],
           spons: []);
+
       isLogin = true;
     } catch (e) {
       isLogin = false;
@@ -174,5 +177,6 @@ class LoginService extends ChangeNotifier {
         return false;
       }
     }
+
   }
 }

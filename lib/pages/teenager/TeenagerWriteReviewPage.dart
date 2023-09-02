@@ -10,7 +10,9 @@ import '../../service/ReviewsService.dart';
 
 class TeenagerWriteReviewPageWidget extends StatefulWidget {
   const TeenagerWriteReviewPageWidget({super.key, required this.post});
+
   final Post post;
+
   @override
   _TeenagerWriteReviewPageWidgetState createState() =>
       _TeenagerWriteReviewPageWidgetState();
@@ -24,6 +26,7 @@ class _TeenagerWriteReviewPageWidgetState
 
   String? item_img;
   final ImagePicker picker = ImagePicker();
+
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
     if (pickedFile != null) {

@@ -98,6 +98,13 @@ class _NutritionistNutriHomePageWidgetState
                 itemCount: mealPlannerService.mealPlannerList.length,
                 itemBuilder: (context, index) {
                   final mealPlanner = mealPlannerService.mealPlannerList[index];
+                  if (index == mealPlannerService.mealPlannerList.length - 1) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
+                      child: ProductDetailsWidget(
+                          mealPlanner: mealPlanner, idx: index),
+                    );
+                  }
                   return ProductDetailsWidget(
                       mealPlanner: mealPlanner, idx: index);
                 },
@@ -149,7 +156,7 @@ class ProductDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return // Generated code for this UserList9 Widget...
         Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 0.0),
+            padding: EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 10.0, 0.0),
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -164,7 +171,7 @@ class ProductDetailsWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(0.0),
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 12.0, 5.0),
+                padding: EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 5.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -203,7 +210,7 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '${mealPlanner.kcal}kcal',
+                                  '${mealPlanner.kcal!.toStringAsFixed(1)}kcal',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       fontSize: 13.0,
@@ -214,10 +221,10 @@ class ProductDetailsWidget extends StatelessWidget {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 2.0, 0.0, 0.0),
                                 child: Text(
-                                  '탄수화물 ${mealPlanner.carbohydrate}g, 단백질 ${mealPlanner.protein}g, 지방 ${mealPlanner.fat}g',
+                                  '탄수화물 ${mealPlanner.carbohydrate!.toStringAsFixed(1)}g, 단백질 ${mealPlanner.protein!.toStringAsFixed(1)}g, 지방 ${mealPlanner.fat!.toStringAsFixed(1)}g',
                                   style: TextStyle(
                                     fontFamily: 'SUITE',
-                                    fontSize: 12.0,
+                                    fontSize: 10.0,
                                     color: secondaryText,
                                   ),
                                 ),

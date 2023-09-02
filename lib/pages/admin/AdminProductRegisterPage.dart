@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Colors.dart';
 import 'package:save_children_v01/etc/TextStyles.dart';
 import 'package:save_children_v01/model/IngredientsModel.dart';
@@ -39,9 +40,13 @@ class _AdminProductRegisterPageWidgetState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '상품 등록',
-        ),
+        title: ingredients == null
+            ? Text(
+                '상품 등록',
+              )
+            : Text(
+                '상품 수정',
+              ),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -312,20 +317,38 @@ class _AdminProductRegisterPageWidgetState
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16.0, 10.0, 16.0, 10.0),
               child: ElevatedButton(
-                onPressed: () {
-                  // TODO : 상품등록시 예외처리 구현하기 (토스트 메세지 띄우기)
-                  IngredientsService().postProduct(PostIngredients(
-                      ingredients_name: _ingredientName,
-                      product_name: _productName,
-                      ingredients_image: _pickerImg,
-                      price: int.parse(_price)));
-                  _pickerImg = null;
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  '상품 등록',
-                  style: titleMedium,
-                ),
+                onPressed: ingredients == null
+                    ? () {
+                        // TODO : 상품등록시 예외처리 구현하기 (스낵바 띄우기)
+                        context.read<IngredientsService>().postProduct(
+                            PostIngredients(
+                                ingredients_name: _ingredientName,
+                                product_name: _productName,
+                                ingredients_image: _pickerImg,
+                                price: int.parse(_price)));
+                        _pickerImg = null;
+                        Navigator.pop(context);
+                      }
+                    : () {
+                        context.read<IngredientsService>().updateProduct(
+                            PostIngredients(
+                                ingredients_name: _ingredientName,
+                                product_name: _productName,
+                                ingredients_image: _pickerImg,
+                                price: int.parse(_price)),
+                            ingredients.ingredients_id);
+                        _pickerImg = null;
+                        Navigator.pop(context);
+                      },
+                child: ingredients == null
+                    ? Text(
+                        '상품 등록',
+                        style: titleMedium,
+                      )
+                    : Text(
+                        '상품 수정',
+                        style: titleMedium,
+                      ),
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),

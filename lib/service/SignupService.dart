@@ -52,6 +52,7 @@ class PostSMember {
 
 class SignupService extends ChangeNotifier {
   void signupBMember(PostBMember bMember) async {
+
     final data = FormData.fromMap(
       {
         "img": await MultipartFile.fromFile(
@@ -77,6 +78,7 @@ class SignupService extends ChangeNotifier {
       },
       ListFormat.multiCompatible,
     );
+
     try {
       Response response = await Dio()
           .post("http://15.165.106.139:8080/join/bMember", data: data);

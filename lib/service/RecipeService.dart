@@ -29,7 +29,7 @@ class RecipeService extends ChangeNotifier {
   late Recipe requestedMenu;
 
   // 이름으로 검색된 식단에 포함된 메뉴들 이름
-  List<String> requested4MenuInDiet = [];
+  List<String?> requested4MenuInDiet = [];
 
   // 이름으로 검색된 식단에 포함된 메뉴들의 레시피
   List<Recipe> requested4RecipeInDiet = [];
@@ -38,6 +38,7 @@ class RecipeService extends ChangeNotifier {
   double carbo = 0;
   double fat = 0;
   double pro = 0;
+  double na = 0;
   String searchText = "";
 
   RecipeService() {
@@ -99,7 +100,7 @@ class RecipeService extends ChangeNotifier {
     for (int i = 0; i < requested4MenuInDiet.length; i++) {
       Response res = await Dio().get(
           "http://15.165.106.139:8080/recipe/findByName?RCP_NM=" +
-              requested4MenuInDiet[i]);
+              requested4MenuInDiet[i]!);
       for (Map<String, dynamic> item in res.data) {
         Recipe _menu = Recipe.fromJson(item);
         requested4RecipeInDiet.add(_menu);

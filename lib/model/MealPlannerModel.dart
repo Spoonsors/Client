@@ -1,4 +1,5 @@
 class MealPlanner {
+
   int? mealPlannerId;
   String? menuName1;
   String? menuImg1;
@@ -53,8 +54,8 @@ class MealPlanner {
         carbohydrate: json["carbohydrate"],
         protein: json["protein"],
         fat: json["fat"],
-        level: json["level"],
         na: json["na"],
+        level: json["level"],
         timeRequired: json["timeRequired"],
       );
 

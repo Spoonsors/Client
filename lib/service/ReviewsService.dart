@@ -25,7 +25,10 @@ class PostReview {
 class ReviewsService extends ChangeNotifier {
   List<Review> reviewsList = [];
   late BMember _bMember;
+
   Review? review_of_post;
+
+
   ReviewsService() {}
 
   void getMyReviews(String bMember_Id) async {

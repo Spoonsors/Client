@@ -8,7 +8,9 @@ import '../../model/SponModel.dart';
 //viewPost
 class TeenagerViewRequestDetailPageWidget extends StatefulWidget {
   const TeenagerViewRequestDetailPageWidget({super.key, required this.request});
+
   final Post request;
+
   @override
   _TeenagerViewRequestDetailPageWidgetState createState() =>
       _TeenagerViewRequestDetailPageWidgetState();
@@ -323,6 +325,7 @@ class _TeenagerViewRequestDetailPageWidgetState
 
 class IngredientImageCard extends StatelessWidget {
   const IngredientImageCard({super.key, required this.spon, required this.idx});
+
   final Spon spon;
   final int idx;
 
