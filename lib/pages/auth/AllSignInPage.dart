@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/pages/auth/SupporterCreateProfilePage.dart';
 import 'package:save_children_v01/service/SignupService.dart';
 
+import '../../etc/Dialog.dart';
 import '../../models/AllSignInPageModel.dart';
 import 'TeenagerCreateProfilePage.dart';
 
 class AllSignInPageWidget extends StatefulWidget {
   final String whichPage;
-
-  const AllSignInPageWidget({required this.whichPage, Key? key})
+  final User? kakaoUser;
+  final bool isKakao;
+  const AllSignInPageWidget(
+      {required this.whichPage,
+      Key? key,
+      this.kakaoUser,
+      required this.isKakao})
       : super(key: key);
 
   @override
@@ -139,12 +146,17 @@ class _AllSignInPageWidgetState extends State<AllSignInPageWidget> {
                                       child: Container(
                                         width: double.infinity,
                                         child: TextFormField(
+                                          enabled:
+                                              widget.isKakao ? false : true,
                                           controller: emailController,
                                           autofocus: true,
                                           autofillHints: [AutofillHints.email],
                                           obscureText: false,
                                           decoration: InputDecoration(
-                                            labelText: '이메일',
+                                            labelText: widget.isKakao
+                                                ? widget.kakaoUser!
+                                                    .kakaoAccount!.email
+                                                : '이메일',
                                             labelStyle: TextStyle(
                                               fontFamily: 'SUITE',
                                               color: const Color(0xff757575),
@@ -204,6 +216,8 @@ class _AllSignInPageWidgetState extends State<AllSignInPageWidget> {
                                       child: Container(
                                         width: double.infinity,
                                         child: TextFormField(
+                                          enabled:
+                                              widget.isKakao ? false : true,
                                           controller: passwordController,
                                           autofocus: true,
                                           autofillHints: [
@@ -211,7 +225,10 @@ class _AllSignInPageWidgetState extends State<AllSignInPageWidget> {
                                           ],
                                           obscureText: !passwordVisibility,
                                           decoration: InputDecoration(
-                                            labelText: '비밀번호',
+                                            labelText: widget.isKakao
+                                                ? widget.kakaoUser!.id
+                                                    .toString()
+                                                : '비밀번호',
                                             labelStyle: TextStyle(
                                               fontFamily: 'SUITE',
                                               color: const Color(0xff757575),
@@ -285,6 +302,8 @@ class _AllSignInPageWidgetState extends State<AllSignInPageWidget> {
                                       child: Container(
                                         width: double.infinity,
                                         child: TextFormField(
+                                          enabled:
+                                              widget.isKakao ? false : true,
                                           controller: passwordConfirmController,
                                           autofocus: true,
                                           autofillHints: [
@@ -292,7 +311,10 @@ class _AllSignInPageWidgetState extends State<AllSignInPageWidget> {
                                           ],
                                           obscureText: !passwordVisibility,
                                           decoration: InputDecoration(
-                                            labelText: '비밀번호 확인',
+                                            labelText: widget.isKakao
+                                                ? widget.kakaoUser!.id
+                                                    .toString()
+                                                : '비밀번호 확인',
                                             labelStyle: TextStyle(
                                               fontFamily: 'SUITE',
                                               color: const Color(0xff757575),
@@ -371,12 +393,13 @@ class _AllSignInPageWidgetState extends State<AllSignInPageWidget> {
                                                       .DuplicateCheckId(
                                                           emailController.text);
                                               if (isIdAvailable) {
-                                                if (passwordController
-                                                            .text.length >=
-                                                        8 &&
-                                                    passwordController
-                                                            .text.length <=
-                                                        15) {
+                                                if ((passwordController
+                                                                .text.length >=
+                                                            8 &&
+                                                        passwordController
+                                                                .text.length <=
+                                                            15) ||
+                                                    widget.isKakao) {
                                                   if (passwordController.text ==
                                                       passwordConfirmController
                                                           .text) {
@@ -386,11 +409,21 @@ class _AllSignInPageWidgetState extends State<AllSignInPageWidget> {
                                                           MaterialPageRoute(
                                                               builder: (context) =>
                                                                   TeenagerCreateProfilePageWidget(
-                                                                    email:
-                                                                        emailController
+                                                                    email: widget.isKakao
+                                                                        ? widget
+                                                                            .kakaoUser!
+                                                                            .kakaoAccount!
+                                                                            .email!
+                                                                        : emailController
                                                                             .text,
-                                                                    pw: passwordController
-                                                                        .text,
+                                                                    pw: widget
+                                                                            .isKakao
+                                                                        ? widget
+                                                                            .kakaoUser!
+                                                                            .id!
+                                                                            .toString()
+                                                                        : passwordController
+                                                                            .text,
                                                                   )));
                                                     } else if (page ==
                                                         "supporter") {
@@ -399,183 +432,40 @@ class _AllSignInPageWidgetState extends State<AllSignInPageWidget> {
                                                           MaterialPageRoute(
                                                               builder: (context) =>
                                                                   SupporterCreateProfilePageWidget(
-                                                                    email:
-                                                                        emailController
+                                                                    email: widget.isKakao
+                                                                        ? widget
+                                                                            .kakaoUser!
+                                                                            .kakaoAccount!
+                                                                            .email!
+                                                                        : emailController
                                                                             .text,
-                                                                    pw: passwordController
-                                                                        .text,
+                                                                    pw: widget
+                                                                            .isKakao
+                                                                        ? widget
+                                                                            .kakaoUser!
+                                                                            .id!
+                                                                            .toString()
+                                                                        : passwordController
+                                                                            .text,
                                                                   )));
                                                     }
                                                   } else {
-                                                    showDialog(
-                                                        context: context,
-                                                        barrierDismissible:
-                                                            false,
-                                                        builder: (BuildContext
-                                                            context) {
-                                                          return AlertDialog(
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0)),
-                                                            title: Column(
-                                                              children: <
-                                                                  Widget>[
-                                                                Text("비밀번호 확인"),
-                                                              ],
-                                                            ),
-                                                            content: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: <
-                                                                  Widget>[
-                                                                Text(
-                                                                  "비밀번호를 확인해주세요.",
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            actions: <Widget>[
-                                                              TextButton(
-                                                                style: TextButton
-                                                                    .styleFrom(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .all(
-                                                                          20.0),
-                                                                  foregroundColor:
-                                                                      Color(
-                                                                          0xffFFB74D),
-                                                                  textStyle:
-                                                                      const TextStyle(
-                                                                          fontSize:
-                                                                              20),
-                                                                ),
-                                                                child:
-                                                                    Text("확인"),
-                                                                onPressed: () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                },
-                                                              ),
-                                                            ],
-                                                          );
-                                                        });
+                                                    dialog(
+                                                        "비밀번호 확인",
+                                                        "비밀번호를 확인해주세요",
+                                                        context);
                                                   }
                                                 } else {
-                                                  showDialog(
-                                                      context: context,
-                                                      barrierDismissible: false,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return AlertDialog(
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10.0)),
-                                                          title: Column(
-                                                            children: <Widget>[
-                                                              Text("비밀번호 확인"),
-                                                            ],
-                                                          ),
-                                                          content: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: <Widget>[
-                                                              Text(
-                                                                "비밀번호는 8~15자여야 합니다.",
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          actions: <Widget>[
-                                                            TextButton(
-                                                              style: TextButton
-                                                                  .styleFrom(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .all(
-                                                                        20.0),
-                                                                foregroundColor:
-                                                                    Color(
-                                                                        0xffFFB74D),
-                                                                textStyle:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            20),
-                                                              ),
-                                                              child: Text("확인"),
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                            ),
-                                                          ],
-                                                        );
-                                                      });
+                                                  dialog(
+                                                      "비밀번호 확인",
+                                                      "비밀번호는 8~15자여야 합니다.",
+                                                      context);
                                                 }
                                               } else {
-                                                showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10.0)),
-                                                        title: Column(
-                                                          children: <Widget>[
-                                                            Text("ID 중복"),
-                                                          ],
-                                                        ),
-                                                        content: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: <Widget>[
-                                                            Text(
-                                                              "이미 사용 중인 ID입니다.",
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            style: TextButton
-                                                                .styleFrom(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .all(
-                                                                      20.0),
-                                                              foregroundColor:
-                                                                  Color(
-                                                                      0xffFFB74D),
-                                                              textStyle:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          20),
-                                                            ),
-                                                            child: Text("확인"),
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                          ),
-                                                        ],
-                                                      );
-                                                    });
+                                                dialog(
+                                                    "아이디 중복",
+                                                    "이미 사용 중인 아이디입니다.",
+                                                    context);
                                               }
                                             },
                                             child: Text("계정 생성하기",

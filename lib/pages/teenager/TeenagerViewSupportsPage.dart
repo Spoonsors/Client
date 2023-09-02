@@ -8,6 +8,7 @@ import '../../model/PostModel.dart';
 import '../../models/TeenagerViewSupportsPageModel.dart';
 import '../../service/LoginService.dart';
 import '../../service/PostsService.dart';
+import 'TeenagerViewCompletePostDetailPage.dart';
 
 class TeenagerVIewSupportsPageWidget extends StatefulWidget {
   const TeenagerVIewSupportsPageWidget({
@@ -210,18 +211,22 @@ class _TeenagerVIewSupportsPageWidgetState
                                             color: const Color(0xff212121)),
                                       ),
                                     ),
-                                    ListView.builder(
-                                        padding: EdgeInsets.zero,
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: waitingPostList.length,
-                                        itemBuilder: (context, index) {
-                                          return WaitingPostCard(
-                                            bMember: loginservice.loginB,
-                                            idx: index,
-                                            post: waitingPostList[index],
-                                          );
-                                        }),
+                                    SingleChildScrollView(
+                                      child: ListView.builder(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          padding: EdgeInsets.zero,
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: waitingPostList.length,
+                                          itemBuilder: (context, index) {
+                                            return WaitingPostCard(
+                                              bMember: loginservice.loginB,
+                                              idx: index,
+                                              post: waitingPostList[index],
+                                            );
+                                          }),
+                                    )
                                   ],
                                 ),
                               ),
@@ -242,18 +247,22 @@ class _TeenagerVIewSupportsPageWidgetState
                                             color: const Color(0xff212121)),
                                       ),
                                     ),
-                                    ListView.builder(
-                                        padding: EdgeInsets.zero,
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: completedPostList.length,
-                                        itemBuilder: (context, index) {
-                                          return CompletedPostCard(
-                                            bMember: loginservice.loginB,
-                                            idx: index,
-                                            post: completedPostList[index],
-                                          );
-                                        }),
+                                    SingleChildScrollView(
+                                      child: ListView.builder(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          padding: EdgeInsets.zero,
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: completedPostList.length,
+                                          itemBuilder: (context, index) {
+                                            return CompletedPostCard(
+                                              bMember: loginservice.loginB,
+                                              idx: index,
+                                              post: completedPostList[index],
+                                            );
+                                          }),
+                                    )
                                   ],
                                 ),
                               ),
@@ -545,7 +554,14 @@ class CompletedPostCard extends StatelessWidget {
             focusColor: Colors.transparent,
             hoverColor: Colors.transparent,
             highlightColor: Colors.transparent,
-            onTap: () async {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          TeenagerViewCompletePostDetailPageWidget(
+                              post: post)));
+            },
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,

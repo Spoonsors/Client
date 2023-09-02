@@ -40,7 +40,7 @@ class Post {
     postTxt = json['post_txt'];
     postState = json['post_state'];
     hasReview = json['has_review'];
-    postDate = json['post_date'];
+    postDate = json['post_date'].toString();
     if (json['spon'] != null) {
       spon = <Spon>[];
       json['spon'].forEach((v) {

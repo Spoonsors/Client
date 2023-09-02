@@ -144,6 +144,7 @@ class _TeenagerViewRecipePageWidgetState
                 Container(
                   height: 60,
                   child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
@@ -209,10 +210,12 @@ class _TeenagerViewRecipePageWidgetState
                             itemCount: parts.length,
                             itemBuilder: (context, index) {
                               print(_recipe.manual[index]);
-                              return RecipeStepCard(
-                                  recipeExplain: _recipe.manual[index],
-                                  recipeImg: _recipe.manual_IMG[index],
-                                  idx: index);
+                              if (_recipe.manual[index] != "") {
+                                return RecipeStepCard(
+                                    recipeExplain: _recipe.manual[index],
+                                    recipeImg: _recipe.manual_IMG[index],
+                                    idx: index);
+                              }
                             },
                           ),
                         ],

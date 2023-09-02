@@ -1,10 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Routes.dart';
 import 'package:save_children_v01/etc/ThemeData.dart';
+
+import 'package:save_children_v01/pages/auth/AllLoginPage.dart';
+import 'package:save_children_v01/service/AlertService.dart';
+
 import 'package:save_children_v01/pages/admin/AdminViewAllProductPage.dart';
 import 'package:save_children_v01/service/AdminCertificatedItemsService.dart';
 import 'package:save_children_v01/service/CheckMyReviewService.dart';
+
 import 'package:save_children_v01/service/FridgesService.dart';
 import 'package:save_children_v01/service/IngredientsService.dart';
 import 'package:save_children_v01/service/LoginService.dart';
@@ -18,7 +25,13 @@ import 'package:save_children_v01/service/SupporterPostService.dart';
 import 'package:save_children_v01/service/SupporterSponListService.dart';
 import 'package:save_children_v01/service/ViewPostingService.dart';
 
-void main() {
+void main() async {
+  KakaoSdk.init(nativeAppKey: 'b1c6065783d0a3451d239c15e0a28da3');
+  WidgetsFlutterBinding.ensureInitialized();
+
+  print("여깄어" + await KakaoSdk.origin);
+  await Firebase.initializeApp();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => LoginService()),
@@ -47,6 +60,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    print('FCM Token: ${getFcmToken()}');
     return MaterialApp(
       title: "Login",
       debugShowCheckedModeBanner: false,

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../model/BMemberModel.dart';
 import '../model/PostModel.dart';
@@ -9,7 +9,7 @@ import '../model/ReviewModel.dart';
 class PostReview {
   int review_id;
   Post post;
-  XFile? review_img;
+  String? review_img;
   String review_txt;
   DateTime review_date;
 
@@ -25,6 +25,9 @@ class PostReview {
 class ReviewsService extends ChangeNotifier {
   List<Review> reviewsList = [];
   late BMember _bMember;
+
+  Review? review_of_post;
+
 
   ReviewsService() {}
 
@@ -42,11 +45,22 @@ class ReviewsService extends ChangeNotifier {
   }
 
   void writeReview(String bMember_id, PostReview postReview) async {
+    print("경로" + postReview.review_img!);
+    print("텍스트" + postReview.review_txt);
+    final data = FormData.fromMap({
+      'img': await MultipartFile.fromFile(
+        postReview.review_img!,
+        contentType: MediaType.parse('multipart/form-data'),
+      ),
+      'reviewTxt': MultipartFile.fromString(
+        postReview.review_txt,
+        contentType: MediaType.parse('application/json'),
+      ),
+    });
     try {
       Response response = await Dio().post(
         "http://15.165.106.139:8080/review/create/${postReview.post.postId}",
-        data: FormData.fromMap(
-            {'img': postReview.review_img, 'reviewTxt': postReview.review_txt}),
+        data: data,
       );
       if (response.statusCode == 200) {
         // 업로드 성공 시 처리
@@ -62,5 +76,15 @@ class ReviewsService extends ChangeNotifier {
       print(e.toString());
     }
     getMyReviews(bMember_id);
+  }
+
+  Future<void> getReviewOfPost(int post_id) async {
+    Response res = await Dio().get(
+      "http://15.165.106.139:8080/viewPosting/" + post_id.toString(),
+    );
+
+    Map<String, dynamic> data = res.data["review"];
+
+    review_of_post = Review.fromJson(data);
   }
 }

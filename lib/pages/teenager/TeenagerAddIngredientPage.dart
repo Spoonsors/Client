@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:save_children_v01/components/teenagerAddIngredientPop.dart';
 import 'package:save_children_v01/etc/Colors.dart';
 import 'package:save_children_v01/model/IngredientsModel.dart';
-import 'package:save_children_v01/service/FridgesService.dart';
 import 'package:save_children_v01/service/IngredientsService.dart';
 import 'package:save_children_v01/service/LoginService.dart';
 
-class TeenagerAddIngredientPop2Widget extends StatefulWidget {
-  const TeenagerAddIngredientPop2Widget({Key? key}) : super(key: key);
+class TeenagerAddIngredientPageWidget extends StatefulWidget {
+  const TeenagerAddIngredientPageWidget({Key? key}) : super(key: key);
 
   @override
-  _TeenagerAddIngredientPop2Widget createState() =>
-      _TeenagerAddIngredientPop2Widget();
+  _TeenagerAddIngredientPageWidget createState() =>
+      _TeenagerAddIngredientPageWidget();
 }
 
-class _TeenagerAddIngredientPop2Widget
-    extends State<TeenagerAddIngredientPop2Widget> {
+class _TeenagerAddIngredientPageWidget
+    extends State<TeenagerAddIngredientPageWidget> {
   List<String> items = [
     "최신 순",
     "가격 순",
@@ -44,8 +42,8 @@ class _TeenagerAddIngredientPop2Widget
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<IngredientsService, FridgesService, LoginService>(builder:
-        (context, ingredientsService, fridgesService, loginService, child) {
+    return Consumer2<IngredientsService, LoginService>(
+        builder: (context, ingredientsService, loginService, child) {
       ingredientsList = ingredientsService.productList;
       return Scaffold(
         appBar: AppBar(
@@ -233,22 +231,13 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
                           children: [
                             IconButton(
                               icon: Icon(
-                                Icons.mode_edit_sharp,
+                                Icons.add,
                                 color: secondaryText,
                                 size: 17.0,
                               ),
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TeenagerAddIngredientPopWidget(
-                                              ingredient_name: widget
-                                                  .ingredients.ingredients_name,
-                                              bMember_id: loginService
-                                                  .loginB.bMember_id!,
-                                            )));
-                                //유통기한 입력
+                                Navigator.pop(context, widget.ingredients);
+                                //고른 재료가 전 페이지에 반영
                               },
                             ),
                           ],

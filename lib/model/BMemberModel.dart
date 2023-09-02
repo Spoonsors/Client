@@ -41,8 +41,8 @@ class BMember {
     bMember_phoneNumber = json["bMember_phoneNumber"];
     bMember_address = json["bMember_address"];
     bMember_certificate = json["bMember_certificate"];
-    createDate = json['createDate'];
-    modifiedDate = json['modifiedDate'];
+    createDate = json['createDate'].toString();
+    modifiedDate = json['modifiedDate'].toString();
     token = json['token'];
     isVerified = json['is_verified'];
     profilePath = json['profile_path'];
