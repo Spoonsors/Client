@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 
 FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -30,4 +29,34 @@ void pushAlert(String target_id, String writing_id, String state) async {
   }
 }
 
-class AlertService extends ChangeNotifier {}
+void pushBToken(String bid) async {
+  Future<String?> token = getFcmToken();
+  Dio dio = new Dio();
+
+  Map<String, dynamic> data = {
+    "id": bid,
+    "token": token,
+  };
+  try {
+    Response response = await dio
+        .post("http://15.165.106.139:8080/bMember/putToken", data: data);
+  } catch (e) {
+    print(e.toString);
+  }
+}
+
+void pushSToken(String sid) async {
+  Future<String?> token = getFcmToken();
+  Dio dio = new Dio();
+
+  Map<String, dynamic> data = {
+    "id": sid,
+    "token": token,
+  };
+  try {
+    Response response = await dio
+        .post("http://15.165.106.139:8080/sMember/putToken", data: data);
+  } catch (e) {
+    print(e.toString);
+  }
+}

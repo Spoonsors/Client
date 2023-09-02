@@ -19,6 +19,7 @@ import 'package:save_children_v01/service/SignupService.dart';
 void main() async {
   KakaoSdk.init(nativeAppKey: 'b1c6065783d0a3451d239c15e0a28da3');
   WidgetsFlutterBinding.ensureInitialized();
+
   print("여깄어" + await KakaoSdk.origin);
   await Firebase.initializeApp();
 
