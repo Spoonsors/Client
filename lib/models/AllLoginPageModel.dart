@@ -9,7 +9,7 @@ class AllLoginPageModel {
   String? Function(BuildContext, String?)? emailAddressControllerValidator;
   // State field(s) for password widget.
   TextEditingController? passwordController;
-  late bool passwordVisibility;
+  bool passwordVisibility = false;
   String? Function(BuildContext, String?)? passwordControllerValidator;
 
   /// Initialization and disposal methods.

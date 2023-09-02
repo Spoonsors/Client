@@ -1,18 +1,15 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/service/FridgesService.dart';
-import 'package:save_children_v01/service/IngredientsService.dart';
-import 'package:save_children_v01/service/PostsService.dart';
-import '../../components/teenagerAddIngredientPop.dart';
+
+import 'package:save_children_v01/service/LoginService.dart';
+
+import '../../components/teenagerAddIngredientPop2.dart';
 import '../../model/FridgeModel.dart';
 import '../../models/TeenagerViewRefrigeratorPageModel.dart';
 
 class TeenagerViewRefrigeratorPageWidget extends StatefulWidget {
-  const TeenagerViewRefrigeratorPageWidget({Key? key}) : super(key: key);
-
+  const TeenagerViewRefrigeratorPageWidget({super.key});
   @override
   _TeenagerViewRefrigeratorPageWidgetState createState() =>
       _TeenagerViewRefrigeratorPageWidgetState();
@@ -21,7 +18,6 @@ class TeenagerViewRefrigeratorPageWidget extends StatefulWidget {
 class _TeenagerViewRefrigeratorPageWidgetState
     extends State<TeenagerViewRefrigeratorPageWidget> {
   late TeenagerViewRefrigeratorPageModel _model;
-
   @override
   void initState() {
     super.initState();
@@ -37,7 +33,9 @@ class _TeenagerViewRefrigeratorPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FridgesService>(builder: (context, fridgesService, child) {
+    return Consumer2<FridgesService, LoginService>(
+        builder: (context, fridgesService, loginservice, child) {
+      fridgesService.getMyFridge(loginservice.loginB.bMember_id!);
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
         child: Scaffold(
@@ -55,7 +53,7 @@ class _TeenagerViewRefrigeratorPageWidgetState
                   return GestureDetector(
                     child: Padding(
                       padding: MediaQuery.viewInsetsOf(context),
-                      child: TeenagerAddIngredientPopWidget(),
+                      child: TeenagerAddIngredientPop2Widget(),
                     ),
                   );
                 },
@@ -68,7 +66,7 @@ class _TeenagerViewRefrigeratorPageWidgetState
             ),
             elevation: 8,
             label: Text(
-              '재료추가',
+              '재료 추가',
               style: TextStyle(
                 fontFamily: 'SUITE',
                 color: const Color(0xffFFFFFF),
@@ -201,85 +199,128 @@ class IngredientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 3,
-            color: Color(0x33000000),
-            offset: Offset(0, 1),
-          )
-        ],
-        borderRadius: BorderRadius.circular(12),
-        shape: BoxShape.rectangle,
-        border: Border.all(
-          color: Color(0xFFE0E3E7),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+    return Consumer<FridgesService>(builder: (context, fridgesService, child) {
+      return InkWell(
+          onTap: () {
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    title: Column(
+                      children: <Widget>[
+                        Text("재료 삭제"),
+                      ],
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "재료를 삭제하시겠습니까?",
+                        ),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.all(20.0),
+                          foregroundColor: Color(0xffFFB74D),
+                          textStyle: const TextStyle(fontSize: 20),
+                        ),
+                        child: Text("확인"),
+                        onPressed: () {
+                          fridgesService
+                              .deleteFridge(fridgeItem.fridge_id.toString());
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 3,
+                  color: Color(0x33000000),
+                  offset: Offset(0, 1),
+                )
+              ],
+              borderRadius: BorderRadius.circular(12),
+              shape: BoxShape.rectangle,
+              border: Border.all(
+                color: Color(0xFFE0E3E7),
+              ),
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    "${fridgeItem.fridge_item_img}",
-                    width: double.infinity,
-                    height: MediaQuery.sizeOf(context).height * 0.1,
-                    fit: BoxFit.cover,
-                  ),
-                ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-                  child: Text(
-                    '${fridgeItem.fridge_item_name}',
-                    style: TextStyle(
-                      fontFamily: 'Plus Jakarta Sans',
-                      color: Color(0xFF14181B),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text:
-                              '${DateTime.now().difference(fridgeItem.expiration_date).inDays.toString()}\n',
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          "${fridgeItem.fridge_item_img}",
+                          width: double.infinity,
+                          height: MediaQuery.sizeOf(context).height * 0.1,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+                        child: Text(
+                          '${fridgeItem.fridge_item_name}',
                           style: TextStyle(
-                            color: const Color(0xffFF4081),
+                            fontFamily: 'Plus Jakarta Sans',
+                            color: Color(0xFF14181B),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        TextSpan(
-                          text: '~${fridgeItem.expiration_date.toString()}',
-                          style: TextStyle(),
-                        )
-                      ],
-                      style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
-                        color: Color(0xFF57636C),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
                       ),
-                    ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: fridgeItem.expiration_date == null
+                                    ? "-"
+                                    : '~${fridgeItem.expiration_date.toString()}',
+                                style: TextStyle(),
+                              )
+                            ],
+                            style: TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
+                              color: DateTime.now().isBefore(DateTime.parse(
+                                      fridgeItem.expiration_date == null
+                                          ? "2099-08-30"
+                                          : fridgeItem.expiration_date!))
+                                  ? Color(0xFF57636C)
+                                  : Color.fromARGB(239, 204, 26, 26),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          ));
+    });
   }
 }

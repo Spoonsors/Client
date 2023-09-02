@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:save_children_v01/model/IngredientsModel.dart';
+import 'package:save_children_v01/pages/teenager/TeenagerAddIngredientPage.dart';
+import 'package:save_children_v01/service/FridgesService.dart';
+import 'package:save_children_v01/service/LoginService.dart';
 import 'package:save_children_v01/service/PostsService.dart';
 
-import '../../model/BMemberModel.dart';
+import '../../etc/Colors.dart';
+import '../../etc/Dialog.dart';
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerWriteRequestPageModel.dart';
 
 class TeenagerWriteRequestPageWidget extends StatefulWidget {
   const TeenagerWriteRequestPageWidget({super.key, required this.recipe});
+
   final Recipe recipe;
+
   @override
   _TeenagerWriteRequestPageWidgetState createState() =>
       _TeenagerWriteRequestPageWidgetState();
@@ -19,6 +26,7 @@ class _TeenagerWriteRequestPageWidgetState
   late TeenagerWriteRequestPageModel _model;
   late Recipe _recipe;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -37,15 +45,18 @@ class _TeenagerWriteRequestPageWidgetState
   Widget build(BuildContext context) {
     final _titleTextController = TextEditingController();
     final _contentTextController = TextEditingController();
-    BMember bMember = BMember(
-        bMember_id: "cjw",
-        bMember_pwd: "0102",
-        bMember_nickname: "jinu",
-        bMember_phoneNumber: "010",
-        bMember_address: "인천",
-        bMember_certificate: "");
-    List<String> parts = _recipe.rcp_PARTS_DTLS.split(',');
-    return Consumer<PostsService>(builder: (context, postsService, child) {
+    List<String> requestParts = [];
+    List<String> requiredParts = _recipe.rcp_PARTS_DTLS.split(',');
+    return Consumer3<PostsService, LoginService, FridgesService>(
+        builder: (context, postsService, loginservice, fridgesservice, child) {
+      List<String> availableIng = [];
+      fridgesservice.getMyFridge(loginservice.loginB.bMember_id!);
+      fridgesservice.fridgeList.forEach((value) {
+        availableIng.add(value.fridge_item_name);
+      });
+      fridgesservice.freezerList.forEach((value) {
+        availableIng.add(value.fridge_item_name);
+      });
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
         child: Scaffold(
@@ -71,68 +82,223 @@ class _TeenagerWriteRequestPageWidgetState
             centerTitle: false,
             elevation: 0,
           ),
-          body: SafeArea(
-            top: true,
+          body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-              child: SingleChildScrollView(
+              child: Container(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 10),
-                      child: Text(
-                        _recipe.rcp_NM,
-                        style: TextStyle(
-                            fontFamily: "SUITE",
-                            fontSize: 24,
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xff212121)),
-                      ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsetsDirectional.fromSTEB(0, 4, 132, 10),
+                          child: Text(
+                            _recipe.rcp_NM,
+                            style: TextStyle(
+                                fontFamily: "SUITE",
+                                fontSize: 24,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xff212121)),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            Ingredients requiredIngredient =
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TeenagerAddIngredientPageWidget()));
+                            requestParts
+                                .add(requiredIngredient.ingredients_name);
+                          },
+                          style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              backgroundColor: const Color(0xffffb74d),
+                              minimumSize: Size(80, 30),
+                              side: BorderSide(
+                                color: Colors.transparent,
+                                width: 1,
+                              ),
+                              elevation: 2),
+                          child: Text("재료 추가",
+                              style: TextStyle(
+                                fontFamily: 'Lexend Deca',
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.normal,
+                              )),
+                        ),
+                      ],
                     ),
+                    Container(
+                        child: Text(
+                      "필요한 모든 식재료",
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        color: Color(0xFF15161E),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )),
                     SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: parts.length,
-                          itemBuilder: (context, index) {
-                            final _part = parts[index];
-                            return Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(4, 4, 4, 4),
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffff8a80), //색 변화 필요
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: const Color(0xffff8a80),
-                                  ),
-                                ),
-                                child: Align(
-                                  alignment: AlignmentDirectional(0, 0),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8, 0, 8, 0),
-                                    child: Text(
-                                      _part,
-                                      style: TextStyle(
-                                        fontFamily: 'Plus Jakarta Sans',
-                                        color: Color(0xFF15161E),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
+                        scrollDirection: Axis.horizontal,
+                        child: SizedBox(
+                          height: 60,
+                          child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: requiredParts.length,
+                              itemBuilder: (context, index) {
+                                final _part = requiredParts[index];
+                                return Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 0, 8),
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(4, 4, 4, 4),
+                                    height: 32,
+                                    decoration: BoxDecoration(
+                                      color: availableIng.contains(_part)
+                                          ? Colors.white
+                                          : info,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: availableIng.contains(_part)
+                                            ? Colors.black
+                                            : info,
+                                      ),
+                                    ),
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0, 0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            8, 0, 8, 0),
+                                        child: Text(
+                                          _part,
+                                          style: TextStyle(
+                                            fontFamily: 'Plus Jakarta Sans',
+                                            color: Color(0xFF15161E),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
+                                );
+                              }),
+                        )),
+                    Container(
+                        child: Text(
+                      "후원이 필요한 식재료",
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        color: Color(0xFF15161E),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )),
+                    SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: SizedBox(
+                          height: 60,
+                          child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: requestParts.length,
+                              itemBuilder: (context, index) {
+                                final _part = requestParts[index];
+                                return InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0)),
+                                              title: Column(
+                                                children: <Widget>[
+                                                  Text("재료 삭제"),
+                                                ],
+                                              ),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "등록한 재료를 삭제하시겠습니까?",
+                                                  ),
+                                                ],
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            20.0),
+                                                    foregroundColor:
+                                                        Color(0xffFFB74D),
+                                                    textStyle: const TextStyle(
+                                                        fontSize: 20),
+                                                  ),
+                                                  child: Text("확인"),
+                                                  onPressed: () {
+                                                    requestParts.remove(_part);
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 0, 8),
+                                      child: Container(
+                                        margin: EdgeInsets.fromLTRB(4, 4, 4, 4),
+                                        height: 32,
+                                        decoration: BoxDecoration(
+                                          color: availableIng.contains(_part)
+                                              ? Colors.white
+                                              : primary,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          border: Border.all(
+                                            color: availableIng.contains(_part)
+                                                ? Colors.black
+                                                : primary,
+                                          ),
+                                        ),
+                                        child: Align(
+                                          alignment: AlignmentDirectional(0, 0),
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    8, 0, 8, 0),
+                                            child: Text(
+                                              _part,
+                                              style: TextStyle(
+                                                fontFamily: 'Plus Jakarta Sans',
+                                                color: Color(0xFF15161E),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ));
+                              }),
+                        )),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                       child: Column(mainAxisSize: MainAxisSize.max, children: [
@@ -258,20 +424,22 @@ class _TeenagerWriteRequestPageWidgetState
                         padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
                         child: ElevatedButton.icon(
                             onPressed: () async {
+                              requestParts.removeWhere(
+                                  (element) => availableIng.contains(element));
+
                               PostPosts _post = PostPosts(
-                                post_id: 1,
-                                bMember: bMember,
-                                post_title: _titleTextController.text,
-                                post_txt: _contentTextController.text,
-                                post_state: 0,
-                                has_review: 0,
-                                menu_img: _recipe.att_FILE_NO_MAIN,
-                                menu_name: _recipe.rcp_NM,
-                                post_date: DateTime.now(),
-                                remain_spon: parts.length,
-                                spon: [],
-                              ); //후원이 하나도 없는 상태
-                              postsService.writePost(_post, bMember);
+                                  post_title: _titleTextController.text,
+                                  post_txt: _contentTextController.text,
+                                  menu_img: _recipe.att_FILE_NO_MAIN,
+                                  menu_name: _recipe.rcp_NM,
+                                  item_list: requestParts);
+                              postsService.writePost(
+                                  _post, loginservice.loginB.bMember_id!);
+                              if (!postsService.isVerified) {
+                                dialog(
+                                    "후원 글 작성 불가", "인증되지 않은 사용자입니다.", context);
+                              }
+
                               Navigator.pop(context);
                             },
                             icon: Icon(Icons.receipt_long,

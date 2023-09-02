@@ -7,32 +7,54 @@ SMember SMemberJson(String str) => SMember.fromJson(json.decode(str));
 String SMemberToJson(SMember data) => json.encode(data.toJson());
 
 class SMember {
-  String sMember_id;
-  String sMember_pwd;
-  String sMember_nickname;
-  String sMember_phoneNumber;
-  List<Spon> spons;
+  String? createDate;
+  String? modifiedDate;
+  String? role;
+  String? token;
+  String? profilePath;
+  String? smemberId;
+  String? smemberName;
+  String? smemberNickname;
+  String? sMember_id;
+  String? sMember_pwd;
+  String? sMember_phoneNumber;
+  List<Spon>? spons;
 
   SMember(
-      {required this.sMember_id,
-      required this.sMember_pwd,
-      required this.sMember_nickname,
-      required this.sMember_phoneNumber,
-      required this.spons});
+      {this.createDate,
+      this.modifiedDate,
+      this.role,
+      this.token,
+      this.profilePath,
+      this.smemberId,
+      this.smemberName,
+      this.smemberNickname,
+      this.sMember_id,
+      this.sMember_phoneNumber,
+      this.sMember_pwd,
+      this.spons});
 
-  factory SMember.fromJson(Map<String, dynamic> json) => SMember(
-        sMember_id: json["sMember_id"],
-        sMember_pwd: json["sMember_pwd"],
-        sMember_nickname: json["sMember_nickname"],
-        sMember_phoneNumber: json["sMember_phoneNumber"],
-        spons: json["spons"],
-      );
+  SMember.fromJson(Map<String, dynamic> json) {
+    createDate = json['createDate'].toString();
+    modifiedDate = json['modifiedDate'].toString();
+    role = json['role'];
+    token = json['token'];
+    profilePath = json['profile_path'];
+    smemberId = json['smember_id'];
+    smemberName = json['smember_name'];
+    smemberNickname = json['smember_nickname'];
+  }
 
-  Map<String, dynamic> toJson() => {
-        "sMember_id": sMember_id,
-        "sMember_pwd": sMember_pwd,
-        "sMember_nickname": sMember_nickname,
-        "sMember_phoneNumber": sMember_phoneNumber,
-        "spons": spons,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['createDate'] = this.createDate;
+    data['modifiedDate'] = this.modifiedDate;
+    data['role'] = this.role;
+    data['token'] = this.token;
+    data['profile_path'] = this.profilePath;
+    data['smember_id'] = this.smemberId;
+    data['smember_name'] = this.smemberName;
+    data['smember_nickname'] = this.smemberNickname;
+    return data;
+  }
 }

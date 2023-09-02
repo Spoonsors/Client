@@ -1,59 +1,38 @@
-import 'dart:ffi';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:save_children_v01/model/SponModel.dart';
-import '../model/BMemberModel.dart';
 import '../model/PostModel.dart';
 import '../model/RecipeModel.dart';
 
 class PostPosts {
-  int post_id;
-  BMember bMember;
   String post_title;
   String post_txt;
-  int post_state;
-  int has_review;
-  DateTime post_date;
-  List<Spon> spon;
-  int remain_spon;
+  List<String> item_list;
   String menu_img;
   String menu_name;
 
   PostPosts(
-      {required this.post_id,
-      required this.bMember,
-      required this.post_title,
+      {required this.post_title,
       required this.post_txt,
-      required this.post_state,
-      required this.has_review,
-      required this.post_date,
-      required this.spon,
-      required this.remain_spon,
       required this.menu_img,
-      required this.menu_name});
+      required this.menu_name,
+      required this.item_list});
 }
 
 class PostsService extends ChangeNotifier {
   List<Post> allPostList = [];
   List<Post> myPostList = [];
   late Post _post;
-  final BMember bMember;
-
+  bool isVerified = true;
   // 후원에 올리는 메뉴의 레시피
   late Recipe post_Recipe;
 
-  PostsService({required this.bMember}) {
+  PostsService() {
     getAllPosts();
-    getAllMyPosts(bMember.bMember_Id);
   }
 
   void getAllMyPosts(String id) async {
     Response res = await Dio().get(
-      "http://3.86.110.15:8080/viewMyPosting/" + id,
+      "http://15.165.106.139:8080/viewMyPosting/" + id,
     );
     myPostList.clear();
     for (Map<String, dynamic> item in res.data) {
@@ -66,7 +45,7 @@ class PostsService extends ChangeNotifier {
 
   void getAllPosts() async {
     Response res = await Dio().get(
-      "http://3.86.110.15:8080/viewPosting",
+      "http://15.165.106.139:8080/viewPosting",
     );
     allPostList.clear();
     for (Map<String, dynamic> item in res.data) {
@@ -77,23 +56,22 @@ class PostsService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void writePost(PostPosts post, BMember bMember) async {
+  void writePost(PostPosts post, String bMember_id) async {
     Map<String, dynamic> data = {
-      "post_id": post.post_id,
-      "bMember": post.bMember,
-      "post_title": post.post_title,
-      "post_txt": post.post_txt,
-      "post_state": post.post_state,
-      "has_review": post.has_review,
-      "post_date": post.post_date,
-      "spon": post.spon,
-      "remain_spon": post.remain_spon,
-      "menu_img": post.menu_img,
-      "menu_name": post.menu_name,
+      "post_title": post.post_title, //
+      "post_txt": post.post_txt, //
+      "menu_img": post.menu_img, //
+      "menu_name": post.menu_name, //
+      "item_list": post.item_list
     };
+    print(post.post_title);
+    print(post.post_txt);
+    print(post.menu_img);
+    print(post.menu_name);
+    print(post.item_list);
     try {
       Response response = await Dio().post(
-        "http://3.86.110.15:8080/bMember/post/" + bMember.bMember_Id,
+        "http://15.165.106.139:8080/bMember/post/${bMember_id}",
         data: data,
       );
       if (response.statusCode == 200) {
@@ -108,13 +86,17 @@ class PostsService extends ChangeNotifier {
     } catch (e) {
       print('후원 POST 에러');
       print(e.toString());
+      if (e.toString() ==
+          "DioError [DioErrorType.response]: Http status error [403]") {
+        isVerified = false;
+      }
     }
     getAllPosts();
   }
 
-  void viewPost(PostPosts post) async {
+  void viewPost(Post post) async {
     Response res = await Dio().get(
-      "http://3.86.110.15:8080/viewPosting/${post.post_id}",
+      "http://15.165.106.139:8080/viewPosting/" + post.postId.toString(),
     );
     _post = Post.fromJson(res.data);
 
@@ -123,7 +105,20 @@ class PostsService extends ChangeNotifier {
 
   void getIngredientsOfPost(Post post) async {
     Response res = await Dio().get(
-        "http://3.86.110.15:8080/recipe/findByName?RCP_NM=" + post.menu_name);
+        "http://15.165.106.139:8080/recipe/findByName?RCP_NM=" +
+            post.menuName!);
     post_Recipe = Recipe.fromJson(res.data);
+  }
+
+  void changeStateofPost(Post post) async {
+    Response res = await Dio().post(
+      "http://15.165.106.139:8080/bMember/changePostState/${post.postId}",
+    );
+  }
+
+  void deletePost(Post post) async {
+    Response res = await Dio().delete(
+      "http://15.165.106.139:8080/bMember/deletePost/${post.postId}",
+    );
   }
 }

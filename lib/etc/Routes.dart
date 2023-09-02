@@ -1,3 +1,6 @@
+import 'package:save_children_v01/pages/admin/AdminCertificateConfirmPage.dart';
+import 'package:save_children_v01/pages/auth/AllSelectUserPage.dart';
+
 import '../pages/admin/AdminProductRegisterPage.dart';
 import '../pages/nutritionist/NutritionistDietEditPage.dart';
 import '../pages/nutritionist/NutritionistNutriHomePage.dart';
@@ -12,6 +15,7 @@ import '../pages/supporter/SupporterViewPostDetailPage.dart';
 // dart.js가 import 될 수 있으니 이 import는 삭제해야합니다.
 
 var namedRoutes = {
+  '/start': (context) => AllSelectUserPageWidget(),
   '/SupporterMainPage': (context) => SupporterMainPageWidget(),
   '/SupporterPurchaseHistoryPage': (context) =>
       SupporterPurchaseHistoryPageWidget(),
@@ -24,4 +28,6 @@ var namedRoutes = {
   '/AdminProductRegisterPage': (context) => AdminProductRegisterPageWidget(),
   '/NutritionistNutriHomePage': (context) => NutritionistNutriHomePageWidget(),
   '/NutritionistDietEditPage': (context) => NutritionistDietEditPageWidget(),
+  '/AdminCertificateConfirmPage': (context) =>
+      AdminCertificateConfirmPageWidget(),
 };

@@ -67,27 +67,14 @@ class _SupporterViewInfoPopWidgetState
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.help_outline_outlined,
+                        Icons.info_outline_rounded,
                         color: const Color(0xff212121),
-                        size: 36,
-                      ),
-                      Align(
-                        alignment: AlignmentDirectional(0, 0),
-                        child: Text(
-                          '도움말',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'SUITE',
-                            color: const Color(0xff212121),
-                            fontSize: 24,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                        size: 30,
                       ),
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
                         child: Text(
-                          '모두의 한끼는 여러분들의 힘이 필요한 서비스입니다.\n후원 게시판에서 자립준비청년들에게 후원하세요!\n여러분들의 작은 후원이\n자립준비청년들에게 큰 힘이 됩니다.',
+                          '모두의 한끼는 여러분들의 힘이 필요한 서비스입니다. 자립준비청년들에게 후원하세요! \n 여러분들의 작은 후원이\n자립준비청년들에게 큰 힘이 됩니다.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'SUITE',

@@ -1,11 +1,7 @@
-import 'dart:ffi';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:save_children_v01/model/SponModel.dart';
+import 'package:http_parser/http_parser.dart';
+
 import '../model/BMemberModel.dart';
 import '../model/PostModel.dart';
 import '../model/ReviewModel.dart';
@@ -13,7 +9,7 @@ import '../model/ReviewModel.dart';
 class PostReview {
   int review_id;
   Post post;
-  XFile? review_img;
+  String? review_img;
   String review_txt;
   DateTime review_date;
 
@@ -29,13 +25,15 @@ class PostReview {
 class ReviewsService extends ChangeNotifier {
   List<Review> reviewsList = [];
   late BMember _bMember;
-  ReviewsService() {
-    getMyReviews(_bMember);
-  }
 
-  void getMyReviews(BMember bMember) async {
+  Review? review_of_post;
+
+
+  ReviewsService() {}
+
+  void getMyReviews(String bMember_Id) async {
     Response res = await Dio().get(
-      "http://3.86.110.15:8080/review/findMyReview/" + bMember.bMember_Id,
+      "http://15.165.106.139:8080/review/findMyReview/" + bMember_Id,
     );
     reviewsList.clear();
     for (Map<String, dynamic> item in res.data) {
@@ -46,20 +44,22 @@ class ReviewsService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void writeReview(BMember bMember, PostReview postReview) async {
-    Map<String, dynamic> data = {
-      "review_id": postReview.review_id,
-      "post": postReview.review_img?.path,
-      "review_img": await MultipartFile.fromFile(
-        postReview.review_img!.path,
-        filename: "${postReview.review_id}.jpg",
+  void writeReview(String bMember_id, PostReview postReview) async {
+    print("경로" + postReview.review_img!);
+    print("텍스트" + postReview.review_txt);
+    final data = FormData.fromMap({
+      'img': await MultipartFile.fromFile(
+        postReview.review_img!,
+        contentType: MediaType.parse('multipart/form-data'),
       ),
-      "review_txt": postReview.review_txt,
-      "review_date": postReview.review_date,
-    };
+      'reviewTxt': MultipartFile.fromString(
+        postReview.review_txt,
+        contentType: MediaType.parse('application/json'),
+      ),
+    });
     try {
       Response response = await Dio().post(
-        "http://3.86.110.15:8080//review/create/${postReview.post.post_id}",
+        "http://15.165.106.139:8080/review/create/${postReview.post.postId}",
         data: data,
       );
       if (response.statusCode == 200) {
@@ -75,6 +75,16 @@ class ReviewsService extends ChangeNotifier {
       print('리뷰 POST 에러');
       print(e.toString());
     }
-    getMyReviews(bMember);
+    getMyReviews(bMember_id);
+  }
+
+  Future<void> getReviewOfPost(int post_id) async {
+    Response res = await Dio().get(
+      "http://15.165.106.139:8080/viewPosting/" + post_id.toString(),
+    );
+
+    Map<String, dynamic> data = res.data["review"];
+
+    review_of_post = Review.fromJson(data);
   }
 }

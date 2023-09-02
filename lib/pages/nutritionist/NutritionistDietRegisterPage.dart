@@ -59,6 +59,7 @@ class _NutritionistDietRegisterPageWidgetState
                         carbohydrate: recipeService.carbo.toInt(),
                         protein: recipeService.pro.toInt(),
                         fat: recipeService.fat.toInt(),
+                        na: 0,
                         level: "중",
                         timeRequired: "50");
                     print(postMealPlanner.toString());
@@ -175,7 +176,7 @@ class _NutritionistDietRegisterPageWidgetState
                         ),
                       ),
                       Text(
-                        '${recipeService.kcal}kcal',
+                        '${recipeService.kcal.toStringAsFixed(1)}kcal',
                         style: TextStyle(
                             fontFamily: 'SUITE',
                             color: primaryText,
@@ -197,7 +198,7 @@ class _NutritionistDietRegisterPageWidgetState
                         ),
                       ),
                       Text(
-                        '${recipeService.pro}g',
+                        '${recipeService.pro.toStringAsFixed(1)}g',
                         style: TextStyle(
                             fontFamily: 'SUITE',
                             color: primaryText,
@@ -219,7 +220,7 @@ class _NutritionistDietRegisterPageWidgetState
                         ),
                       ),
                       Text(
-                        '${recipeService.carbo}g',
+                        '${recipeService.carbo.toStringAsFixed(1)}g',
                         style: TextStyle(
                             fontFamily: 'SUITE',
                             color: primaryText,
@@ -241,7 +242,7 @@ class _NutritionistDietRegisterPageWidgetState
                         ),
                       ),
                       Text(
-                        '${recipeService.fat}g',
+                        '${recipeService.fat.toStringAsFixed(1)}g',
                         style: TextStyle(
                             fontFamily: 'SUITE',
                             color: primaryText,
@@ -371,7 +372,7 @@ class SelectedFoodWidget extends StatelessWidget {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       0.0, 1.0, 0.0, 1.0),
                                   child: Text(
-                                    '탄수화물 ${selectedRecipe.recipe.info_CAR}g, 단백질 ${selectedRecipe.recipe.info_PRO}g, 지방 ${selectedRecipe.recipe.info_FAT}g',
+                                    '탄수화물 ${selectedRecipe.recipe.info_CAR.toStringAsFixed(1)}g, 단백질 ${selectedRecipe.recipe.info_PRO.toStringAsFixed(1)}g, 지방 ${selectedRecipe.recipe.info_FAT.toStringAsFixed(1)}g',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontFamily: 'SUITE',

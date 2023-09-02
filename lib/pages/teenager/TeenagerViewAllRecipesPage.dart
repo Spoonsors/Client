@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
-import 'package:save_children_v01/pages/teenager/TeenagerViewReviewsPage.dart';
 import 'package:save_children_v01/service/RecipeService.dart';
-import 'package:save_children_v01/service/ReviewsService.dart';
 
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerViewAllRecipesPageModel.dart';
@@ -16,6 +13,7 @@ class TeenagerViewAllRecipesPageWidget extends StatefulWidget {
 
   //diet_name라는 이름의 식단에 포함된 메뉴들 및 레시피 조회
   final String diet_name;
+
   @override
   _TeenagerViewAllRecipesPageWidgetState createState() =>
       _TeenagerViewAllRecipesPageWidgetState();
@@ -47,79 +45,70 @@ class _TeenagerViewAllRecipesPageWidgetState
   @override
   Widget build(BuildContext context) {
     return Consumer<RecipeService>(builder: (context, recipeService, child) {
+      recipeService.get4RecipeInfo(_diet_name);
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
         child: Scaffold(
-          key: scaffoldKey,
-          backgroundColor: const Color(0xffffffff),
-          appBar: AppBar(
+            key: scaffoldKey,
             backgroundColor: const Color(0xffffffff),
-            iconTheme: IconThemeData(color: const Color(0xff212121)),
-            automaticallyImplyLeading: true,
-            title: Text(
-              '모든 레시피 보기',
-              style: TextStyle(
-                fontFamily: 'SUITE',
-                color: const Color(0xff212121),
-                fontSize: 22,
+            appBar: AppBar(
+              backgroundColor: const Color(0xffffffff),
+              iconTheme: IconThemeData(color: const Color(0xff212121)),
+              automaticallyImplyLeading: true,
+              title: Text(
+                '모든 레시피 보기',
+                style: TextStyle(
+                  fontFamily: 'SUITE',
+                  color: const Color(0xff212121),
+                  fontSize: 22,
+                ),
               ),
+              actions: [],
+              centerTitle: false,
+              elevation: 2,
             ),
-            actions: [],
-            centerTitle: false,
-            elevation: 2,
-          ),
-          body: SafeArea(
-            top: true,
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+            body: SafeArea(
+              top: true,
               child: SingleChildScrollView(
                 child: Column(mainAxisSize: MainAxisSize.max, children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                          child: Text(
-                            '현재 등록된 재료 기준으로 정렬합니다',
-                            style: TextStyle(
-                              fontFamily: 'SUITE',
-                              color: const Color(0xff757575),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: recipeService.recipeList.length,
-                              itemBuilder: (context, index) {
-                                if (_diet_name == '') {
-                                  final _recipe =
-                                      recipeService.recipeList[index];
-                                  return RecipeCard(
-                                      recipe: _recipe.recipe, idx: index);
-                                } else {
-                                  recipeService.get4RecipeInfo(_diet_name);
-                                  final _recipe = recipeService
-                                      .requested4RecipeInDiet[index];
-                                  return RecipeCard(
-                                      recipe: _recipe, idx: index);
-                                }
-                              }),
-                        )
-                      ],
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                    child: Text(
+                      '현재 등록된 재료 기준으로 정렬합니다',
+                      style: TextStyle(
+                        fontFamily: 'SUITE',
+                        color: const Color(0xff757575),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
+                  SingleChildScrollView(
+                    child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: _diet_name == ''
+                            ? recipeService.recipeList.length
+                            : recipeService.requested4MenuInDiet.length,
+                        itemBuilder: (context, index) {
+                          if (_diet_name == '') {
+                            final _recipe = recipeService.recipeList[index];
+                            return RecipeCard(
+                                recipe: _recipe.recipe, idx: index);
+                          } else {
+                            print("hello");
+                            final _recipe =
+                                recipeService.requested4RecipeInDiet[index];
+                            return RecipeCard(recipe: _recipe, idx: index);
+                          }
+                        }),
+                  )
                 ]),
               ),
-            ),
-          ),
-        ),
+            )),
       );
     });
   }
@@ -230,8 +219,8 @@ class RecipeCard extends StatelessWidget {
                                 alignment: AlignmentDirectional(0, 0),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(
-                                        0xffFF8A80), //재료를 갖고 있는지 아닌지에 따라 색깔 구분 필요
+                                    color: const Color(0xffFF8A80),
+                                    //재료를 갖고 있는지 아닌지에 따라 색깔 구분 필요
                                     borderRadius: BorderRadius.circular(20),
                                     shape: BoxShape.rectangle,
                                   ),

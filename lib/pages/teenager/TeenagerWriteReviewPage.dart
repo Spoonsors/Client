@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:save_children_v01/pages/teenager/TeenagerViewSupportsPage.dart';
 
-import '../../model/BMemberModel.dart';
 import '../../model/PostModel.dart';
 import '../../models/TeenagerWriteReviewPageModel.dart';
+import '../../service/LoginService.dart';
 import '../../service/ReviewsService.dart';
 
 class TeenagerWriteReviewPageWidget extends StatefulWidget {
   const TeenagerWriteReviewPageWidget({super.key, required this.post});
+
   final Post post;
+
   @override
   _TeenagerWriteReviewPageWidgetState createState() =>
       _TeenagerWriteReviewPageWidgetState();
@@ -21,13 +24,14 @@ class _TeenagerWriteReviewPageWidgetState
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late Post _post;
 
-  XFile? item_img;
+  String? item_img;
   final ImagePicker picker = ImagePicker();
+
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
     if (pickedFile != null) {
       setState(() {
-        item_img = XFile(pickedFile.path);
+        item_img = pickedFile.path;
       });
     }
   }
@@ -53,14 +57,8 @@ class _TeenagerWriteReviewPageWidgetState
   Widget build(BuildContext context) {
     final _titleTextController = TextEditingController();
     final _contentTextController = TextEditingController();
-    BMember bMember = BMember(
-        bMember_id: "cjw",
-        bMember_pwd: "0102",
-        bMember_nickname: "jinu",
-        bMember_phoneNumber: "010",
-        bMember_address: "인천",
-        bMember_certificate: "");
-    return Consumer<ReviewsService>(builder: (context, reviewsSerice, child) {
+    return Consumer2<ReviewsService, LoginService>(
+        builder: (context, reviewsSerice, loginservice, child) {
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
         child: Scaffold(
@@ -99,7 +97,7 @@ class _TeenagerWriteReviewPageWidgetState
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                       child: Text(
-                        _post.menu_name,
+                        _post.menuName!,
                         style: TextStyle(
                           fontFamily: 'SUITE',
                           color: const Color(0xff212121),
@@ -109,65 +107,54 @@ class _TeenagerWriteReviewPageWidgetState
                       ),
                     ),
                     Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                        child: Container(
+                          width: double.infinity,
+                          constraints: BoxConstraints(
+                            maxWidth: 500,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xfff5f5f5),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: const Color(0xffe0e0e0),
+                              width: 2,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    getImage(ImageSource.gallery);
+                                  },
+                                  icon: Icon(Icons.add_a_photo_rounded),
+                                  color: const Color(0xffffb74d),
+                                  iconSize: 32,
+                                ),
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16, 0, 0, 0),
+                                  child: Text(
+                                    '사진 업로드',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'SUITE',
+                                      color: const Color(0xff757575),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )),
+                    Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                       child: Column(mainAxisSize: MainAxisSize.max, children: [
-                        TextFormField(
-                          controller: _titleTextController,
-                          autofocus: true,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelStyle: TextStyle(
-                              fontFamily: 'SUITE',
-                              color: const Color(0xff757575),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            hintText: '제목을 입력하세요',
-                            hintStyle: TextStyle(
-                              fontFamily: 'SUITE',
-                              color: const Color(0xff757575),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color(0xffe0e0e0),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color(0xffffb74d),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color(0xfff44336),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color(0xfff44336),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            contentPadding:
-                                EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
-                          ),
-                          style: TextStyle(
-                            fontFamily: 'SUITE',
-                            color: const Color(0xff757575),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          cursorColor: const Color(0xffffb74d),
-                        ),
                         SizedBox(height: 10),
                         TextFormField(
                           controller: _contentTextController,
@@ -231,52 +218,6 @@ class _TeenagerWriteReviewPageWidgetState
                         ),
                       ]),
                     ),
-                    Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                        child: Container(
-                          width: double.infinity,
-                          constraints: BoxConstraints(
-                            maxWidth: 500,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xfff5f5f5),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: const Color(0xffe0e0e0),
-                              width: 2,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    getImage(ImageSource.gallery);
-                                  },
-                                  icon: Icon(Icons.add_a_photo_rounded),
-                                  color: const Color(0xffffb74d),
-                                  iconSize: 32,
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 0, 0, 0),
-                                  child: Text(
-                                    '사진 업로드',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'SUITE',
-                                      color: const Color(0xff757575),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
                       child: Container(
@@ -543,7 +484,51 @@ class _TeenagerWriteReviewPageWidgetState
                                 review_img: item_img,
                                 review_txt: _contentTextController.text,
                               );
-                              reviewsSerice.writeReview(bMember, _review);
+                              reviewsSerice.writeReview(
+                                  loginservice.loginB.bMember_id!, _review);
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0)),
+                                      title: Column(
+                                        children: <Widget>[
+                                          Text("등록 완료!"),
+                                        ],
+                                      ),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "리뷰가 등록되었습니다",
+                                          ),
+                                        ],
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.all(20.0),
+                                            foregroundColor: Color(0xffFFB74D),
+                                            textStyle:
+                                                const TextStyle(fontSize: 20),
+                                          ),
+                                          child: Text("확인"),
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TeenagerVIewSupportsPageWidget()));
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  });
                             },
                             label: Text("리뷰 올리기",
                                 style: TextStyle(

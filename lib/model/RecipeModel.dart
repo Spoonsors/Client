@@ -29,19 +29,19 @@ class Recipe {
       required this.rcp_PARTS_DTLS});
 
   factory Recipe.fromJson(Map<String, dynamic> json) => Recipe(
-        rcp_SEQ: json["rcp_SEQ"],
-        rcp_NM: json["rcp_NM"],
-        att_FILE_NO_MAIN: json["att_FILE_NO_MAIN"],
+        rcp_SEQ: json["rcp_SEQ"],//
+        rcp_NM: json["rcp_NM"],//
+        att_FILE_NO_MAIN: json["att_FILE_NO_MAIN"],//
         att_FILE_NO_MK: json["att_FILE_NO_MK"],
-        rcp_PAT2: json["rcp_PAT2"],
-        manual: json["manual"],
-        manual_IMG: json["manual_IMG"],
-        info_ENG: json["info_ENG"],
-        info_CAR: json["info_CAR"],
-        info_PRO: json["info_PRO"],
-        info_FAT: json["info_FAT"],
-        info_NA: json["info_NA"],
-        rcp_PARTS_DTLS: json["rcp_PARTS_DTLS"],
+        rcp_PAT2: json["rcp_PAT2"],//
+        manual: json["manual"],//
+        manual_IMG: json["manual_IMG"],//
+        info_ENG: json["info_ENG"],//
+        info_CAR: json["info_CAR"],//
+        info_PRO: json["info_PRO"],//
+        info_FAT: json["info_FAT"],//
+        info_NA: json["info_NA"],//
+        rcp_PARTS_DTLS: json["rcp_PARTS_DTLS"],//
       );
 
   Map<String, dynamic> toJson() => {

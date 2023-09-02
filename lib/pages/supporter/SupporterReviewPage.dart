@@ -1,37 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:save_children_v01/service/CheckMyReviewService.dart';
+import 'package:save_children_v01/service/LoginService.dart';
 
 import '../../etc/Colors.dart';
-import '../../etc/TextStyles.dart';
 
 class SupporterReviewPageWidget extends StatelessWidget {
   const SupporterReviewPageWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: primaryText),
-        title: Text('받은 감사글'),
-      ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(vertical: 15.0),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        children: [
-          SupportReviewPostListItem(),
-        ],
-      ),
-    );
+    var sId = context.read<LoginService>().loginS.smemberId;
+    context.read<CheckMyReviewService>().getAllServicesInfo(sId!);
+
+    return Consumer<CheckMyReviewService>(
+        builder: (context, checkMyReviewService, child) {
+      return Scaffold(
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: primaryText),
+          title: Text('받은 감사글'),
+        ),
+        body: ListView.builder(
+          padding: EdgeInsets.symmetric(vertical: 15.0),
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: checkMyReviewService.items.length,
+          itemBuilder: (BuildContext context, int index) {
+            return SupportReviewPostListItem(
+              checkMyReviewModel: checkMyReviewService.items[index],
+            );
+          },
+        ),
+      );
+    });
   }
 }
 
 class SupportReviewPostListItem extends StatelessWidget {
-  const SupportReviewPostListItem({super.key});
+  const SupportReviewPostListItem(
+      {super.key, required this.checkMyReviewModel});
+
+  final CheckMyReviewModel checkMyReviewModel;
 
   @override
   Widget build(BuildContext context) {
+    DateTime dt =
+        new DateFormat('yyyy-mm-dd').parse(checkMyReviewModel.writeDate!);
+
+    String d1 = DateFormat('yyyy-mm-dd').format(dt);
+    String d2 = DateFormat('hh:mm a').format(dt);
+
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+      padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
       child: AnimatedContainer(
         duration: Duration(milliseconds: 100),
         curve: Curves.easeInOut,
@@ -60,23 +81,19 @@ class SupportReviewPostListItem extends StatelessWidget {
                   children: [
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 5.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 10.0, 10.0),
                       child: Text(
-                        '비빔밥',
-                        style: titleLarge,
+                        '${checkMyReviewModel.reviewTxt}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 14,
+                            color: secondaryText,
+                            fontFamily: 'SUITE'),
                       ),
-                    ),
-                    Text(
-                      '계란, 나물 등으로 만들었어요!\n감사합니다~',
-                      style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14,
-                          color: secondaryText,
-                          fontFamily: 'SUITE'),
                     ),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                      EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                       child: Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -85,7 +102,8 @@ class SupportReviewPostListItem extends StatelessWidget {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: '닉네임2',
+                                    text:
+                                        '${checkMyReviewModel.writerNickname}',
                                     style: TextStyle(),
                                   ),
                                   TextSpan(
@@ -93,7 +111,7 @@ class SupportReviewPostListItem extends StatelessWidget {
                                     style: TextStyle(),
                                   ),
                                   TextSpan(
-                                    text: '2023.07.17',
+                                    text: '${d1}',
                                     style: TextStyle(),
                                   )
                                 ],
@@ -107,41 +125,13 @@ class SupportReviewPostListItem extends StatelessWidget {
                             ),
                           ]),
                     ),
-                    Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: '후원상품',
-                                  style: TextStyle(),
-                                ),
-                                TextSpan(
-                                  text: ' | ',
-                                  style: TextStyle(),
-                                ),
-                                TextSpan(
-                                  text: '계란',
-                                  style: TextStyle(),
-                                )
-                              ],
-                              style: TextStyle(
-                                  fontFamily: 'SUITE',
-                                  color: secondaryText,
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.normal),
-                            ),
-                          ),
-                        ]),
                   ],
                 ),
               ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Image.network(
-                  'https://cdn.bonif.co.kr/cmdt/20220628_qRJ_1656371947942_631Kb.jpg',
+                  '${checkMyReviewModel.reviewImg}',
                   width: 100.0,
                   height: 100.0,
                   fit: BoxFit.cover,

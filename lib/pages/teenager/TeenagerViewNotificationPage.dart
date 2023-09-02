@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/TeenagerViewNotificationPageModel.dart';
 
 class TeenagerViewNotificationPageWidget extends StatefulWidget {
-  const TeenagerViewNotificationPageWidget({Key? key}) : super(key: key);
-
+  const TeenagerViewNotificationPageWidget({super.key});
   @override
   _TeenagerViewNotificationPageWidgetState createState() =>
       _TeenagerViewNotificationPageWidgetState();

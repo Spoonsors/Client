@@ -29,7 +29,7 @@ class RecipeService extends ChangeNotifier {
   late Recipe requestedMenu;
 
   // 이름으로 검색된 식단에 포함된 메뉴들 이름
-  List<String> requested4MenuInDiet = [];
+  List<String?> requested4MenuInDiet = [];
 
   // 이름으로 검색된 식단에 포함된 메뉴들의 레시피
   List<Recipe> requested4RecipeInDiet = [];
@@ -38,6 +38,7 @@ class RecipeService extends ChangeNotifier {
   double carbo = 0;
   double fat = 0;
   double pro = 0;
+  double na = 0;
   String searchText = "";
 
   RecipeService() {
@@ -50,11 +51,12 @@ class RecipeService extends ChangeNotifier {
     try {
       // API 호출
       Response response = await Dio().get(
-        "http://3.86.110.15:8080/recipe/findAll",
+        "http://15.165.106.139:8080/recipe/findAll",
       );
       if (response.statusCode == 200) {
         print('GET 요청 성공');
         for (Map<String, dynamic> item in response.data) {
+          print("a");
           Recipe recipe = Recipe.fromJson(item);
           recipeList.add(new SelectedRecipe(recipe, false));
         }
@@ -73,27 +75,44 @@ class RecipeService extends ChangeNotifier {
 
   // 특정 식단에 포함된 메뉴들(4개)의 레시피 정보 가져오기
   void get4RecipeInfo(String diet_name) async {
+    requested4MenuInDiet.clear();
+    requested4RecipeInDiet.clear();
     Response res = await Dio().get(
-        "http://3.86.110.15:8080/mealplanner/findByName?mealPlanner_name=" +
+        "http://15.165.106.139:8080/mealplanner/findByName?mealPlanner_name=" +
             diet_name);
+
     requestedDiet = MealPlanner.fromJson(res.data);
-    requested4MenuInDiet.add(requestedDiet.menu_name1);
-    requested4MenuInDiet.add(requestedDiet.menu_name2);
-    requested4MenuInDiet.add(requestedDiet.menu_name3);
-    requested4MenuInDiet.add(requestedDiet.menu_name4);
-    for (int i = 0; i < 4; i++) {
-      Response res = await Dio().get(
-          "http://3.86.110.15:8080/recipe/findByName?RCP_NM=" +
-              requested4MenuInDiet[i]);
-      Recipe _menu = Recipe.fromJson(res.data);
-      requested4RecipeInDiet.add(_menu);
+
+    if (requestedDiet.menuName1 != null) {
+      requested4MenuInDiet.add(requestedDiet.menuName1!);
     }
+    if (requestedDiet.menuName2 != null) {
+      requested4MenuInDiet.add(requestedDiet.menuName2!);
+    }
+    if (requestedDiet.menuName3 != null) {
+      requested4MenuInDiet.add(requestedDiet.menuName3!);
+    }
+    if (requestedDiet.menuName4 != null) {
+      requested4MenuInDiet.add(requestedDiet.menuName4!);
+    }
+    print(requested4MenuInDiet.length.toString());
+
+    for (int i = 0; i < requested4MenuInDiet.length; i++) {
+      Response res = await Dio().get(
+          "http://15.165.106.139:8080/recipe/findByName?RCP_NM=" +
+              requested4MenuInDiet[i]!);
+      for (Map<String, dynamic> item in res.data) {
+        Recipe _menu = Recipe.fromJson(item);
+        requested4RecipeInDiet.add(_menu);
+      }
+    }
+    print(requested4RecipeInDiet);
   }
 
   // 특정 메뉴(1개) 레시피 정보 가져오기
   void getRecipeInfo(String menu_name) async {
-    Response res = await Dio()
-        .get("http://3.86.110.15:8080/recipe/findByName?RCP_NM=" + menu_name);
+    Response res = await Dio().get(
+        "http://15.165.106.139:8080/recipe/findByName?RCP_NM=" + menu_name);
     requestedMenu = Recipe.fromJson(res.data);
   }
 
@@ -147,7 +166,7 @@ class RecipeService extends ChangeNotifier {
   }
 
   // 입력받은 메뉴를 selectedList에 추가하기.
-  void selectMenus(List<String> menus) {
+  void selectMenus(List<String?> menus) {
     selectedRecipeList.clear();
     for (int i = 0; i < recipeList.length; i++) {
       if (menus.contains(recipeList[i].recipe.rcp_NM)) {

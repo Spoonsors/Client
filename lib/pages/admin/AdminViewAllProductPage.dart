@@ -31,6 +31,20 @@ class _AdminViewAllProductPageWidgetState
             '현재 등록된 상품들',
           ),
           actions: [
+            // go to CertificatePage button
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.contact_page_outlined,
+                  color: secondaryText,
+                  size: 24.0,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/AdminCertificateConfirmPage');
+                },
+              ),
+            ),
             // Logout button
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 0.0),
@@ -97,9 +111,13 @@ class _AdminViewAllProductPageWidgetState
                 itemCount: ingredientsService.productList.length,
                 itemBuilder: (context, index) {
                   final ingredient = ingredientsService.productList[index];
-                  return ProductDetailsWidget(
-                      ingredients: ingredient,
-                      ingredientsService: ingredientsService);
+                  if (index == ingredientsService.productList.length - 1) {
+                    return Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 100),
+                      child: ProductDetailsWidget(ingredients: ingredient),
+                    );
+                  }
+                  return ProductDetailsWidget(ingredients: ingredient);
                 },
               ),
             ),
@@ -130,11 +148,9 @@ class _AdminViewAllProductPageWidgetState
 }
 
 class ProductDetailsWidget extends StatefulWidget {
-  const ProductDetailsWidget(
-      {super.key, required this.ingredients, required this.ingredientsService});
+  const ProductDetailsWidget({super.key, required this.ingredients});
 
   final Ingredients ingredients;
-  final IngredientsService ingredientsService;
 
   @override
   State<ProductDetailsWidget> createState() => _ProductDetailsWidgetState();
@@ -143,37 +159,28 @@ class ProductDetailsWidget extends StatefulWidget {
 class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
   @override
   Widget build(BuildContext context) {
-    return // Generated code for this UserList9 Widget...
-        Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 0.0),
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: secondaryBackground,
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 0.0,
-                    color: primaryBackground,
-                    offset: Offset(0.0, 1.0),
-                  )
-                ],
-                borderRadius: BorderRadius.circular(0.0),
-              ),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 12.0, 8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
+    return Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 10.0, 0.0),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: secondaryBackground,
+          ),
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 12.0, 8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(
-                        'assets/images/돼지고기.jpeg',
-                        width: 70.0,
-                        height: 70.0,
-                        fit: BoxFit.cover,
-                      ), // TODO : [admin] 이미지 확인
-                    ),
+                  child: Image.network(
+                    '${widget.ingredients.ingredients_image}',
+                    width: 70.0,
+                    height: 70.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                     Expanded(
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
@@ -185,39 +192,45 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
                             children: [
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 0.0, 0.0, 0.0),
-                                child: Text(
-                                  '${widget.ingredients.ingredients_name}',
-                                  style: TextStyle(
-                                      fontFamily: 'SUITE',
-                                      color: info,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
+                                10.0, 0.0, 0.0, 0.0),
+                            child: Text(
+                              '${widget.ingredients.ingredients_name}',
+                              style: TextStyle(
+                                  fontFamily: 'SUITE',
+                                  color: info,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 2.0, 0.0, 0.0),
-                                child: Text(
-                                  '${widget.ingredients.product_name}',
+                                10.0, 2.0, 0.0, 0.0),
+                            child: Container(
+                              width: 170,
+                              child: RichText(
+                                maxLines: 3,
+                                text: TextSpan(
+                                  text: '${widget.ingredients.product_name}',
                                   style: TextStyle(
                                       fontFamily: 'SUITE',
                                       fontSize: 13.0,
                                       color: secondaryText),
                                 ),
                               ),
+                            ),
+                          ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 2.0, 0.0, 0.0),
-                                child: Text(
-                                  '${widget.ingredients.price}원',
-                                  style: TextStyle(
-                                    fontFamily: 'SUITE',
-                                    fontSize: 12.0,
-                                    color: secondaryText,
-                                  ),
-                                ),
+                                10.0, 2.0, 0.0, 0.0),
+                            child: Text(
+                              '${widget.ingredients.price}원',
+                              style: TextStyle(
+                                fontFamily: 'SUITE',
+                                fontSize: 12.0,
+                                color: secondaryText,
                               ),
+                            ),
+                          ),
                             ],
                           ),
                           Column(
@@ -225,21 +238,21 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
                             children: [
                               IconButton(
                                 icon: Icon(
-                                  Icons.delete_sharp,
-                                  color: secondaryText,
-                                  size: 17.0,
-                                ),
-                                onPressed: () {
-                                  widget.ingredientsService.deleteProduct(
-                                      widget.ingredients.ingredients_id);
-                                }, // TODO : [admin] 등록된 상품 제거 구현
-                              ),
+                              Icons.delete_sharp,
+                              color: secondaryText,
+                              size: 20.0,
+                            ),
+                            onPressed: () {
+                              context.read<IngredientsService>().deleteProduct(
+                                  widget.ingredients.ingredients_id);
+                            },
+                          ),
                               IconButton(
                                 icon: Icon(
                                   Icons.mode_edit_sharp,
-                                  color: secondaryText,
-                                  size: 17.0,
-                                ),
+                              color: secondaryText,
+                              size: 20.0,
+                            ),
                                 onPressed: () {
                                   Navigator.pushNamed(
                                       context, '/AdminProductRegisterPage',
