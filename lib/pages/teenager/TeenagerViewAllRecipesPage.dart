@@ -1,15 +1,21 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import 'package:save_children_v01/service/LoginService.dart';
 import 'package:save_children_v01/service/RecipeService.dart';
 
+import '../../etc/Dialog.dart';
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerViewAllRecipesPageModel.dart';
 import 'TeenagerViewRecipePage.dart';
 import 'TeenagerWriteRequestPage.dart';
 
 class TeenagerViewAllRecipesPageWidget extends StatefulWidget {
-  const TeenagerViewAllRecipesPageWidget({super.key, required this.diet_name});
+  const TeenagerViewAllRecipesPageWidget({
+    super.key,
+    required this.diet_name,
+  });
 
   //diet_name라는 이름의 식단에 포함된 메뉴들 및 레시피 조회
   final String diet_name;
@@ -44,7 +50,8 @@ class _TeenagerViewAllRecipesPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RecipeService>(builder: (context, recipeService, child) {
+    return Consumer2<RecipeService, LoginService>(
+        builder: (context, recipeService, loginService, child) {
       recipeService.get4RecipeInfo(_diet_name);
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
@@ -97,12 +104,17 @@ class _TeenagerViewAllRecipesPageWidgetState
                           if (_diet_name == '') {
                             final _recipe = recipeService.recipeList[index];
                             return RecipeCard(
-                                recipe: _recipe.recipe, idx: index);
+                                recipe: _recipe.recipe,
+                                idx: index,
+                                id: loginService.loginB.bMember_id!);
                           } else {
                             print("hello");
                             final _recipe =
                                 recipeService.requested4RecipeInDiet[index];
-                            return RecipeCard(recipe: _recipe, idx: index);
+                            return RecipeCard(
+                                recipe: _recipe,
+                                idx: index,
+                                id: loginService.loginB.bMember_id!);
                           }
                         }),
                   )
@@ -115,10 +127,18 @@ class _TeenagerViewAllRecipesPageWidgetState
 }
 
 class RecipeCard extends StatelessWidget {
-  const RecipeCard({super.key, required this.recipe, required this.idx});
+  const RecipeCard(
+      {super.key, required this.recipe, required this.idx, required this.id});
 
   final Recipe recipe;
   final int idx;
+  final String id;
+  Future<int> isAvailablePost(String id) async {
+    Response res = await Dio().get(
+      "http://15.165.106.139:8080/bMember/canPost/${id}",
+    );
+    return res.data;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -272,13 +292,18 @@ class RecipeCard extends StatelessWidget {
                                         fontSize: 13,
                                         fontWeight: FontWeight.w400,
                                       )),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                TeenagerWriteRequestPageWidget(
-                                                    recipe: recipe)));
+                                  onPressed: () async {
+                                    await isAvailablePost(id) == 1
+                                        ? Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TeenagerWriteRequestPageWidget(
+                                                        recipe: recipe)))
+                                        : dialog(
+                                            "후원 글 작성 불가",
+                                            "리뷰 작성 후 후원 글을 작성할 수 있습니다...",
+                                            context);
                                   },
                                 ),
                                 ElevatedButton(
