@@ -48,6 +48,7 @@ class _TeenagerAddIngredientPop2Widget
         (context, ingredientsService, fridgesService, loginService, child) {
       ingredientsList = ingredientsService.productList;
       return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           titleSpacing: 10.0,
           title: Text(
@@ -233,7 +234,7 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
                           children: [
                             IconButton(
                               icon: Icon(
-                                Icons.mode_edit_sharp,
+                                Icons.add,
                                 color: secondaryText,
                                 size: 17.0,
                               ),

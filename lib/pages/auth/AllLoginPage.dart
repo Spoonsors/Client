@@ -12,8 +12,11 @@ import 'AllFindIdPage.dart';
 import 'AllFindPwPage.dart';
 
 class AllLoginPageWidget extends StatefulWidget {
-  const AllLoginPageWidget({Key? key}) : super(key: key);
-
+  const AllLoginPageWidget({
+    super.key,
+    required this.user,
+  });
+  final String user;
   @override
   _AllLoginPageWidgetState createState() => _AllLoginPageWidgetState();
 }
@@ -284,12 +287,19 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                           0, 0, 0, 16),
                                       child: ElevatedButton(
                                           onPressed: () async {
-                                            //일단 bMember로만 로그인한다고 가정
-                                            loginservice.loginBMember(
-                                                emailController.text,
-                                                passwordController.text);
+                                            widget.user == "b"
+                                                ? loginservice.loginBMember(
+                                                    emailController.text,
+                                                    passwordController.text)
+                                                : loginservice.loginSMember(
+                                                    emailController.text,
+                                                    passwordController.text);
                                             if (loginservice.isLogin) {
-                                              pushBToken(emailController.text);
+                                              widget.user == "b"
+                                                  ? pushBToken(
+                                                      emailController.text)
+                                                  : pushSToken(
+                                                      emailController.text);
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -518,9 +528,11 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                                             Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            AllFindPwPageWidget()));
+                                                                    builder: (context) => AllFindPwPageWidget(
+                                                                        user: widget.user ==
+                                                                                "b"
+                                                                            ? "b"
+                                                                            : "s")));
                                                           },
                                                     style: TextStyle(
                                                       fontFamily: 'SUITE',

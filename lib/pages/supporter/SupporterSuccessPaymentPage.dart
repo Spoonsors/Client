@@ -10,7 +10,7 @@ import 'package:save_children_v01/components/customIconButton.dart';
 import 'package:save_children_v01/etc/Colors.dart';
 import 'package:save_children_v01/etc/TextStyles.dart';
 import 'package:save_children_v01/service/ViewPostingService.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 
 class SupporterSuccessPaymentPageWidget extends StatefulWidget {
   const SupporterSuccessPaymentPageWidget({super.key});
@@ -221,7 +221,7 @@ class _SupporterSuccessPaymentPageWidgetState
                                     ),
                                   );
                                 } else {
-                                  Share.shareFiles([imgFile]);
+                                  // Share.shareFiles([imgFile]);
                                 }
                               },
                             ),
