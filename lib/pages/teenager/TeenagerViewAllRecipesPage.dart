@@ -1,15 +1,22 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import 'package:save_children_v01/service/LoginService.dart';
 import 'package:save_children_v01/service/RecipeService.dart';
 
+import '../../etc/Colors.dart';
+import '../../etc/Dialog.dart';
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerViewAllRecipesPageModel.dart';
 import 'TeenagerViewRecipePage.dart';
 import 'TeenagerWriteRequestPage.dart';
 
 class TeenagerViewAllRecipesPageWidget extends StatefulWidget {
-  const TeenagerViewAllRecipesPageWidget({super.key, required this.diet_name});
+  const TeenagerViewAllRecipesPageWidget({
+    super.key,
+    required this.diet_name,
+  });
 
   //diet_name라는 이름의 식단에 포함된 메뉴들 및 레시피 조회
   final String diet_name;
@@ -44,7 +51,8 @@ class _TeenagerViewAllRecipesPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RecipeService>(builder: (context, recipeService, child) {
+    return Consumer2<RecipeService, LoginService>(
+        builder: (context, recipeService, loginService, child) {
       recipeService.get4RecipeInfo(_diet_name);
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
@@ -74,15 +82,15 @@ class _TeenagerViewAllRecipesPageWidgetState
                   Container(
                     width: double.infinity,
                     padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                    child: Text(
-                      '현재 등록된 재료 기준으로 정렬합니다',
-                      style: TextStyle(
-                        fontFamily: 'SUITE',
-                        color: const Color(0xff757575),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                      ),
-                    ),
+                    // child: Text(
+                    //   '현재 등록된 재료 기준으로 정렬합니다',
+                    //   style: TextStyle(
+                    //     fontFamily: 'SUITE',
+                    //     color: const Color(0xff757575),
+                    //     fontWeight: FontWeight.w400,
+                    //     fontSize: 14,
+                    //   ),
+                    // ),
                   ),
                   SingleChildScrollView(
                     child: ListView.builder(
@@ -97,12 +105,16 @@ class _TeenagerViewAllRecipesPageWidgetState
                           if (_diet_name == '') {
                             final _recipe = recipeService.recipeList[index];
                             return RecipeCard(
-                                recipe: _recipe.recipe, idx: index);
+                                recipe: _recipe.recipe,
+                                idx: index,
+                                id: loginService.loginB.bMember_id!);
                           } else {
-                            print("hello");
                             final _recipe =
                                 recipeService.requested4RecipeInDiet[index];
-                            return RecipeCard(recipe: _recipe, idx: index);
+                            return RecipeCard(
+                                recipe: _recipe,
+                                idx: index,
+                                id: loginService.loginB.bMember_id!);
                           }
                         }),
                   )
@@ -115,10 +127,18 @@ class _TeenagerViewAllRecipesPageWidgetState
 }
 
 class RecipeCard extends StatelessWidget {
-  const RecipeCard({super.key, required this.recipe, required this.idx});
+  const RecipeCard(
+      {super.key, required this.recipe, required this.idx, required this.id});
 
   final Recipe recipe;
   final int idx;
+  final String id;
+  Future<int> isAvailablePost(String id) async {
+    Response res = await Dio().get(
+      "http://15.165.106.139:8080/bMember/canPost/${id}",
+    );
+    return res.data;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +153,7 @@ class RecipeCard extends StatelessWidget {
           constraints: BoxConstraints(
             minHeight: 220,
             maxWidth: 530,
-            maxHeight: 260,
+            maxHeight: 280,
           ),
           decoration: BoxDecoration(
             color: const Color(0xffffffff),
@@ -150,7 +170,7 @@ class RecipeCard extends StatelessWidget {
               width: 1,
             ),
           ),
-          child: Padding(
+          child: Container(
             padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -171,22 +191,22 @@ class RecipeCard extends StatelessWidget {
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 color: const Color(0xff212121),
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                             Padding(
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                              child: Text(
-                                '쉬움, 30분', //난이도 변경 예정
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  color: Color(0xFF57636C),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
+                              // child: Text(
+                              //   '쉬움, 30분', //난이도 변경 예정
+                              //   style: TextStyle(
+                              //     fontFamily: 'Inter',
+                              //     color: Color(0xFF57636C),
+                              //     fontSize: 12,
+                              //     fontWeight: FontWeight.normal,
+                              //   ),
+                              // ),
                             ),
                           ],
                         ),
@@ -219,7 +239,7 @@ class RecipeCard extends StatelessWidget {
                                 alignment: AlignmentDirectional(0, 0),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xffFF8A80),
+                                    color: primary,
                                     //재료를 갖고 있는지 아닌지에 따라 색깔 구분 필요
                                     borderRadius: BorderRadius.circular(20),
                                     shape: BoxShape.rectangle,
@@ -272,13 +292,18 @@ class RecipeCard extends StatelessWidget {
                                         fontSize: 13,
                                         fontWeight: FontWeight.w400,
                                       )),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                TeenagerWriteRequestPageWidget(
-                                                    recipe: recipe)));
+                                  onPressed: () async {
+                                    await isAvailablePost(id) == 1
+                                        ? Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TeenagerWriteRequestPageWidget(
+                                                        recipe: recipe)))
+                                        : dialog(
+                                            "후원 글 작성 불가",
+                                            "리뷰 작성 후 후원 글을 작성할 수 있습니다...",
+                                            context);
                                   },
                                 ),
                                 ElevatedButton(

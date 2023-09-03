@@ -2,18 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:save_children_v01/service/AlertService.dart';
 
 import '../model/BMemberModel.dart';
 import '../model/SMemberModel.dart';
 
 class LoginService extends ChangeNotifier {
   late BMember loginB;
-
   late SMember loginS;
   bool isLogin = false;
   bool isKakao = false; //카카오 로그인인지 아닌지
-
-  void loginBMember(String id, String pwd) async {
+  Future<void> loginBMember(String id, String pwd) async {
     Map<String, dynamic> data = {
       "id": id,
       "pwd": pwd,
@@ -29,6 +28,7 @@ class LoginService extends ChangeNotifier {
           bMember_address: response.data["member_address"],
           bMember_certificate: "null",
           bMember_phoneNumber: response.data["member_phoneNumber"]);
+      await pushBToken(id);
 
       isLogin = true;
     } catch (e) {
@@ -37,7 +37,7 @@ class LoginService extends ChangeNotifier {
     }
   }
 
-  void loginSMember(String _id, String _pwd) async {
+  Future<void> loginSMember(String _id, String _pwd) async {
     Map<String, dynamic> data = {
       "id": _id,
       "pwd": _pwd,
@@ -52,7 +52,7 @@ class LoginService extends ChangeNotifier {
           sMember_pwd: "null",
           sMember_phoneNumber: response.data["member_phoneNumber"],
           spons: []);
-
+      pushSToken(_id);
       isLogin = true;
     } catch (e) {
       isLogin = false;
@@ -177,6 +177,5 @@ class LoginService extends ChangeNotifier {
         return false;
       }
     }
-
   }
 }

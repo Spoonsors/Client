@@ -336,7 +336,7 @@ class _SupporterCreateProfilePageWidgetState
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                AllLoginPageWidget()));
+                                                AllLoginPageWidget(user: "s")));
                                   } else {
                                     dialog(
                                         "닉네임 중복", "이미 사용 중인 닉네임입니다.", context);

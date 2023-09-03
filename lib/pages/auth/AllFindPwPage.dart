@@ -10,8 +10,11 @@ import '../../etc/TextStyles.dart';
 import '../../service/SMSService.dart';
 
 class AllFindPwPageWidget extends StatefulWidget {
-  const AllFindPwPageWidget({Key? key}) : super(key: key);
-
+  const AllFindPwPageWidget({
+    super.key,
+    required this.user,
+  });
+  final String user;
   @override
   _AllFindPwPageWidgetState createState() => _AllFindPwPageWidgetState();
 }
@@ -540,7 +543,11 @@ class _AllFindPwPageWidgetState extends State<AllFindPwPageWidget> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      AllLoginPageWidget()));
+                                                      AllLoginPageWidget(
+                                                          user:
+                                                              widget.user == "b"
+                                                                  ? "b"
+                                                                  : "s")));
                                         },
                                       ),
                                     ],

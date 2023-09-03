@@ -18,6 +18,7 @@ class BMember {
   String? profilePath;
   String? bmemberName;
   String? bmemberBirth;
+  int? canPost;
 
   BMember(
       {this.bMember_id,
@@ -32,7 +33,8 @@ class BMember {
       this.isVerified,
       this.profilePath,
       this.bmemberName,
-      this.bmemberBirth});
+      this.bmemberBirth,
+      this.canPost});
 
   BMember.fromJson(Map<String, dynamic> json) {
     bMember_id = json["bmember_id"];
@@ -48,6 +50,7 @@ class BMember {
     profilePath = json['profile_path'];
     bmemberName = json['bmember_name'];
     bmemberBirth = json['bmember_birth'];
+    canPost = json['can_post'];
   }
 
   Map<String, dynamic> toJson() => {
