@@ -221,6 +221,7 @@ class RecommendedDietCard extends StatelessWidget {
           hoverColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onTap: () async {
+            print("식단이름" + diet.mealPlannerName!);
             Navigator.push(
                 context,
                 MaterialPageRoute(

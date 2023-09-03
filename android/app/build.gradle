@@ -44,7 +44,6 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.meal_for_all"
@@ -55,7 +54,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
-
+    
     buildTypes {
         release {
             debuggable true
@@ -76,3 +75,4 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation 'com.android.support:multidex:1.0.3'
 }
+

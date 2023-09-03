@@ -4,7 +4,6 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Dialog.dart';
 import 'package:save_children_v01/pages/auth/AllWelcomeSignInPage.dart';
-import 'package:save_children_v01/service/AlertService.dart';
 import 'package:save_children_v01/service/LoginService.dart';
 
 import '../teenager/TeenagerViewMainPage.dart';
@@ -288,18 +287,16 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                       child: ElevatedButton(
                                           onPressed: () async {
                                             widget.user == "b"
-                                                ? loginservice.loginBMember(
-                                                    emailController.text,
-                                                    passwordController.text)
-                                                : loginservice.loginSMember(
-                                                    emailController.text,
-                                                    passwordController.text);
+                                                ? await loginservice
+                                                    .loginBMember(
+                                                        emailController.text,
+                                                        passwordController.text)
+                                                : await loginservice
+                                                    .loginSMember(
+                                                        emailController.text,
+                                                        passwordController
+                                                            .text);
                                             if (loginservice.isLogin) {
-                                              widget.user == "b"
-                                                  ? pushBToken(
-                                                      emailController.text)
-                                                  : pushSToken(
-                                                      emailController.text);
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -353,11 +350,16 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                                   await loginservice
                                                       .kakaoLogin();
                                               if (kakaoUser != false) {
-                                                loginservice.loginBMember(
-                                                    kakaoUser
-                                                        .kakaoAccount!.email!,
-                                                    kakaoUser.id
-                                                        .toString()); //아이디 : 카카오 계정 / 비번 :  카카오 회원번호
+                                                widget.user == "b"
+                                                    ? loginservice.loginBMember(
+                                                        kakaoUser.kakaoAccount!
+                                                            .email!,
+                                                        kakaoUser.id.toString())
+                                                    : loginservice.loginSMember(
+                                                        kakaoUser.kakaoAccount!
+                                                            .email!,
+                                                        kakaoUser.id
+                                                            .toString()); //아이디 : 카카오 계정 / 비번 :  카카오 회원번호
                                                 loginservice.isLogin
                                                     ? Navigator.push(
                                                         context,

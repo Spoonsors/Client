@@ -92,34 +92,34 @@ class _TeenagerAddIngredientPop2Widget
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 5.0, 0.0),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-                    child: DropdownButton(
-                      underline: SizedBox.shrink(),
-                      style: TextStyle(
-                        fontFamily: 'SUITE',
-                        color: primaryText,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      value: selectedItem,
-                      items: items.map(
-                        (value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          );
-                        },
-                      ).toList(),
-                      onChanged: (value) => {
-                        setState(() {
-                          selectedItem = value!;
-                        })
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: primaryText,
-                        size: 24.0,
-                      ),
-                    ),
+                    // child: DropdownButton(
+                    //   underline: SizedBox.shrink(),
+                    //   style: TextStyle(
+                    //     fontFamily: 'SUITE',
+                    //     color: primaryText,
+                    //     fontSize: 16,
+                    //     fontWeight: FontWeight.w400,
+                    //   ),
+                    //   value: selectedItem,
+                    //   items: items.map(
+                    //     (value) {
+                    //       return DropdownMenuItem(
+                    //         value: value,
+                    //         child: Text(value),
+                    //       );
+                    //     },
+                    //   ).toList(),
+                    //   onChanged: (value) => {
+                    //     setState(() {
+                    //       selectedItem = value!;
+                    //     })
+                    //   },
+                    //   icon: Icon(
+                    //     Icons.keyboard_arrow_down_rounded,
+                    //     color: primaryText,
+                    //     size: 24.0,
+                    //   ),
+                    // ),
                   ),
                 ),
               ],

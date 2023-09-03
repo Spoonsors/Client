@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../etc/Colors.dart';
-import '../../etc/TextStyles.dart';
 import 'AllLoginPage.dart';
 
 class AllSelectUserPageWidget extends StatefulWidget {
@@ -39,7 +38,7 @@ class _AllSelectUserPageWidgetState extends State<AllSelectUserPageWidget> {
             height: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [primary, secondary],
+                colors: [primary, primary],
                 stops: [-1, 1],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -54,14 +53,14 @@ class _AllSelectUserPageWidgetState extends State<AllSelectUserPageWidget> {
                 ),
                 Container(
                   width: double.infinity,
-                  height: 415,
+                  height: 500,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: 100,
-                        height: 100,
+                        width: 300,
+                        height: 400,
                         decoration: BoxDecoration(color: Colors.transparent),
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
@@ -75,22 +74,26 @@ class _AllSelectUserPageWidgetState extends State<AllSelectUserPageWidget> {
                               ),
                             )),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 44, 0, 24),
+                      // Padding(
+                      //   padding: EdgeInsetsDirectional.fromSTEB(0, 44, 0, 24),
+                      //   child: Text(
+                      //     '모두의 한끼',
+                      //     style: TextStyle(
+                      //       fontFamily: 'SUITE',
+                      //       fontSize: 36,
+                      //       fontWeight: FontWeight.w600,
+                      //     ),
+                      //   ),
+                      // ),
+                      Container(
+                        height: 60,
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                         child: Text(
-                          '환영합니다!',
+                          '      모두의 한끼를 통해 \n따뜻한 마음을 공유해보세요!',
                           style: TextStyle(
-                            fontFamily: 'SUITE',
-                            fontSize: 36,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-                        child: Text(
-                          '모두의 한끼를 통해 따뜻한 마음을 공유해보세요!',
-                          style: bodyMedium,
+                              fontFamily: 'SUITE',
+                              color: Colors.white,
+                              fontSize: 20),
                         ),
                       ),
                     ],
