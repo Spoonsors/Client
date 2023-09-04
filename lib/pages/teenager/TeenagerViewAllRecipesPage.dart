@@ -259,6 +259,7 @@ class RecipeCard extends StatelessWidget {
                               for (int i = 0; i < availableIng.length; i++) {
                                 if (parts[index].contains(availableIng[i])) {
                                   partContain = true;
+                                  break;
                                 }
                               }
 

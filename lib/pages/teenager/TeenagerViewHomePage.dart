@@ -146,12 +146,9 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
                           ),
                         )
                       : Container(
-                          height: 350,
-                          child: Container(
-                              width: 200,
-                              height: 200,
-                              child: CircularProgressIndicator()),
-                        ),
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator()),
                   Container(
                     width: double.infinity,
                     height: 70,
@@ -189,12 +186,10 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
                           ),
                         )
                       : Container(
-                          height: 350,
-                          child: Container(
-                              width: 200,
-                              height: 200,
-                              child: CircularProgressIndicator()),
-                        ),
+                          margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator()),
                 ],
               ),
             ),

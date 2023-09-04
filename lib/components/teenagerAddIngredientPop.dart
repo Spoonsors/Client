@@ -494,6 +494,7 @@ class _TeenagerAddIngredientPopWidgetState
                                                       fridge, _bMember_id);
                                                 }
                                                 Navigator.pop(context);
+                                                Navigator.pop(context);
                                               },
                                               child: Text("재료 추가",
                                                   style: TextStyle(
