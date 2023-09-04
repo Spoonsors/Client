@@ -74,7 +74,7 @@ class RecipeService extends ChangeNotifier {
   }
 
   // 특정 식단에 포함된 메뉴들(4개)의 레시피 정보 가져오기
-  void get4RecipeInfo(String diet_name) async {
+  Future<void> get4RecipeInfo(String diet_name) async {
     requested4MenuInDiet.clear();
     requested4RecipeInDiet.clear();
     Response res = await Dio().get(

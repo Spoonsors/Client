@@ -9,6 +9,7 @@ import '../../etc/Colors.dart';
 import '../../etc/Dialog.dart';
 import '../../model/RecipeModel.dart';
 import '../../models/TeenagerViewAllRecipesPageModel.dart';
+import '../../service/FridgesService.dart';
 import 'TeenagerViewRecipePage.dart';
 import 'TeenagerWriteRequestPage.dart';
 
@@ -51,9 +52,20 @@ class _TeenagerViewAllRecipesPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<RecipeService, LoginService>(
-        builder: (context, recipeService, loginService, child) {
-      recipeService.get4RecipeInfo(_diet_name);
+    return Consumer3<RecipeService, LoginService, FridgesService>(
+        builder: (context, recipeService, loginService, fridgesService, child) {
+      if (_diet_name != "") {
+        recipeService.get4RecipeInfo(_diet_name);
+      }
+      List<String> availableIng = [];
+      fridgesService.getMyFridge(loginService.loginB.bMember_id!);
+      fridgesService.fridgeList.forEach((value) {
+        availableIng.add(value.fridge_item_name);
+      });
+      fridgesService.freezerList.forEach((value) {
+        availableIng.add(value.fridge_item_name);
+      });
+      print(availableIng);
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
         child: Scaffold(
@@ -107,14 +119,16 @@ class _TeenagerViewAllRecipesPageWidgetState
                             return RecipeCard(
                                 recipe: _recipe.recipe,
                                 idx: index,
-                                id: loginService.loginB.bMember_id!);
+                                id: loginService.loginB.bMember_id!,
+                                availableIng: availableIng);
                           } else {
                             final _recipe =
                                 recipeService.requested4RecipeInDiet[index];
                             return RecipeCard(
                                 recipe: _recipe,
                                 idx: index,
-                                id: loginService.loginB.bMember_id!);
+                                id: loginService.loginB.bMember_id!,
+                                availableIng: availableIng);
                           }
                         }),
                   )
@@ -128,11 +142,16 @@ class _TeenagerViewAllRecipesPageWidgetState
 
 class RecipeCard extends StatelessWidget {
   const RecipeCard(
-      {super.key, required this.recipe, required this.idx, required this.id});
+      {super.key,
+      required this.recipe,
+      required this.idx,
+      required this.id,
+      required this.availableIng});
 
   final Recipe recipe;
   final int idx;
   final String id;
+  final List<String> availableIng;
   Future<int> isAvailablePost(String id) async {
     Response res = await Dio().get(
       "http://15.165.106.139:8080/bMember/canPost/${id}",
@@ -235,11 +254,27 @@ class RecipeCard extends StatelessWidget {
                             mainAxisSpacing: 10,
                             itemCount: parts.length,
                             itemBuilder: (context, index) {
+                              //availableIng의 모든 원소가 parts[index]에 포함이 되는지?
+                              bool partContain = false;
+                              for (int i = 0; i < availableIng.length; i++) {
+                                if (parts[index].contains(availableIng[i])) {
+                                  partContain = true;
+                                }
+                              }
+
                               return Align(
                                 alignment: AlignmentDirectional(0, 0),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: primary,
+                                    border: Border.all(
+                                      color: partContain
+                                          ? Colors.black
+                                          : primary, // 테두리 색상
+                                      width: 2.0, // 테두리 두께
+                                    ),
+                                    color: partContain
+                                        ? Colors.transparent
+                                        : primary,
                                     //재료를 갖고 있는지 아닌지에 따라 색깔 구분 필요
                                     borderRadius: BorderRadius.circular(20),
                                     shape: BoxShape.rectangle,
