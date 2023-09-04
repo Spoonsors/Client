@@ -344,6 +344,7 @@ class RecommendedDietCard extends StatelessWidget {
                                       Icons.no_food,
                                       color: Colors.grey,
                                       size: 24,
+
                                     ),
                                   ])
                                 : Image.network(
@@ -553,11 +554,9 @@ class RecommendedDietCard extends StatelessWidget {
 }
 
 class RecommendedMenuCard extends StatelessWidget {
-
   const RecommendedMenuCard(
       {super.key, required this.menu, required this.id, required this.idx});
 
- 
   final Recipe menu;
   final String id;
   final int idx;
@@ -568,8 +567,6 @@ class RecommendedMenuCard extends StatelessWidget {
     );
     return res.data;
   }
-
-
 
   @override
   Widget build(BuildContext context) {

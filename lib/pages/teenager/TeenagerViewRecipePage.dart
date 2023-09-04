@@ -94,26 +94,6 @@ class _TeenagerViewRecipePageWidgetState
                           fit: BoxFit.cover,
                         ),
                       ),
-                      Align(
-                        alignment: AlignmentDirectional(0, -0.13),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
-                          child: Container(
-                            width: 64,
-                            height: 64,
-                            decoration: BoxDecoration(
-                              color: Color(0x9AFFFFFF),
-                              shape: BoxShape.circle,
-                            ),
-                            alignment: AlignmentDirectional(0, 0),
-                            child: Icon(
-                              Icons.play_arrow,
-                              color: const Color(0xff),
-                              size: 44,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -132,7 +112,6 @@ class _TeenagerViewRecipePageWidgetState
                 Container(
                   height: 60,
                   child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
