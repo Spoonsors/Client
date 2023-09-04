@@ -29,7 +29,7 @@ class FridgesService extends ChangeNotifier {
 
   FridgesService() {}
 
-  void getMyFridge(String bMember_id) async {
+  Future<void> getMyFridge(String bMember_id) async {
     Dio dio = new Dio();
     Response response = await dio
         .get("http://15.165.106.139:8080/bMember/fridge/" + bMember_id);
