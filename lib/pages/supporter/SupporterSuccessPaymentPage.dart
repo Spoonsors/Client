@@ -50,7 +50,9 @@ class _SupporterSuccessPaymentPageWidgetState
                       size: 20.0,
                     ),
                     onPressed: () async {
-                      Navigator.pop(context);
+                      viewPostingService.getAllSuppViewPosts();
+                      Navigator.of(context)
+                          .pushReplacementNamed('/SupporterMainPage');
                     },
                   ),
                 ],
@@ -238,7 +240,9 @@ class _SupporterSuccessPaymentPageWidgetState
                           EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
                       child: FilledButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          viewPostingService.getAllSuppViewPosts();
+                          Navigator.of(context)
+                              .pushReplacementNamed('/SupporterMainPage');
                         },
                         style: FilledButton.styleFrom(
                           backgroundColor: alternate,

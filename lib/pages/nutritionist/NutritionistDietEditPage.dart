@@ -31,7 +31,7 @@ class _NutritionistDietEditPageWidgetState
         appBar: AppBar(
           iconTheme: IconThemeData(color: primaryText),
           title: Text(
-            '식단 등록하기',
+            '식단 수정하기',
           ),
           actions: [
             Align(

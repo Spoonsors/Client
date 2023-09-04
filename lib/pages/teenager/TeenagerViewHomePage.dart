@@ -343,7 +343,8 @@ class RecommendedDietCard extends StatelessWidget {
                                     Icon(
                                       Icons.no_food,
                                       color: Colors.grey,
-                                      size: 24.0,
+                                      size: 24,
+
                                     ),
                                   ])
                                 : Image.network(

@@ -65,25 +65,7 @@ class _TeenagerWriteReviewPageWidgetState
           key: scaffoldKey,
           backgroundColor: const Color(0xfff5f5f5),
           appBar: AppBar(
-            backgroundColor: const Color(0xfff5f5f5),
-            automaticallyImplyLeading: false,
-            leading: Icon(
-              Icons.arrow_back_rounded,
-              color: const Color(0xff212121),
-              size: 30,
-            ),
-            title: Text(
-              '리뷰 작성',
-              style: TextStyle(
-                fontFamily: 'SUITE',
-                color: const Color(0xff212121),
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            actions: [],
-            centerTitle: false,
-            elevation: 0,
+            title: Text('리뷰 작성'),
           ),
           body: SafeArea(
             top: true,

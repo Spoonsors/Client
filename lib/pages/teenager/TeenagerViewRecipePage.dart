@@ -72,21 +72,9 @@ class _TeenagerViewRecipePageWidgetState
             ),
           ),
           appBar: AppBar(
-            backgroundColor: const Color(0xffFFFFFF),
-            iconTheme: IconThemeData(color: const Color(0xff212121)),
-            automaticallyImplyLeading: true,
             title: Text(
               '레시피 상세',
-              style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
-                color: Color(0xFF15161E),
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-              ),
             ),
-            actions: [],
-            centerTitle: false,
-            elevation: 2,
           ),
           body: SingleChildScrollView(
             child: Column(

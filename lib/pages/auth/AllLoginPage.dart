@@ -4,6 +4,9 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Dialog.dart';
 import 'package:save_children_v01/pages/auth/AllWelcomeSignInPage.dart';
+
+import 'package:save_children_v01/pages/supporter/SupporterMainPage.dart';
+import 'package:save_children_v01/service/AlertService.dart';
 import 'package:save_children_v01/service/LoginService.dart';
 
 import '../teenager/TeenagerViewMainPage.dart';
@@ -297,11 +300,25 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                                         passwordController
                                                             .text);
                                             if (loginservice.isLogin) {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          TeenagerViewMainPageWidget()));
+
+                                              if (widget.user == "b") {
+                                                pushBToken(
+                                                    emailController.text);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            TeenagerViewMainPageWidget()));
+                                              } else {
+                                                pushSToken(
+                                                    emailController.text);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            SupporterMainPageWidget()));
+                                              }
+
                                             } else {
                                               dialog(
                                                   "로그인 실패",

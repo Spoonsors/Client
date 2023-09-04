@@ -1,5 +1,6 @@
 import 'package:save_children_v01/pages/admin/AdminCertificateConfirmPage.dart';
 import 'package:save_children_v01/pages/auth/AllSelectUserPage.dart';
+import 'package:save_children_v01/pages/supporter/SupporterViewPostsPage.dart';
 
 import '../pages/admin/AdminProductRegisterPage.dart';
 import '../pages/nutritionist/NutritionistDietEditPage.dart';
@@ -30,4 +31,6 @@ var namedRoutes = {
   '/NutritionistDietEditPage': (context) => NutritionistDietEditPageWidget(),
   '/AdminCertificateConfirmPage': (context) =>
       AdminCertificateConfirmPageWidget(),
+  '/SupporterMainPage': (context) => SupporterMainPageWidget(),
+  '/SupporterViewPostsPage': (context) => SupporterViewPostsPageWidget(),
 };
