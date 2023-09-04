@@ -83,6 +83,7 @@ class _SupporterPurchasePageWidgetState
                                 ),
                               ),
                               ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: viewPostingService.cart!.length,
                                   itemBuilder: (context, index) {
@@ -341,13 +342,29 @@ class _SupporterPurchasePageWidgetState
                                             );
                                           });
                                     } else {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              color: primary,
+                                            ), // Display a loading indicator
+                                          );
+                                        },
+                                      );
+
                                       bool chk = await viewPostingService
                                           .payCartProduct(loginService
                                               .loginS.smemberId); // 결제
-                                      if (chk)
+                                      if (chk) {
+                                        Navigator.of(context)
+                                            .pop(); // Close the loading dialog
                                         Navigator.of(context)
                                             .push(_goToSuccess()); // 화면전환
-                                      else {
+                                      } else {
+                                        Navigator.of(context)
+                                            .pop(); // Close the loading dialog
                                         showDialog(
                                             context: context,
                                             builder: (_) {
@@ -511,14 +528,13 @@ class _SupporterPurchaseListItemState extends State<SupporterPurchaseListItem> {
                                   style: titleSmall),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
-                                child: Container(
-                                  child: RichText(
+                                child: SizedBox(
+                                  width: 170,
+                                  child: Text(
+                                    '${widget.spon.ingredients!.productName}',
+                                    style: labelSmall,
+                                    overflow: TextOverflow.ellipsis,
                                     maxLines: 3,
-                                    text: TextSpan(
-                                      text:
-                                          '${widget.spon.ingredients!.productName}',
-                                      style: labelSmall,
-                                    ),
                                   ),
                                 ),
                               ),

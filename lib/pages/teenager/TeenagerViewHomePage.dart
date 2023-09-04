@@ -294,8 +294,8 @@ class RecommendedDietCard extends StatelessWidget {
                                         fit: BoxFit.cover),
                                     Icon(
                                       Icons.no_food,
-                                      color: Colors.yellow,
-                                      size: 48.0,
+                                      color: Colors.grey,
+                                      size: 24.0,
                                     ),
                                   ])
                                 : Image.network(
@@ -342,8 +342,8 @@ class RecommendedDietCard extends StatelessWidget {
                                         fit: BoxFit.cover),
                                     Icon(
                                       Icons.no_food,
-                                      color: Colors.yellow,
-                                      size: 48.0,
+                                      color: Colors.grey,
+                                      size: 24,
                                     ),
                                   ])
                                 : Image.network(

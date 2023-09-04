@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ViewPosting {
   int? postId;
@@ -326,7 +327,10 @@ class ViewPostingService extends ChangeNotifier {
 
   // 장바구니 채우기
   void putCart() {
-    cart = [...nowView.spon!];
+    cart.clear();
+    for (Spon sp in nowView.spon!) {
+      if (sp.sponState == 0) cart.add(sp);
+    }
     getTotalCount();
     notifyListeners();
   }
@@ -360,15 +364,28 @@ class ViewPostingService extends ChangeNotifier {
 
   // 장바구니 결제
   Future<bool> payCartProduct(String? smemberId) async {
-    print(cart[0]!.sponId);
-    print(smemberId);
+    var data = {
+      "member_id": smemberId,
+      "spon_list": cart.map((item) => item!.sponId).toList(),
+    };
+
     try {
-      Response response = await Dio().post(
-        "http://15.165.106.139:8080/sMember/kakaoPay/${cart[0]!.sponId}/${smemberId}",
-      );
+      Response response = await Dio()
+          .post("http://15.165.106.139:8080/sMember/kakaoPay", data: data);
       if (response.statusCode == 200) {
         print('[후원자] 후원 성공! -> 카카오 결제페이지로 연결');
-        print(response.data);
+
+        await launchUrl(Uri.parse(response.data),
+            mode: LaunchMode.externalApplication);
+
+        await Future.delayed(Duration(seconds: 15), () async {
+          Response res = await Dio().get(
+            response.data,
+          );
+          print(res.data);
+        });
+
+        return true;
       }
     } catch (e) {
       return false;

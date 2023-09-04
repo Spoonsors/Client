@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Colors.dart';
 import 'package:save_children_v01/model/MealPlannerModel.dart';
+import 'package:save_children_v01/pages/auth/NutriAdminLoginPage.dart';
 import 'package:save_children_v01/service/MealPlannerService.dart';
 import 'package:save_children_v01/service/RecipeService.dart';
 
@@ -29,6 +30,7 @@ class _NutritionistNutriHomePageWidgetState
         builder: (context, mealPlannerService, recipeService, child) {
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             '추천 식단 목록',
           ),
@@ -41,7 +43,10 @@ class _NutritionistNutriHomePageWidgetState
                   Icons.login_rounded,
                   size: 24.0,
                 ),
-                onPressed: () {}, // TODO : [Nutri] Logout 버튼 구현
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => NutriAdminPageWidget()));
+                },
               ),
             ),
           ],
@@ -51,45 +56,8 @@ class _NutritionistNutriHomePageWidgetState
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 5.0, 0.0),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-                    child: DropdownButton(
-                      underline: SizedBox.shrink(),
-                      style: TextStyle(
-                        fontFamily: 'SUITE',
-                        color: primaryText,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      value: selectedItem,
-                      items: items.map(
-                        (value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          );
-                        },
-                      ).toList(),
-                      onChanged: (value) => {
-                        setState(() {
-                          selectedItem = value!;
-                        })
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: primaryText,
-                        size: 24.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            SizedBox(
+              height: 20,
             ),
             Expanded(
               child: ListView.builder(

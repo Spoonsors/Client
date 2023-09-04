@@ -63,7 +63,7 @@ class SupporterProfilePageWidget extends StatelessWidget {
                     padding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 12.0),
                     child: Text(
-                      '${loginService.loginS.smemberName}',
+                      '${loginService.loginS.smemberNickname}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 24,
@@ -89,55 +89,6 @@ class SupporterProfilePageWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                4.0, 0.0, 4.0, 0.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 12.0),
-                                  child: InkWell(
-                                    splashColor: Colors.transparent,
-                                    focusColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    onTap: () async {
-                                      Navigator.of(context).pushNamed(
-                                          '/SupporterNotificationPage');
-                                    },
-                                    child: Container(
-                                      width: 44.0,
-                                      height: 44.0,
-                                      decoration: BoxDecoration(
-                                        color: secondaryBackground,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Icon(
-                                        Icons.notifications_outlined,
-                                        color: primaryText,
-                                        size: 24.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  '알람',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                    fontFamily: 'SUITE',
-                                    color: primary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
                         Expanded(
                           child: Column(
                             mainAxisSize: MainAxisSize.max,

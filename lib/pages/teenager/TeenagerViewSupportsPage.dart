@@ -27,7 +27,6 @@ class _TeenagerVIewSupportsPageWidgetState
   void initState() {
     super.initState();
     _model = TeenagerVIewSupportsPageModel();
-    _model.searchBarController ??= TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -58,221 +57,82 @@ class _TeenagerVIewSupportsPageWidgetState
           key: scaffoldKey,
           backgroundColor: const Color(0xfff5f5f5),
           appBar: AppBar(
-            backgroundColor: const Color(0xfff5f5f5),
-            automaticallyImplyLeading: false,
-            leading: Icon(
-              Icons.arrow_back_rounded,
-              color: const Color(0xff212121),
-              size: 30,
-            ),
-            title: Text(
-              '수혜 내역 ',
-              style: TextStyle(
-                  fontFamily: "SUITE",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xff212121)),
-            ),
+            title: Text('수혜 내역'),
           ),
           body: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Row(mainAxisSize: MainAxisSize.max, children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(16, 12, 8, 0),
-                    child: TextFormField(
-                      controller: _model.searchBarController,
-                      textCapitalization: TextCapitalization.words,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        labelText: '제품을 검색하세요',
-                        labelStyle: TextStyle(
-                            fontFamily: 'SUITE',
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xff212121)),
-                        hintStyle: TextStyle(
-                            fontFamily: 'SUITE',
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xff212121)),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: const Color(0xffe0e0e0),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: const Color(0xffFFB74D),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: const Color(0xfff44336),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: const Color(0xfff44336),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: const Color(0xffffffff),
-                        contentPadding:
-                            EdgeInsetsDirectional.fromSTEB(24, 24, 20, 24),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: const Color(0xff757575),
-                          size: 16,
-                        ),
-                      ),
-                      style: TextStyle(
-                          fontFamily: "SUITE",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff212121)),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 12, 12, 0),
-                  child: Icon(
-                    Icons.search_sharp,
-                    color: const Color(0xff212121),
-                    size: 30,
-                  ),
-                ),
-              ]),
-              Expanded(
-                child: Align(
-                  alignment: AlignmentDirectional(0, 0),
-                  child: DefaultTabController(
-                    length: 2,
-                    initialIndex: 0,
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment(0, 0),
-                          child: TabBar(
-                            isScrollable: true,
-                            labelStyle: TextStyle(
-                                fontFamily: "SUITE",
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: const Color(0xffffb74d)),
-                            unselectedLabelStyle: TextStyle(
-                                fontFamily: "SUITE",
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: const Color(0xff757575)),
-                            labelColor: const Color(0xffFFB74D),
-                            unselectedLabelColor: const Color(0xff757575),
-                            labelPadding:
-                                EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+              Column(
+                children: [
+                  Column(
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
                             padding:
-                                EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                            indicatorColor: const Color(0xffFFB74D),
-                            tabs: [
-                              Tab(
-                                text: '대기 중인 후원',
-                              ),
-                              Tab(
-                                text: '완료된 후원',
-                              ),
-                            ],
+                                EdgeInsetsDirectional.fromSTEB(16, 16, 0, 0),
+                            child: Text(
+                              '대기 중인 후원',
+                              style: TextStyle(
+                                  fontFamily: "SUITE",
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xff212121)),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            children: [
-                              SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          16, 16, 0, 0),
-                                      child: Text(
-                                        '대기 중인 후원',
-                                        style: TextStyle(
-                                            fontFamily: "SUITE",
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w500,
-                                            color: const Color(0xff212121)),
-                                      ),
-                                    ),
-                                    SingleChildScrollView(
-                                      child: ListView.builder(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.vertical,
-                                          itemCount: waitingPostList.length,
-                                          itemBuilder: (context, index) {
-                                            return WaitingPostCard(
-                                              bMember: loginservice.loginB,
-                                              idx: index,
-                                              post: waitingPostList[index],
-                                            );
-                                          }),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          16, 16, 0, 0),
-                                      child: Text(
-                                        '완료된 후원',
-                                        style: TextStyle(
-                                            fontFamily: "SUITE",
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w500,
-                                            color: const Color(0xff212121)),
-                                      ),
-                                    ),
-                                    SingleChildScrollView(
-                                      child: ListView.builder(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.vertical,
-                                          itemCount: completedPostList.length,
-                                          itemBuilder: (context, index) {
-                                            return CompletedPostCard(
-                                              bMember: loginservice.loginB,
-                                              idx: index,
-                                              post: completedPostList[index],
-                                            );
-                                          }),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
+                          SingleChildScrollView(
+                            child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: waitingPostList.length,
+                                itemBuilder: (context, index) {
+                                  return WaitingPostCard(
+                                    bMember: loginservice.loginB,
+                                    idx: index,
+                                    post: waitingPostList[index],
+                                  );
+                                }),
+                          )
+                        ],
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(16, 16, 0, 0),
+                            child: Text(
+                              '완료된 후원',
+                              style: TextStyle(
+                                  fontFamily: "SUITE",
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xff212121)),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                          ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: completedPostList.length,
+                              itemBuilder: (context, index) {
+                                return CompletedPostCard(
+                                  bMember: loginservice.loginB,
+                                  idx: index,
+                                  post: completedPostList[index],
+                                );
+                              })
+                        ],
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ),
             ],
           ),

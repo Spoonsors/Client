@@ -62,26 +62,7 @@ class _TeenagerWriteRequestPageWidgetState
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: const Color(0xfff5f5f5),
-          appBar: AppBar(
-            backgroundColor: const Color(0xfff5f5f5),
-            automaticallyImplyLeading: false,
-            leading: Icon(
-              Icons.arrow_back_rounded,
-              color: const Color(0xff212121),
-              size: 30,
-            ),
-            title: Text(
-              '후원 요청',
-              style: TextStyle(
-                  fontFamily: "SUITE",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xff212121)),
-            ),
-            actions: [],
-            centerTitle: false,
-            elevation: 0,
-          ),
+          appBar: AppBar(title: Text('후원 요청')),
           body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),

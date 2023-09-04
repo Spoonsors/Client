@@ -8,9 +8,11 @@ import '../model/SMemberModel.dart';
 
 class LoginService extends ChangeNotifier {
   late BMember loginB;
+
   late SMember loginS;
   bool isLogin = false;
   bool isKakao = false; //카카오 로그인인지 아닌지
+
   void loginBMember(String id, String pwd) async {
     Map<String, dynamic> data = {
       "id": id,
@@ -45,16 +47,27 @@ class LoginService extends ChangeNotifier {
           .post("http://15.165.106.139:8080/login/sMember", data: data);
       //토큰 처리
       loginS = SMember(
-          sMember_id: response.data["member_id"],
+          smemberId: response.data["member_id"],
           smemberNickname: response.data["member_nickname"],
           sMember_pwd: "null",
           sMember_phoneNumber: response.data["member_phoneNumber"],
           spons: []);
+
       isLogin = true;
     } catch (e) {
       isLogin = false;
       print(e.toString());
     }
+  }
+
+  bool LoginNutrioutionist(String _id, String _pwd) {
+    if (_id == 'nutri' && _pwd == '123456') return true;
+    return false;
+  }
+
+  bool LoginAdmin(String _id, String _pwd) {
+    if (_id == 'admin' && _pwd == '123456') return true;
+    return false;
   }
 
   Future<Uri> kakaoLoginRedirect() async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_children_v01/pages/auth/NutriAdminLoginPage.dart';
 
 import '../../etc/Colors.dart';
 import '../../etc/TextStyles.dart';
@@ -179,7 +180,7 @@ class _AllSelectUserPageWidgetState extends State<AllSelectUserPageWidget> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            AllLoginPageWidget(user: "b")));
+                                            NutriAdminPageWidget()));
                               },
                               child: Text(
                                 '영양사 및 관리자로 로그인',

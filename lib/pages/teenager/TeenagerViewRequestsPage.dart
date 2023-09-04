@@ -99,30 +99,8 @@ class _TeenagerViewRequestsPageWidgetState
                           Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 5, 5, 5),
-                                    child: DropdownButton(
-                                        value: _selectedSort,
-                                        items: _sortList.map(
-                                          (value) {
-                                            return DropdownMenuItem(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          },
-                                        ).toList(),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _selectedSort = value!;
-                                          });
-                                        }),
-                                  )
-                                ],
+                              SizedBox(
+                                height: 10,
                               ),
                               Expanded(
                                 child: ListView.builder(
@@ -143,29 +121,8 @@ class _TeenagerViewRequestsPageWidgetState
                           Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 5, 5, 5),
-                                      child: DropdownButton(
-                                          value: _selectedSort,
-                                          items: _sortList.map(
-                                            (value) {
-                                              return DropdownMenuItem(
-                                                value: value,
-                                                child: Text(value),
-                                              );
-                                            },
-                                          ).toList(),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _selectedSort = value!;
-                                            });
-                                          })),
-                                ],
+                              SizedBox(
+                                height: 10,
                               ),
                               Expanded(
                                 child: ListView.builder(

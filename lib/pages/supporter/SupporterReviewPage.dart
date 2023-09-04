@@ -21,17 +21,23 @@ class SupporterReviewPageWidget extends StatelessWidget {
           iconTheme: IconThemeData(color: primaryText),
           title: Text('받은 감사글'),
         ),
-        body: ListView.builder(
-          padding: EdgeInsets.symmetric(vertical: 15.0),
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemCount: checkMyReviewService.items.length,
-          itemBuilder: (BuildContext context, int index) {
-            return SupportReviewPostListItem(
-              checkMyReviewModel: checkMyReviewService.items[index],
-            );
-          },
-        ),
+        body: checkMyReviewService.items.isEmpty
+            ? Container(
+                child: Center(
+                  child: Text('아직 작성된 감사글이 없습니다.'),
+                ),
+              )
+            : ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: checkMyReviewService.items.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return SupportReviewPostListItem(
+                    checkMyReviewModel: checkMyReviewService.items[index],
+                  );
+                },
+              ),
       );
     });
   }
@@ -93,7 +99,7 @@ class SupportReviewPostListItem extends StatelessWidget {
                     ),
                     Padding(
                       padding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                       child: Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.start,
