@@ -1,16 +1,15 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:save_children_v01/service/FridgesService.dart';
 
-import '../../components/teenagerAddIngredientPop.dart';
+import 'package:save_children_v01/service/LoginService.dart';
+
+import '../../components/teenagerAddIngredientPop2.dart';
+import '../../model/FridgeModel.dart';
 import '../../models/TeenagerViewRefrigeratorPageModel.dart';
 
 class TeenagerViewRefrigeratorPageWidget extends StatefulWidget {
-  const TeenagerViewRefrigeratorPageWidget({Key? key}) : super(key: key);
-
+  const TeenagerViewRefrigeratorPageWidget({super.key});
   @override
   _TeenagerViewRefrigeratorPageWidgetState createState() =>
       _TeenagerViewRefrigeratorPageWidgetState();
@@ -34,697 +33,294 @@ class _TeenagerViewRefrigeratorPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          shape: RoundedRectangleBorder(
-              side: BorderSide(width: 3, color: Colors.transparent),
-              borderRadius: BorderRadius.circular(100)),
-          onPressed: () async {
-            await showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              enableDrag: false,
-              context: context,
-              builder: (context) {
-                return GestureDetector(
-                  child: Padding(
-                    padding: MediaQuery.viewInsetsOf(context),
-                    child: TeenagerAddIngredientPopWidget(),
+    return Consumer2<FridgesService, LoginService>(
+        builder: (context, fridgesService, loginservice, child) {
+      fridgesService.getMyFridge(loginservice.loginB.bMember_id!);
+      return GestureDetector(
+        onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+        child: Scaffold(
+          floatingActionButton: FloatingActionButton.extended(
+            shape: RoundedRectangleBorder(
+                side: BorderSide(width: 3, color: Colors.transparent),
+                borderRadius: BorderRadius.circular(100)),
+            onPressed: () async {
+              await showModalBottomSheet(
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                enableDrag: false,
+                context: context,
+                builder: (context) {
+                  return GestureDetector(
+                    child: Padding(
+                      padding: MediaQuery.viewInsetsOf(context),
+                      child: TeenagerAddIngredientPop2Widget(),
+                    ),
+                  );
+                },
+              ).then((value) => setState(() {}));
+            },
+            backgroundColor: const Color(0xffFFB74D),
+            icon: Icon(
+              Icons.add_rounded,
+              color: const Color(0xffffffff),
+            ),
+            elevation: 8,
+            label: Text(
+              '재료 추가',
+              style: TextStyle(
+                fontFamily: 'SUITE',
+                color: const Color(0xffFFFFFF),
+                fontSize: 20,
+              ),
+            ),
+          ),
+          appBar: AppBar(
+            backgroundColor: const Color(0xffFFFFFF),
+            automaticallyImplyLeading: false,
+            title: Text(
+              '나의 냉장고',
+              style: TextStyle(
+                fontFamily: 'SUITE',
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            actions: [],
+            centerTitle: false,
+            elevation: 2,
+          ),
+          body: DefaultTabController(
+            length: 2,
+            initialIndex: 0,
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment(0, 0),
+                  child: TabBar(
+                    labelColor: const Color(0xff212121),
+                    unselectedLabelColor: const Color(0xff757575),
+                    labelStyle: TextStyle(
+                      fontFamily: "Primary Family",
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                    ),
+                    indicatorColor: const Color(0xffFFB74D),
+                    tabs: [
+                      Tab(
+                        text: '냉장',
+                      ),
+                      Tab(
+                        text: '냉동/실온',
+                      ),
+                    ],
                   ),
-                );
-              },
-            ).then((value) => setState(() {}));
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                              child: GridView.builder(
+                                padding: EdgeInsets.zero,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 20,
+                                  childAspectRatio: 0.7,
+                                ),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: fridgesService.fridgeList.length,
+                                itemBuilder: (context, index) {
+                                  final _item =
+                                      fridgesService.fridgeList[index];
+                                  return IngredientCard(
+                                      fridgeItem: _item, idx: index);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                              child: GridView.builder(
+                                padding: EdgeInsets.zero,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 20,
+                                  childAspectRatio: 0.7,
+                                ),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: fridgesService.freezerList.length,
+                                itemBuilder: (context, index) {
+                                  final _item =
+                                      fridgesService.freezerList[index];
+                                  return IngredientCard(
+                                      fridgeItem: _item, idx: index);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}
+
+class IngredientCard extends StatelessWidget {
+  const IngredientCard(
+      {super.key, required this.fridgeItem, required this.idx});
+
+  final Fridge fridgeItem;
+  final int idx;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<FridgesService>(builder: (context, fridgesService, child) {
+      return InkWell(
+          onTap: () {
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    title: Column(
+                      children: <Widget>[
+                        Text("재료 삭제"),
+                      ],
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "재료를 삭제하시겠습니까?",
+                        ),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.all(20.0),
+                          foregroundColor: Color(0xffFFB74D),
+                          textStyle: const TextStyle(fontSize: 20),
+                        ),
+                        child: Text("확인"),
+                        onPressed: () {
+                          fridgesService
+                              .deleteFridge(fridgeItem.fridge_id.toString());
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                });
           },
-          backgroundColor: const Color(0xffFFB74D),
-          icon: Icon(
-            Icons.add_rounded,
-            color: const Color(0xffffffff),
-          ),
-          elevation: 8,
-          label: Text(
-            '재료추가',
-            style: TextStyle(
-              fontFamily: 'SUITE',
-              color: const Color(0xffFFFFFF),
-              fontSize: 20,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 3,
+                  color: Color(0x33000000),
+                  offset: Offset(0, 1),
+                )
+              ],
+              borderRadius: BorderRadius.circular(12),
+              shape: BoxShape.rectangle,
+              border: Border.all(
+                color: Color(0xFFE0E3E7),
+              ),
             ),
-          ),
-        ),
-        appBar: AppBar(
-          backgroundColor: const Color(0xffFFFFFF),
-          automaticallyImplyLeading: false,
-          title: Text(
-            '나의 냉장고',
-            style: TextStyle(
-              fontFamily: 'SUITE',
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          actions: [],
-          centerTitle: false,
-          elevation: 2,
-        ),
-        body: DefaultTabController(
-          length: 2,
-          initialIndex: 0,
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment(0, 0),
-                child: TabBar(
-                  labelColor: const Color(0xff212121),
-                  unselectedLabelColor: const Color(0xff757575),
-                  labelStyle: TextStyle(
-                    fontFamily: "Primary Family",
-                    fontWeight: FontWeight.w400,
-                    fontSize: 18,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          "${fridgeItem.fridge_item_img}",
+                          width: double.infinity,
+                          height: MediaQuery.sizeOf(context).height * 0.1,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+                        child: Text(
+                          '${fridgeItem.fridge_item_name}',
+                          style: TextStyle(
+                            fontFamily: 'Plus Jakarta Sans',
+                            color: Color(0xFF14181B),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: fridgeItem.expiration_date == null
+                                    ? "-"
+                                    : '~${fridgeItem.expiration_date.toString()}',
+                                style: TextStyle(),
+                              )
+                            ],
+                            style: TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
+                              color: DateTime.now().isBefore(DateTime.parse(
+                                      fridgeItem.expiration_date == null
+                                          ? "2099-08-30"
+                                          : fridgeItem.expiration_date!))
+                                  ? Color(0xFF57636C)
+                                  : Color.fromARGB(239, 204, 26, 26),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  indicatorColor: const Color(0xffFFB74D),
-                  tabs: [
-                    Tab(
-                      text: '냉장',
-                    ),
-                    Tab(
-                      text: '냉동/실온',
-                    ),
-                  ],
                 ),
-              ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-                            child: GridView(
-                              padding: EdgeInsets.zero,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 20,
-                                mainAxisSpacing: 20,
-                                childAspectRatio: 0.7,
-                              ),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 3,
-                                        color: Color(0x33000000),
-                                        offset: Offset(0, 1),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(12),
-                                    shape: BoxShape.rectangle,
-                                    border: Border.all(
-                                      color: Color(0xFFE0E3E7),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            8, 8, 8, 8),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.asset(
-                                                'assets/images/돼지고기.jpeg',
-                                                width: double.infinity,
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                            .height *
-                                                        0.1,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 8, 0, 0),
-                                              child: Text(
-                                                '돼지고기',
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      'Plus Jakarta Sans',
-                                                  color: Color(0xFF14181B),
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 4, 0, 0),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'D-3\n',
-                                                      style: TextStyle(
-                                                        color: const Color(
-                                                            0xffFF4081),
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: '~2023.07.09',
-                                                      style: TextStyle(),
-                                                    )
-                                                  ],
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'Plus Jakarta Sans',
-                                                    color: Color(0xFF57636C),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 3,
-                                        color: Color(0x33000000),
-                                        offset: Offset(0, 1),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(12),
-                                    shape: BoxShape.rectangle,
-                                    border: Border.all(
-                                      color: Color(0xFFE0E3E7),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            8, 8, 8, 8),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.asset(
-                                                'assets/images/대파.jpeg',
-                                                width: double.infinity,
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                            .height *
-                                                        0.1,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 8, 0, 0),
-                                              child: Text(
-                                                '대파',
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      'Plus Jakarta Sans',
-                                                  color: Color(0xFF14181B),
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 4, 0, 0),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'D-4\n',
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xFF4B39EF),
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: '~2023.07.09',
-                                                      style: TextStyle(),
-                                                    )
-                                                  ],
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'Plus Jakarta Sans',
-                                                    color: Color(0xFF57636C),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 3,
-                                        color: Color(0x33000000),
-                                        offset: Offset(0, 1),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(12),
-                                    shape: BoxShape.rectangle,
-                                    border: Border.all(
-                                      color: Color(0xFFE0E3E7),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            8, 8, 8, 8),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.asset(
-                                                'assets/images/다진마늘.jpeg',
-                                                width: double.infinity,
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                            .height *
-                                                        0.1,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 8, 0, 0),
-                                              child: Text(
-                                                '다진마늘',
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      'Plus Jakarta Sans',
-                                                  color: Color(0xFF14181B),
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 4, 0, 0),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'D-10\n',
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xFF4B39EF),
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: '~2023.07.09',
-                                                      style: TextStyle(),
-                                                    )
-                                                  ],
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'Plus Jakarta Sans',
-                                                    color: Color(0xFF57636C),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 3,
-                                        color: Color(0x33000000),
-                                        offset: Offset(0, 1),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(12),
-                                    shape: BoxShape.rectangle,
-                                    border: Border.all(
-                                      color: Color(0xFFE0E3E7),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            8, 8, 8, 8),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.asset(
-                                                'assets/images/계란.jpg',
-                                                width: double.infinity,
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                            .height *
-                                                        0.1,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 8, 0, 0),
-                                              child: Text(
-                                                '계란',
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      'Plus Jakarta Sans',
-                                                  color: Color(0xFF14181B),
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 4, 0, 0),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'D-3\n',
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xFF4B39EF),
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: '~2023.07.09',
-                                                      style: TextStyle(),
-                                                    )
-                                                  ],
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'Plus Jakarta Sans',
-                                                    color: Color(0xFF57636C),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-                            child: GridView(
-                              padding: EdgeInsets.zero,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 20,
-                                mainAxisSpacing: 20,
-                                childAspectRatio: 0.7,
-                              ),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 3,
-                                        color: Color(0x33000000),
-                                        offset: Offset(0, 1),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(12),
-                                    shape: BoxShape.rectangle,
-                                    border: Border.all(
-                                      color: Color(0xFFE0E3E7),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            8, 8, 8, 8),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.asset(
-                                                'assets/images/닭가슴살(냉동).jpeg',
-                                                width: double.infinity,
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                            .height *
-                                                        0.1,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 8, 0, 0),
-                                              child: Text(
-                                                '닭가슴살(냉동)',
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      'Plus Jakarta Sans',
-                                                  color: Color(0xFF14181B),
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 4, 0, 0),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'D-3\n',
-                                                      style: TextStyle(
-                                                        color: const Color(
-                                                            0xffFF4081),
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: '~2023.07.09',
-                                                      style: TextStyle(),
-                                                    )
-                                                  ],
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'Plus Jakarta Sans',
-                                                    color: Color(0xFF57636C),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 3,
-                                        color: Color(0x33000000),
-                                        offset: Offset(0, 1),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(12),
-                                    shape: BoxShape.rectangle,
-                                    border: Border.all(
-                                      color: Color(0xFFE0E3E7),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            8, 8, 8, 8),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.asset(
-                                                'assets/images/햄_스팸.jpg',
-                                                width: double.infinity,
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                            .height *
-                                                        0.1,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 8, 0, 0),
-                                              child: Text(
-                                                '스팸 클래식',
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      'Plus Jakarta Sans',
-                                                  color: Color(0xFF14181B),
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 4, 0, 0),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'D-365\n',
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xFF4B39EF),
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: '~2023.07.09',
-                                                      style: TextStyle(),
-                                                    )
-                                                  ],
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        'Plus Jakarta Sans',
-                                                    color: Color(0xFF57636C),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+              ],
+            ),
+          ));
+    });
   }
 }

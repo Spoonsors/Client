@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class TeenagerViewInfoPopWidget extends StatefulWidget {
   const TeenagerViewInfoPopWidget({Key? key}) : super(key: key);
@@ -36,6 +33,7 @@ class _TeenagerViewInfoPopWidgetState extends State<TeenagerViewInfoPopWidget> {
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
         child: Container(
+          height: 280,
           width: double.infinity,
           constraints: BoxConstraints(
             maxWidth: 530,
@@ -88,7 +86,7 @@ class _TeenagerViewInfoPopWidgetState extends State<TeenagerViewInfoPopWidget> {
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
                         child: Text(
-                          '모두의 한끼는 여러분을 위한 서비스입니다! 먹고 싶은 메뉴를 선택하고 필요한 재료를 후원받으세요!\n후원에 대한 리뷰도 잊지 말고 작성해주세요!',
+                          '모두의 한끼는 여러분을 위한 서비스입니다! 먹고 싶은 메뉴를 선택하고 필요한 재료를 후원받으세요!\n후원에 대한 감사글도 잊지 말고 작성해주세요!',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'SUITE',
@@ -106,7 +104,9 @@ class _TeenagerViewInfoPopWidgetState extends State<TeenagerViewInfoPopWidget> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
                           child: Text("확인",
                               style: TextStyle(
                                 fontFamily: 'Lexend Deca',

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:save_children_v01/pages/auth/AllSignInPage.dart';
 
 import '../../models/AllWelcomeSignInPageModel.dart';
 
 class AllWelcomeSignInPageWidget extends StatefulWidget {
-  const AllWelcomeSignInPageWidget({Key? key}) : super(key: key);
-
+  const AllWelcomeSignInPageWidget({
+    super.key,
+    required this.isKakao,
+    this.kakaoUser,
+  });
+  final bool isKakao;
+  final User? kakaoUser;
   @override
   _AllWelcomeSignInPageWidgetState createState() =>
       _AllWelcomeSignInPageWidgetState();
@@ -93,12 +96,22 @@ class _AllWelcomeSignInPageWidgetState
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AllSignInPageWidget(
-                                    whichPage: "teenager",
-                                  )));
+                      widget.isKakao
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AllSignInPageWidget(
+                                        whichPage: "teenager",
+                                        isKakao: widget.isKakao,
+                                        kakaoUser: widget.kakaoUser,
+                                      )))
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AllSignInPageWidget(
+                                        whichPage: "teenager",
+                                        isKakao: widget.isKakao,
+                                      )));
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -143,12 +156,22 @@ class _AllWelcomeSignInPageWidgetState
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AllSignInPageWidget(
-                                      whichPage: "supporter",
-                                    )));
+                        widget.isKakao
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AllSignInPageWidget(
+                                          whichPage: "supporter",
+                                          kakaoUser: widget.kakaoUser,
+                                          isKakao: widget.isKakao,
+                                        )))
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AllSignInPageWidget(
+                                          whichPage: "supporter",
+                                          isKakao: widget.isKakao,
+                                        )));
                       },
                       child: Container(
                         alignment: Alignment.center,
