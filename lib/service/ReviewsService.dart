@@ -1,10 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:save_children_v01/service/PostsService.dart';
 
 import '../model/BMemberModel.dart';
 import '../model/PostModel.dart';
 import '../model/ReviewModel.dart';
+import 'AlertService.dart';
+// import 'ViewPostingService.dart';
 
 class PostReview {
   int review_id;
@@ -28,7 +31,6 @@ class ReviewsService extends ChangeNotifier {
 
   Review? review_of_post;
 
-
   ReviewsService() {}
 
   void getMyReviews(String bMember_Id) async {
@@ -45,8 +47,19 @@ class ReviewsService extends ChangeNotifier {
   }
 
   void writeReview(String bMember_id, PostReview postReview) async {
-    print("경로" + postReview.review_img!);
-    print("텍스트" + postReview.review_txt);
+    PostsService postsService = PostsService();
+    print("포스트 아이디" + postReview.post.postId.toString());
+    await postsService.viewPost(postReview.post);
+    Post? post = postsService.aPost;
+    List<String> sTokens = [];
+    for (int i = 0; i < (post!.spon == null ? 1 : post.spon!.length); i++) {
+      print(post.spon![i].smember == null
+          ? ""
+          : post.spon![i].smember!.smemberId!);
+      if (post.spon![i].smember != null) {
+        sTokens.add(post.spon![i].smember!.token!);
+      }
+    }
     final data = FormData.fromMap({
       'img': await MultipartFile.fromFile(
         postReview.review_img!,
@@ -66,6 +79,10 @@ class ReviewsService extends ChangeNotifier {
         // 업로드 성공 시 처리
         print('리뷰 POST 성공');
         print(response.data);
+        for (int i = 0; i < sTokens.length; i++) {
+          await pushAlert(sTokens[i], postReview.post.bmember!.bMember_id!,
+              postReview.post.postId.toString(), "리뷰 등록");
+        }
       } else {
         // 업로드 실패 시 처리
         print('업로드 실패');

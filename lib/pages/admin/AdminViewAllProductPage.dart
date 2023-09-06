@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Colors.dart';
 import 'package:save_children_v01/model/IngredientsModel.dart';
+import 'package:save_children_v01/pages/auth/NutriAdminLoginPage.dart';
 import 'package:save_children_v01/service/IngredientsService.dart';
 
 class AdminViewAllProductPageWidget extends StatefulWidget {
@@ -14,19 +15,13 @@ class AdminViewAllProductPageWidget extends StatefulWidget {
 
 class _AdminViewAllProductPageWidgetState
     extends State<AdminViewAllProductPageWidget> {
-  List<String> items = [
-    "최신 순",
-    "가격 순",
-  ];
-
-  String selectedItem = "최신 순";
-
   @override
   Widget build(BuildContext context) {
     return Consumer<IngredientsService>(
         builder: (context, ingredientsService, child) {
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             '현재 등록된 상품들',
           ),
@@ -54,7 +49,10 @@ class _AdminViewAllProductPageWidgetState
                   color: secondaryText,
                   size: 24.0,
                 ),
-                onPressed: () {}, // TODO : [admin] Logout 버튼 구현
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => NutriAdminPageWidget()));
+                },
               ),
             ),
           ],
@@ -64,45 +62,8 @@ class _AdminViewAllProductPageWidgetState
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 5.0, 0.0),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-                    child: DropdownButton(
-                      underline: SizedBox.shrink(),
-                      style: TextStyle(
-                        fontFamily: 'SUITE',
-                        color: primaryText,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      value: selectedItem,
-                      items: items.map(
-                        (value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          );
-                        },
-                      ).toList(),
-                      onChanged: (value) => {
-                        setState(() {
-                          selectedItem = value!;
-                        })
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: primaryText,
-                        size: 24.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            SizedBox(
+              height: 20,
             ),
             Expanded(
               child: ListView.builder(
@@ -172,8 +133,8 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
                   child: Image.network(
                     '${widget.ingredients.ingredients_image}',
                     width: 70.0,
@@ -181,17 +142,17 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                    Expanded(
-                      child: Row(
+                Expanded(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
                         mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
                                 10.0, 0.0, 0.0, 0.0),
                             child: Text(
                               '${widget.ingredients.ingredients_name}',
@@ -202,8 +163,8 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
                                   fontWeight: FontWeight.w400),
                             ),
                           ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
                                 10.0, 2.0, 0.0, 0.0),
                             child: Container(
                               width: 170,
@@ -219,8 +180,8 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
                               ),
                             ),
                           ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
                                 10.0, 2.0, 0.0, 0.0),
                             child: Text(
                               '${widget.ingredients.price}원',
@@ -231,13 +192,13 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
                               ),
                             ),
                           ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                icon: Icon(
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: Icon(
                               Icons.delete_sharp,
                               color: secondaryText,
                               size: 20.0,
@@ -247,26 +208,26 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
                                   widget.ingredients.ingredients_id);
                             },
                           ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.mode_edit_sharp,
+                          IconButton(
+                            icon: Icon(
+                              Icons.mode_edit_sharp,
                               color: secondaryText,
                               size: 20.0,
                             ),
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/AdminProductRegisterPage',
-                                      arguments: widget.ingredients);
-                                }, // TODO : [admin] 등록된 상품 수정 구현
-                              ),
-                            ],
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, '/AdminProductRegisterPage',
+                                  arguments: widget.ingredients);
+                            },
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ));
+              ],
+            ),
+          ),
+        ));
   }
 }

@@ -86,7 +86,7 @@ class _TeenagerViewInfoPopWidgetState extends State<TeenagerViewInfoPopWidget> {
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
                         child: Text(
-                          '모두의 한끼는 여러분을 위한 서비스입니다! 먹고 싶은 메뉴를 선택하고 필요한 재료를 후원받으세요!\n후원에 대한 리뷰도 잊지 말고 작성해주세요!',
+                          '모두의 한끼는 여러분을 위한 서비스입니다! 먹고 싶은 메뉴를 선택하고 필요한 재료를 후원받으세요!\n후원에 대한 감사글도 잊지 말고 작성해주세요!',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'SUITE',

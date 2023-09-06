@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
 import '../model/PostModel.dart';
 import '../model/RecipeModel.dart';
 
@@ -21,7 +22,7 @@ class PostPosts {
 class PostsService extends ChangeNotifier {
   List<Post> allPostList = [];
   List<Post> myPostList = [];
-  late Post _post;
+  late Post? aPost;
   bool isVerified = true;
   // 후원에 올리는 메뉴의 레시피
   late Recipe post_Recipe;
@@ -94,11 +95,14 @@ class PostsService extends ChangeNotifier {
     getAllPosts();
   }
 
-  void viewPost(Post post) async {
+  Future<void> viewPost(Post post) async {
     Response res = await Dio().get(
       "http://15.165.106.139:8080/viewPosting/" + post.postId.toString(),
     );
-    _post = Post.fromJson(res.data);
+    final jsonData = res.data;
+    print(jsonData);
+    print(jsonData["post"]);
+    aPost = Post.fromJson(jsonData["post"]);
 
     notifyListeners();
   }

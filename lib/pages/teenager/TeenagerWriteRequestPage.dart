@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/model/IngredientsModel.dart';
@@ -62,26 +63,7 @@ class _TeenagerWriteRequestPageWidgetState
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: const Color(0xfff5f5f5),
-          appBar: AppBar(
-            backgroundColor: const Color(0xfff5f5f5),
-            automaticallyImplyLeading: false,
-            leading: Icon(
-              Icons.arrow_back_rounded,
-              color: const Color(0xff212121),
-              size: 30,
-            ),
-            title: Text(
-              '후원 요청',
-              style: TextStyle(
-                  fontFamily: "SUITE",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xff212121)),
-            ),
-            actions: [],
-            centerTitle: false,
-            elevation: 0,
-          ),
+          appBar: AppBar(title: Text('후원 요청')),
           body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
@@ -164,12 +146,13 @@ class _TeenagerWriteRequestPageWidgetState
                                     decoration: BoxDecoration(
                                       color: availableIng.contains(_part)
                                           ? Colors.white
-                                          : info,
+                                          : CupertinoColors.lightBackgroundGray,
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
                                         color: availableIng.contains(_part)
                                             ? Colors.black
-                                            : info,
+                                            : CupertinoColors
+                                                .lightBackgroundGray,
                                       ),
                                     ),
                                     child: Align(
@@ -438,9 +421,9 @@ class _TeenagerWriteRequestPageWidgetState
                               if (!postsService.isVerified) {
                                 dialog(
                                     "후원 글 작성 불가", "인증되지 않은 사용자입니다.", context);
+                              } else {
+                                dialog("후원 등록", "후원이 등록되었습니다!", context);
                               }
-
-                              Navigator.pop(context);
                             },
                             icon: Icon(Icons.receipt_long,
                                 color: const Color(0xffffffff)),

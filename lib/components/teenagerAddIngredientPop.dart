@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -171,71 +173,88 @@ class _TeenagerAddIngredientPopWidgetState
                                       child: Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0, 0, 0, 16),
-                                        child: Container(
-                                          width: 120,
-                                          height: 200,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xffe0e0e0),
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
-                                          child: Stack(
-                                            alignment:
-                                                AlignmentDirectional(0, 0),
-                                            children: [
-                                              Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      getImage(
-                                                          ImageSource.gallery);
-                                                    },
-                                                    icon: Icon(Icons
-                                                        .add_a_photo_outlined),
-                                                    color:
-                                                        const Color(0xff757575),
-                                                    iconSize: 72,
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 12, 0, 0),
-                                                    child: Text(
-                                                      '사진 등록',
-                                                      style: TextStyle(
-                                                          fontFamily: "SUITE",
-                                                          fontSize: 22,
-                                                          fontWeight:
-                                                              FontWeight.w500,
+                                        child: item_img == null
+                                            ? Container(
+                                                width: 120,
+                                                height: 200,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      const Color(0xffe0e0e0),
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                ),
+                                                child: Stack(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0, 0),
+                                                  children: [
+                                                    Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            getImage(ImageSource
+                                                                .gallery);
+                                                          },
+                                                          icon: Icon(Icons
+                                                              .add_a_photo_outlined),
                                                           color: const Color(
-                                                              0xff212121)),
+                                                              0xff757575),
+                                                          iconSize: 72,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(0,
+                                                                      12, 0, 0),
+                                                          child: Text(
+                                                            '사진 등록',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    "SUITE",
+                                                                fontSize: 22,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: const Color(
+                                                                    0xff212121)),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(0,
+                                                                      4, 0, 0),
+                                                          child: Text(
+                                                            '재료 사진을 등록하세요',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    "SUITE",
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: const Color(
+                                                                    0xff757575)),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 4, 0, 0),
-                                                    child: Text(
-                                                      '재료 사진을 등록하세요',
-                                                      style: TextStyle(
-                                                          fontFamily: "SUITE",
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: const Color(
-                                                              0xff757575)),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                                  ],
+                                                ),
+                                              )
+                                            : InkWell(
+                                                onTap: () {
+                                                  getImage(ImageSource.gallery);
+                                                },
+                                                child: Image.file(
+                                                    width: 120,
+                                                    height: 200,
+                                                    File(item_img!))),
                                       ),
                                     ),
                                   ],
@@ -258,7 +277,6 @@ class _TeenagerAddIngredientPopWidgetState
                                             color: secondaryText,
                                             size: 24,
                                           ),
-                                          Text('23.07.25', style: bodyMedium),
                                         ],
                                       ),
                                       Expanded(

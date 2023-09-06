@@ -189,12 +189,9 @@ class _TeenagerViewHomePageWidgetState extends State<TeenagerViewHomePageWidget>
                           ),
                         )
                       : Container(
-                          height: 350,
-                          child: Container(
-                              width: 200,
-                              height: 200,
-                              child: CircularProgressIndicator()),
-                        ),
+                          width: 150,
+                          height: 150,
+                          child: CircularProgressIndicator()),
                 ],
               ),
             ),
@@ -294,8 +291,8 @@ class RecommendedDietCard extends StatelessWidget {
                                         fit: BoxFit.cover),
                                     Icon(
                                       Icons.no_food,
-                                      color: Colors.yellow,
-                                      size: 48.0,
+                                      color: Colors.grey,
+                                      size: 24.0,
                                     ),
                                   ])
                                 : Image.network(
@@ -342,8 +339,8 @@ class RecommendedDietCard extends StatelessWidget {
                                         fit: BoxFit.cover),
                                     Icon(
                                       Icons.no_food,
-                                      color: Colors.yellow,
-                                      size: 48.0,
+                                      color: Colors.grey,
+                                      size: 24,
                                     ),
                                   ])
                                 : Image.network(
@@ -553,11 +550,9 @@ class RecommendedDietCard extends StatelessWidget {
 }
 
 class RecommendedMenuCard extends StatelessWidget {
-
   const RecommendedMenuCard(
       {super.key, required this.menu, required this.id, required this.idx});
 
- 
   final Recipe menu;
   final String id;
   final int idx;
@@ -568,8 +563,6 @@ class RecommendedMenuCard extends StatelessWidget {
     );
     return res.data;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -648,7 +641,7 @@ class RecommendedMenuCard extends StatelessWidget {
                                           TeenagerWriteRequestPageWidget(
                                               recipe: menu)))
                               : dialog("후원 글 작성 불가",
-                                  "리뷰 작성 후 후원 글을 작성할 수 있습니다...", context);
+                                  "감사글 작성 후 후원 글을 작성할 수 있습니다...", context);
                         },
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),

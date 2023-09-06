@@ -19,32 +19,38 @@ class _TeenagerAddIngredientPageWidget
     "최신 순",
     "가격 순",
   ];
-  late List<Ingredients> ingredientsList;
+  List<Ingredients> ingredientsList = IngredientsService().productList;
 
-  String selectedItem = "최신 순";
-  List<Ingredients> filteredIngredientsList = [];
+  List<Ingredients> filteredIngredientsList = IngredientsService().productList;
+
   void filterSearchResults(String query) {
-    List<Ingredients> searchResults = [];
-    searchResults.addAll(ingredientsList);
-
-    if (query.isNotEmpty) {
-      searchResults = searchResults.where((item) {
-        return item.ingredients_name
-            .toLowerCase()
-            .contains(query.toLowerCase());
-      }).toList();
+    filteredIngredientsList.clear();
+    if (query.isEmpty) {
+      filteredIngredientsList.addAll(ingredientsList);
+    } else {
+      filteredIngredientsList.addAll(
+        ingredientsList.where((item) =>
+            item.ingredients_name.toLowerCase().contains(query.toLowerCase())),
+      );
     }
 
-    setState(() {
-      filteredIngredientsList = searchResults;
-    });
+    setState(() {});
+  }
+
+  void initState() {
+    super.initState();
+    filteredIngredientsList.addAll(ingredientsList);
+  }
+
+  int compareIngredientsByName(Ingredients a, Ingredients b) {
+    return a.ingredients_name.compareTo(b.ingredients_name); // 이름을 가나다 순으로 비교
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer2<IngredientsService, LoginService>(
         builder: (context, ingredientsService, loginService, child) {
-      ingredientsList = ingredientsService.productList;
+      filteredIngredientsList.sort(compareIngredientsByName);
       return Scaffold(
         appBar: AppBar(
           titleSpacing: 10.0,
@@ -68,12 +74,10 @@ class _TeenagerAddIngredientPageWidget
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                onChanged: (value) {
-                  filterSearchResults(value);
-                },
+                onChanged: filterSearchResults,
                 decoration: InputDecoration(
-                  labelText: 'Search',
-                  hintText: 'Search for fruits...',
+                  labelText: '재료',
+                  hintText: '재료를 입력하세요',
                   prefixIcon: Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -81,46 +85,46 @@ class _TeenagerAddIngredientPageWidget
                 ),
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 5.0, 0.0),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-                    child: DropdownButton(
-                      underline: SizedBox.shrink(),
-                      style: TextStyle(
-                        fontFamily: 'SUITE',
-                        color: primaryText,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      value: selectedItem,
-                      items: items.map(
-                        (value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          );
-                        },
-                      ).toList(),
-                      onChanged: (value) => {
-                        setState(() {
-                          selectedItem = value!;
-                        })
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: primaryText,
-                        size: 24.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisSize: MainAxisSize.max,
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            //     Padding(
+            //       padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 5.0, 0.0),
+            //       child: Padding(
+            //         padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
+            //         child: DropdownButton(
+            //           underline: SizedBox.shrink(),
+            //           style: TextStyle(
+            //             fontFamily: 'SUITE',
+            //             color: primaryText,
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.w400,
+            //           ),
+            //           value: selectedItem,
+            //           items: items.map(
+            //             (value) {
+            //               return DropdownMenuItem(
+            //                 value: value,
+            //                 child: Text(value),
+            //               );
+            //             },
+            //           ).toList(),
+            //           onChanged: (value) => {
+            //             setState(() {
+            //               selectedItem = value!;
+            //             })
+            //           },
+            //           icon: Icon(
+            //             Icons.keyboard_arrow_down_rounded,
+            //             color: primaryText,
+            //             size: 24.0,
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
             Expanded(
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
