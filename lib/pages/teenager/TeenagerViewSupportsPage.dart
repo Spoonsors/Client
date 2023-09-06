@@ -54,89 +54,109 @@ class _TeenagerVIewSupportsPageWidgetState
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
         child: Scaffold(
-          key: scaffoldKey,
-          backgroundColor: const Color(0xfff5f5f5),
-          appBar: AppBar(
-            title: Text('수혜 내역'),
-          ),
-          body: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Column(
+            key: scaffoldKey,
+            backgroundColor: const Color(0xfff5f5f5),
+            appBar: AppBar(
+              title: Text('수혜 내역'),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   Column(
                     children: [
                       Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(16, 16, 0, 0),
-                            child: Text(
-                              '대기 중인 후원',
-                              style: TextStyle(
-                                  fontFamily: "SUITE",
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xff212121)),
-                            ),
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16, 16, 0, 0),
+                                child: Text(
+                                  '대기 중인 후원',
+                                  style: TextStyle(
+                                      fontFamily: "SUITE",
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xff212121)),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    24, 16, 0, 0),
+                                child: Text(
+                                  '대기 중인 후원이 없습니다.',
+                                  style: TextStyle(
+                                      fontFamily: "SUITE",
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xff212121)),
+                                ),
+                              ),
+                              SingleChildScrollView(
+                                child: ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: waitingPostList.length,
+                                    itemBuilder: (context, index) {
+                                      return WaitingPostCard(
+                                        bMember: loginservice.loginB,
+                                        idx: index,
+                                        post: waitingPostList[index],
+                                      );
+                                    }),
+                              )
+                            ],
                           ),
-                          SingleChildScrollView(
-                            child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount: waitingPostList.length,
-                                itemBuilder: (context, index) {
-                                  return WaitingPostCard(
-                                    bMember: loginservice.loginB,
-                                    idx: index,
-                                    post: waitingPostList[index],
-                                  );
-                                }),
-                          )
-                        ],
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(16, 16, 0, 0),
-                            child: Text(
-                              '완료된 후원',
-                              style: TextStyle(
-                                  fontFamily: "SUITE",
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xff212121)),
-                            ),
+                          Divider(
+                            color: Colors.grey, // 구분선의 색상 설정
+                            height: 20, // 구분선의 높이 설정
+                            thickness: 1, // 구분선의 두께 설정
+                            indent: 20, // 시작 위치에서 구분선의 여백 설정
+                            endIndent: 20, // 끝 위치에서 구분선의 여백 설정
                           ),
-                          ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: completedPostList.length,
-                              itemBuilder: (context, index) {
-                                return CompletedPostCard(
-                                  bMember: loginservice.loginB,
-                                  idx: index,
-                                  post: completedPostList[index],
-                                );
-                              })
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16, 16, 0, 0),
+                                child: Text(
+                                  '완료된 후원',
+                                  style: TextStyle(
+                                      fontFamily: "SUITE",
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xff212121)),
+                                ),
+                              ),
+                              ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: completedPostList.length,
+                                  itemBuilder: (context, index) {
+                                    return CompletedPostCard(
+                                      bMember: loginservice.loginB,
+                                      idx: index,
+                                      post: completedPostList[index],
+                                    );
+                                  })
+                            ],
+                          ),
                         ],
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
+            )),
       );
     });
   }
@@ -535,7 +555,7 @@ class CompletedPostCard extends StatelessWidget {
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               child: Text(
-                                ' 리뷰 작성 완료',
+                                ' 감사글 작성 완료',
                                 style: TextStyle(
                                     fontFamily: "SUITE",
                                     fontSize: 14,
@@ -564,7 +584,7 @@ class CompletedPostCard extends StatelessWidget {
                                     size: 20,
                                   ),
                                   Text(
-                                    ' 리뷰 쓰기',
+                                    ' 감사글 쓰기',
                                     style: TextStyle(
                                         fontFamily: "SUITE",
                                         fontSize: 14,

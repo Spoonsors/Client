@@ -30,7 +30,7 @@ class IngredientsService extends ChangeNotifier {
   }
 
   // 상품 정보 가져오기
-  void getAllProductInfo() async {
+  Future<void> getAllProductInfo() async {
     productList.clear();
     // API 호출
     Response res = await Dio().get(

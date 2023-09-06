@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/model/IngredientsModel.dart';
@@ -145,12 +146,13 @@ class _TeenagerWriteRequestPageWidgetState
                                     decoration: BoxDecoration(
                                       color: availableIng.contains(_part)
                                           ? Colors.white
-                                          : info,
+                                          : CupertinoColors.lightBackgroundGray,
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
                                         color: availableIng.contains(_part)
                                             ? Colors.black
-                                            : info,
+                                            : CupertinoColors
+                                                .lightBackgroundGray,
                                       ),
                                     ),
                                     child: Align(
@@ -419,9 +421,9 @@ class _TeenagerWriteRequestPageWidgetState
                               if (!postsService.isVerified) {
                                 dialog(
                                     "후원 글 작성 불가", "인증되지 않은 사용자입니다.", context);
+                              } else {
+                                dialog("후원 등록", "후원이 등록되었습니다!", context);
                               }
-
-                              Navigator.pop(context);
                             },
                             icon: Icon(Icons.receipt_long,
                                 color: const Color(0xffffffff)),

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +41,7 @@ class _TeenagerViewAllRecipesPageWidgetState
     _diet_name = widget.diet_name;
     // On page load action.
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    // WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -267,14 +268,13 @@ class RecipeCard extends StatelessWidget {
                                 child: Container(
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: partContain
-                                          ? Colors.black
-                                          : primary, // 테두리 색상
+                                      color: Colors.transparent, // 테두리 색상
                                       width: 2.0, // 테두리 두께
                                     ),
                                     color: partContain
-                                        ? Colors.transparent
-                                        : primary,
+                                        ? tertiary
+                                        : CupertinoColors.lightBackgroundGray,
+
                                     //재료를 갖고 있는지 아닌지에 따라 색깔 구분 필요
                                     borderRadius: BorderRadius.circular(20),
                                     shape: BoxShape.rectangle,
@@ -337,7 +337,7 @@ class RecipeCard extends StatelessWidget {
                                                         recipe: recipe)))
                                         : dialog(
                                             "후원 글 작성 불가",
-                                            "리뷰 작성 후 후원 글을 작성할 수 있습니다...",
+                                            "감사글 작성 후 후원 글을 작성할 수 있습니다...",
                                             context);
                                   },
                                 ),

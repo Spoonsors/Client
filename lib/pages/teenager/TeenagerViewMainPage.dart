@@ -64,7 +64,7 @@ class _TeenagerViewMainPageWidgetState
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.rate_review_rounded),
-                label: "내 리뷰",
+                label: "내 감사글",
               ),
             ],
             currentIndex: _selectedIndex,

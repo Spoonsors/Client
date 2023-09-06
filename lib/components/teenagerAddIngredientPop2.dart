@@ -21,42 +21,53 @@ class _TeenagerAddIngredientPop2Widget
     "최신 순",
     "가격 순",
   ];
-  late List<Ingredients> ingredientsList;
+  List<Ingredients> ingredientsList = IngredientsService().productList;
 
-  String selectedItem = "최신 순";
-  List<Ingredients> filteredIngredientsList = [];
+  List<Ingredients> filteredIngredientsList = IngredientsService().productList;
   void filterSearchResults(String query) {
-    List<Ingredients> searchResults = [];
-    searchResults.addAll(ingredientsList);
-
-    if (query.isNotEmpty) {
-      searchResults = searchResults.where((item) {
-        return item.ingredients_name
-            .toLowerCase()
-            .contains(query.toLowerCase());
-      }).toList();
+    filteredIngredientsList.clear();
+    if (query.isEmpty) {
+      filteredIngredientsList.addAll(ingredientsList);
+    } else {
+      filteredIngredientsList.addAll(
+        ingredientsList.where((item) =>
+            item.ingredients_name.toLowerCase().contains(query.toLowerCase())),
+      );
     }
 
-    setState(() {
-      filteredIngredientsList = searchResults;
-    });
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    filteredIngredientsList.addAll(ingredientsList);
+  }
+
+  int compareIngredientsByName(Ingredients a, Ingredients b) {
+    return a.ingredients_name.compareTo(b.ingredients_name); // 이름을 가나다 순으로 비교
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer3<IngredientsService, FridgesService, LoginService>(builder:
         (context, ingredientsService, fridgesService, loginService, child) {
-      ingredientsList = ingredientsService.productList;
+      filteredIngredientsList.sort(compareIngredientsByName);
+
       return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          titleSpacing: 10.0,
-          title: Text(
-            '재료 검색',
-            style: TextStyle(
-              fontFamily: 'SUITE',
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
+          toolbarHeight: 90.0,
+          titleSpacing: 5.0,
+          title: Align(
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              '재료 검색',
+              style: TextStyle(
+                fontFamily: 'SUITE',
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           actions: [],
@@ -71,12 +82,10 @@ class _TeenagerAddIngredientPop2Widget
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                onChanged: (value) {
-                  filterSearchResults(value);
-                },
+                onChanged: filterSearchResults,
                 decoration: InputDecoration(
-                  labelText: 'Search',
-                  hintText: 'Search for fruits...',
+                  labelText: '검색',
+                  hintText: '재료를 검색하세요',
                   prefixIcon: Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25.0)),

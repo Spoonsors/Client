@@ -4,7 +4,6 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:save_children_v01/etc/Dialog.dart';
 import 'package:save_children_v01/pages/auth/AllWelcomeSignInPage.dart';
-
 import 'package:save_children_v01/pages/supporter/SupporterMainPage.dart';
 import 'package:save_children_v01/service/AlertService.dart';
 import 'package:save_children_v01/service/LoginService.dart';
@@ -300,15 +299,66 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                                         passwordController
                                                             .text);
                                             if (loginservice.isLogin) {
-
                                               if (widget.user == "b") {
                                                 pushBToken(
                                                     emailController.text);
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            TeenagerViewMainPageWidget()));
+                                                showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10.0)),
+                                                        title: Column(
+                                                          children: <Widget>[
+                                                            Text("문서 인증 필요"),
+                                                          ],
+                                                        ),
+                                                        content: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            Text(
+                                                              "문서 인증 후 후원 글을 작성할 수 있습니다.",
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(
+                                                                      20.0),
+                                                              foregroundColor:
+                                                                  Color(
+                                                                      0xffFFB74D),
+                                                              textStyle:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          20),
+                                                            ),
+                                                            child: Text("확인"),
+                                                            onPressed: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              TeenagerViewMainPageWidget()));
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    });
                                               } else {
                                                 pushSToken(
                                                     emailController.text);
@@ -318,7 +368,6 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                                         builder: (context) =>
                                                             SupporterMainPageWidget()));
                                               }
-
                                             } else {
                                               dialog(
                                                   "로그인 실패",
@@ -396,8 +445,7 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                                                         .circular(
                                                                             10.0)),
                                                             title: Column(
-                                                              children: <
-                                                                  Widget>[
+                                                              children: <Widget>[
                                                                 Text(
                                                                     "앱 정보 등록 필요"),
                                                               ],
@@ -409,8 +457,7 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
                                                                       .start,
-                                                              children: <
-                                                                  Widget>[
+                                                              children: <Widget>[
                                                                 Text(
                                                                   "계정 정보를 등록해야합니다.",
                                                                 ),
@@ -422,7 +469,7 @@ class _AllLoginPageWidgetState extends State<AllLoginPageWidget> {
                                                                     .styleFrom(
                                                                   padding:
                                                                       const EdgeInsets
-                                                                              .all(
+                                                                          .all(
                                                                           20.0),
                                                                   foregroundColor:
                                                                       Color(

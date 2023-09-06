@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -65,7 +67,25 @@ class _TeenagerWriteReviewPageWidgetState
           key: scaffoldKey,
           backgroundColor: const Color(0xfff5f5f5),
           appBar: AppBar(
-            title: Text('리뷰 작성'),
+            backgroundColor: const Color(0xfff5f5f5),
+            automaticallyImplyLeading: false,
+            leading: Icon(
+              Icons.arrow_back_rounded,
+              color: const Color(0xff212121),
+              size: 30,
+            ),
+            title: Text(
+              '감사글 작성',
+              style: TextStyle(
+                fontFamily: 'SUITE',
+                color: const Color(0xff212121),
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            actions: [],
+            centerTitle: false,
+            elevation: 0,
           ),
           body: SafeArea(
             top: true,
@@ -89,51 +109,75 @@ class _TeenagerWriteReviewPageWidgetState
                       ),
                     ),
                     Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                        child: Container(
-                          width: double.infinity,
-                          constraints: BoxConstraints(
-                            maxWidth: 500,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xfff5f5f5),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: const Color(0xffe0e0e0),
-                              width: 2,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    getImage(ImageSource.gallery);
-                                  },
-                                  icon: Icon(Icons.add_a_photo_rounded),
-                                  color: const Color(0xffffb74d),
-                                  iconSize: 32,
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                      child: item_img == null
+                          ? Container(
+                              width: double.infinity,
+                              constraints: BoxConstraints(
+                                maxWidth: 500,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xfff5f5f5),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: const Color(0xffe0e0e0),
+                                  width: 2,
                                 ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 0, 0, 0),
-                                  child: Text(
-                                    '사진 업로드',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'SUITE',
-                                      color: const Color(0xff757575),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
+                              ),
+                              child: Container(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        getImage(ImageSource.gallery);
+                                      },
+                                      icon: Icon(Icons.add_a_photo_rounded),
+                                      color: const Color(0xffffb74d),
+                                      iconSize: 32,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          16, 0, 0, 0),
+                                      child: Text(
+                                        '사진 업로드',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'SUITE',
+                                          color: const Color(0xff757575),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : InkWell(
+                              onTap: () {
+                                getImage(ImageSource.gallery);
+                              },
+                              child: Container(
+                                  width: double.infinity,
+                                  constraints: BoxConstraints(
+                                    maxWidth: 500,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xfff5f5f5),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: const Color(0xffe0e0e0),
+                                      width: 2,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
+                                  child: Image.file(
+                                      width: 120,
+                                      height: 200,
+                                      File(item_img!)))),
+                    ),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                       child: Column(mainAxisSize: MainAxisSize.max, children: [
@@ -228,15 +272,16 @@ class _TeenagerWriteReviewPageWidgetState
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
+                            Container(
+                              height: 140,
+                              child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: _post.spon!.length,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      width: 100,
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           12, 12, 0, 12),
                                       child: Column(
@@ -246,14 +291,14 @@ class _TeenagerWriteReviewPageWidgetState
                                             width: 64,
                                             height: 64,
                                             decoration: BoxDecoration(
-                                              color: const Color(0xffff4081),
+                                              color: Colors.transparent,
                                               shape: BoxShape.circle,
                                               border: Border.all(
                                                 color: const Color(0xffffb74d),
                                                 width: 2,
                                               ),
                                             ),
-                                            child: Padding(
+                                            child: Container(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(4, 4, 4, 4),
                                               child: Container(
@@ -264,18 +309,23 @@ class _TeenagerWriteReviewPageWidgetState
                                                   shape: BoxShape.circle,
                                                 ),
                                                 child: Image.asset(
-                                                  'assets/images/익명.png',
+                                                  _post.spon![index].smember!
+                                                              .profilePath ==
+                                                          ""
+                                                      ? "assets/images/children.png"
+                                                      : "assets/images/employee.png",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
                                             ),
                                           ),
-                                          Padding(
+                                          Container(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     0, 8, 0, 0),
                                             child: Text(
-                                              '익명1',
+                                              _post.spon![index].smember!
+                                                  .smemberNickname!,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontFamily: 'Lexend Deca',
@@ -287,167 +337,9 @@ class _TeenagerWriteReviewPageWidgetState
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          12, 12, 0, 12),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Container(
-                                            width: 64,
-                                            height: 64,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xffff4081),
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: const Color(0xffffb74d),
-                                                width: 2,
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(4, 4, 4, 4),
-                                              child: Container(
-                                                width: 70,
-                                                height: 70,
-                                                clipBehavior: Clip.antiAlias,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Image.asset(
-                                                  'assets/images/익명.png',
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 8, 0, 0),
-                                            child: Text(
-                                              '익명2',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily: 'Lexend Deca',
-                                                color: const Color(0xff757575),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          12, 12, 0, 12),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Container(
-                                            width: 64,
-                                            height: 64,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xffff4081),
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: const Color(0xffffb74d),
-                                                width: 2,
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(4, 4, 4, 4),
-                                              child: Container(
-                                                width: 70,
-                                                height: 70,
-                                                clipBehavior: Clip.antiAlias,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Image.asset(
-                                                  'assets/images/익명.png',
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 8, 0, 0),
-                                            child: Text(
-                                              '익명3',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily: 'Lexend Deca',
-                                                color: const Color(0xff757575),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          12, 12, 0, 12),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Container(
-                                            width: 64,
-                                            height: 64,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xffff4081),
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: const Color(0xffffb74d),
-                                                width: 2,
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(4, 4, 4, 4),
-                                              child: Container(
-                                                width: 70,
-                                                height: 70,
-                                                clipBehavior: Clip.antiAlias,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Image.asset(
-                                                  'assets/images/익명.png',
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 8, 0, 0),
-                                            child: Text(
-                                              '익명4',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily: 'Lexend Deca',
-                                                color: const Color(0xff757575),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                    );
+                                  }),
+                            )
                           ],
                         ),
                       ),
@@ -487,7 +379,7 @@ class _TeenagerWriteReviewPageWidgetState
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "리뷰가 등록되었습니다",
+                                            "감사글이 등록되었습니다",
                                           ),
                                         ],
                                       ),
@@ -512,7 +404,7 @@ class _TeenagerWriteReviewPageWidgetState
                                     );
                                   });
                             },
-                            label: Text("리뷰 올리기",
+                            label: Text("감사글 올리기",
                                 style: TextStyle(
                                   fontFamily: 'SUITE',
                                   color: Colors.white,
